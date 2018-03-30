@@ -1,0 +1,10 @@
+C:\Users\Gage\source\repos\Sender\Sender\bin\Release\Sender.exe.config
+C:\Users\Gage\source\repos\Sender\Sender\bin\Release\Sender.exe
+C:\Users\Gage\source\repos\Sender\Sender\bin\Release\Sender.pdb
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.Form1.resources
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.Form2.resources
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.Properties.Resources.resources
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.csproj.GenerateResource.Cache
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.csproj.CoreCompileInputs.cache
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.exe
+C:\Users\Gage\source\repos\Sender\Sender\obj\Release\Sender.pdb

@@ -1,0 +1,11 @@
+C:\Users\Gage\source\repos\Sender\Sender\bin\Debug\Sender.exe.config
+C:\Users\Gage\source\repos\Sender\Sender\bin\Debug\Sender.exe
+C:\Users\Gage\source\repos\Sender\Sender\bin\Debug\Sender.pdb
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.csprojResolveAssemblyReference.cache
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.Form1.resources
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.Form2.resources
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.Properties.Resources.resources
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.csproj.GenerateResource.Cache
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.csproj.CoreCompileInputs.cache
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.exe
+C:\Users\Gage\source\repos\Sender\Sender\obj\Debug\Sender.pdb
