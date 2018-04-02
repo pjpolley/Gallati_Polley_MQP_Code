@@ -8,10 +8,14 @@ public static class Globals{
     public static float T2Pos = 0;
     public static float A1Pos = 0;
     public static float A2Pos = 0;
+    public static float A3Pos = 0;
     public static float B1Pos = 0;
     public static float B2Pos = 0;
+    public static float B3Pos = 0;
     public static float C1Pos = 0;
     public static float C2Pos = 0;
+    public static float C3Pos = 0;
     public static float D1Pos = 0;
     public static float D2Pos = 0;
+    public static float D3Pos = 0;
 }

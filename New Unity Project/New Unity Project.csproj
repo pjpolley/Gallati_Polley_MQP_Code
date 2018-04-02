@@ -299,9 +299,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\HandyHands\scripts\Globals.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\A1Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\A2Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\A3Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\B1Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\B2Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\B3Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\C1Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\C2Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\C3Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\D1Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\D2Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\D3Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\T1Behavior.cs" />
+    <Compile Include="Assets\HandyHands\scripts\Joints\T2Behavior.cs" />
     <Compile Include="Assets\HandyHands\scripts\RotateHandParts.cs" />
     <Compile Include="Assets\HandyHands\scripts\showcasecam.cs" />
-    <Compile Include="Assets\HandyHands\scripts\T1Behavior.cs" />
     <Compile Include="Assets\HandyHands\scripts\thumbRotationTest.cs" />
     <Compile Include="Assets\HandyHands\scripts\VisualizeJoint.cs" />
   </ItemGroup>

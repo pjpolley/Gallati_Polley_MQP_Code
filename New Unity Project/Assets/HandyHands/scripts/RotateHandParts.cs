@@ -41,6 +41,45 @@ public class RotateHandParts : MonoBehaviour
                         case "T1":
                             Globals.T1Pos = (float)System.Convert.ToDouble(line.Substring(2));
                             break;
+                        case "T2":
+                            Globals.T2Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "A1":
+                            Globals.A1Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "A2":
+                            Globals.A2Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "A3":
+                            Globals.A3Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "B1":
+                            Globals.B1Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "B2":
+                            Globals.B2Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "B3":
+                            Globals.B3Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "C1":
+                            Globals.C1Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "C2":
+                            Globals.C2Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "C3":
+                            Globals.C3Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "D1":
+                            Globals.D1Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "D2":
+                            Globals.D2Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
+                        case "D3":
+                            Globals.D3Pos = (float)System.Convert.ToDouble(line.Substring(2));
+                            break;
                     }
 
                 }
