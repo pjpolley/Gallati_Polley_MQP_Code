@@ -20,3 +20,14 @@ C:\Users\PatronalComputer\Downloads\MSMQtester-master\MSMQtester-master\Sender\o
 C:\Users\PatronalComputer\Downloads\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.csproj.CoreCompileInputs.cache
 C:\Users\PatronalComputer\Downloads\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.exe
 C:\Users\PatronalComputer\Downloads\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.pdb
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\bin\Debug\Sender.exe.config
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\bin\Debug\Sender.exe
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\bin\Debug\Sender.pdb
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.csprojResolveAssemblyReference.cache
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.Form1.resources
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.Form2.resources
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.Properties.Resources.resources
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.csproj.GenerateResource.Cache
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.csproj.CoreCompileInputs.cache
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.exe
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.pdb
