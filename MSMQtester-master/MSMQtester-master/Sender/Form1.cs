@@ -23,7 +23,7 @@ namespace Sender
         Form2 form;
         Byte[] inData;
 
-        string dataPath = @"c:\Program Files\OpenBCI_GUI\SavedData\OpenBCI-RAW-readThis.txt";
+        
         string directoryPath = @"c:\BCIDataDirectory";
         string filePath = @"c:\BCIDataDirectory\transferInfo.txt";
         string mutexFileTurn = @"c:\BCIDataDirectory\WFATurn.mutex";
@@ -75,18 +75,18 @@ namespace Sender
             this.FormClosing += Form1_FormClosing;
 
             //Initializes read buffer
-            inData = new Byte[25];
+            inData = new Byte[32];
 
             //Opens serial port for communication
             serialPort1 = new SerialPort("COM5", 115200);
             serialPort1.Open();
+            serialPort1.Write("s");
 
             InitializeComponent();
             form = new Form2();
             form.Show();
 
-            //Opens the floodgates
-            serialPort1.Write("b");
+            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -124,24 +124,24 @@ namespace Sender
 
         private void button2_Click(object sender, EventArgs e)
         {
+            //Opens the floodgates
+            serialPort1.Write("b");
+
             while (true)
             {
-                //If serial port reads the beginning of a packet, makes the data packet and prints the 1st node info
+                //Checks for start of packet; if it finds it, verifies it's a packet, then processes data
                 if (serialPort1.ReadByte() == 0xA0)
                 {
-                    serialPort1.Read(inData, 0, 25);
-                    Byte[] node1 = new ArraySegment<Byte>(inData, 0, 4).ToArray<Byte>();
-                    node1[0] = 0;
-                    node1 = node1.Reverse<Byte>().ToArray<Byte>();
-                    textBox1.Text = BitConverter.ToInt32(inData, 1).ToString();
+                    serialPort1.Read(inData, 0, 32);
+                    if (inData[31] > 0xBF && inData[31] < 0xD0 && inData[0] == 0)
+                    {
+                        int outVal = interpret24bitAsInt32(inData[1], inData[2], inData[3]);
+                        double returnVal = outVal * 0.02235;
+                        textBox1.Text = returnVal.ToString();
+                    }
                 }
-                //Else it just keeps iterating
-                else
-                {
-                    serialPort1.ReadByte();
-                }
-            }
 
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -154,6 +154,25 @@ namespace Sender
                 e.Cancel = true;
             }
         }
-    }
+
+        //Converts 3 bytes to signed Int32 (from OpenBCI)
+        int interpret24bitAsInt32(byte byte1, byte byte2, byte byte3)
+            {
+                int newInt = (
+                    ((0xFF & byte1) << 16) |
+                    ((0xFF & byte2) << 8) |
+                    (0xFF & byte3)
+                  );
+                if ((newInt & 0x00800000) > 0)
+                {
+                    newInt = (int)((uint)newInt | (uint)0xFF000000);
+                }
+                else
+                {
+                    newInt = (int)((uint)newInt & (uint)0x00FFFFFF);
+                }
+                return (newInt);
+            }
+        }
 
 }
