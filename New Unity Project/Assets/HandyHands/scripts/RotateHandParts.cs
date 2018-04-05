@@ -43,71 +43,59 @@ public class RotateHandParts : MonoBehaviour
                 {
                     switch (line.Substring(0, 2)){
                         case "T1":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
+                            data = parseInput(line.Substring(2));
                             Globals.T1DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "T2":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.T2DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "A1":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.A1DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "A2":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.A2DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "A3":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.A3DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "B1":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.B1DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "B2":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.B2DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "B3":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.B3DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "C1":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.C1DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "C2":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.C2DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "C3":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.C3DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "D1":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.D1DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "D2":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
-
+                            data = parseInput(line.Substring(2));
                             Globals.D2DesiredPosition = optimizeInputAngles(data);
                             break;
                         case "D3":
-                            data = (float)System.Convert.ToDouble(line.Substring(2));
+                            data = parseInput(line.Substring(2));
                             Globals.D3DesiredPosition = optimizeInputAngles(data);
                             break;
                     }
@@ -122,10 +110,23 @@ public class RotateHandParts : MonoBehaviour
         }
     }
 
+    private float parseInput(String input)
+    {
+        try
+        {
+            return float.Parse(input);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("ERROR IN INPUT: " + e.ToString());
+            return 0;
+        }
+    }
+
     private float optimizeInputAngles(float input)
     {
         float data = input;
-        while (data > 360)
+        while (data >= 360)
         {
             data -= 360;
         }

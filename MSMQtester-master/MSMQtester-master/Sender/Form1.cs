@@ -52,7 +52,17 @@ namespace Sender
         {
             if (UnityCommunicationHub.connected)
             {
-                Globals.T1DesiredPosition = (float)System.Convert.ToDouble(toSend);
+
+                try
+                {
+                    Globals.T1DesiredPosition = float.Parse(toSend);
+                }
+                catch(Exception error)
+                {
+                    Console.WriteLine("ERROR WHEN PARSING FLOAT: " + error.ToString());
+                    Globals.T1DesiredPosition = 0;
+                }
+
                 UnityCommunicationHub.TwoWayTransmission();
             }
             else

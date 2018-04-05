@@ -31,6 +31,7 @@
             this.NeuralTreeButton = new System.Windows.Forms.Button();
             this.NeuralNetButton = new System.Windows.Forms.Button();
             this.BasicFunctionalityButton = new System.Windows.Forms.Button();
+            this.clearDataButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NeuralTreeButton
@@ -62,11 +63,21 @@
             this.BasicFunctionalityButton.UseVisualStyleBackColor = true;
             this.BasicFunctionalityButton.Click += new System.EventHandler(this.BasicFunctionalityButton_Click);
             // 
+            // clearDataButton
+            // 
+            this.clearDataButton.Location = new System.Drawing.Point(288, 290);
+            this.clearDataButton.Name = "clearDataButton";
+            this.clearDataButton.Size = new System.Drawing.Size(216, 148);
+            this.clearDataButton.TabIndex = 3;
+            this.clearDataButton.Text = "Clear All Data";
+            this.clearDataButton.UseVisualStyleBackColor = true;
+            // 
             // WelcomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.clearDataButton);
             this.Controls.Add(this.BasicFunctionalityButton);
             this.Controls.Add(this.NeuralNetButton);
             this.Controls.Add(this.NeuralTreeButton);
@@ -81,5 +92,6 @@
         private System.Windows.Forms.Button NeuralTreeButton;
         private System.Windows.Forms.Button NeuralNetButton;
         private System.Windows.Forms.Button BasicFunctionalityButton;
+        private System.Windows.Forms.Button clearDataButton;
     }
 }
