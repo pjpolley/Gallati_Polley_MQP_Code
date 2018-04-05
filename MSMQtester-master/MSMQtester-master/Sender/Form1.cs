@@ -19,22 +19,18 @@ namespace Sender
 {
     public partial class Form1 : Form
     {
-        String toSend;
+        SerialReader serialReader;
         Form2 form;
-        Byte[] inData;
+        String toSend;
+
 
         public Form1()
         {
 
             this.FormClosing += Globals.CloseAllForms;
 
-            //Initializes read buffer
-            inData = new Byte[32];
-
-            //Opens serial port for communication
-            //serialPort1 = new SerialPort("COM5", 115200);
-            //serialPort1.Open();
-            //serialPort1.Write("s");
+            //Initializes Serial Reader
+            serialReader = new SerialReader();
 
             InitializeComponent();
             form = new Form2();
@@ -79,24 +75,8 @@ namespace Sender
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //Opens the floodgates
-            serialPort1.Write("b");
-
-            while (true)
-            {
-                //Checks for start of packet; if it finds it, verifies it's a packet, then processes data
-                if (serialPort1.ReadByte() == 0xA0)
-                {
-                    serialPort1.Read(inData, 0, 32);
-                    if (inData[31] > 0xBF && inData[31] < 0xD0 && inData[0] == 0)
-                    {
-                        int outVal = interpret24bitAsInt32(inData[1], inData[2], inData[3]);
-                        double returnVal = outVal * 0.02235;
-                        textBox1.Text = returnVal.ToString();
-                    }
-                }
-
-            }
+            //Starts reading information from serial
+            serialReader.Read();
         }
 
         //Converts 3 bytes to signed Int32 (from OpenBCI)
