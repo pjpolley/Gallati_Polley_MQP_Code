@@ -9,7 +9,7 @@ namespace Sender
     class PatsControlScheme : ControlSystemInterface
     {
         float timeNeededForChange = 0.2f;
-        TreeNode root = null;
+        Node root = null;
 
 
         public void DetermineSetpointsFromInputs()

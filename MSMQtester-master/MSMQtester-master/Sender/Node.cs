@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Sender
 {
-    public class TreeNode
+    public class Node
     {
-        TreeNode[] children;
+        Node[] children;
         SetPoint handPosition;
     }
 }
