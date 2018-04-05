@@ -23,21 +23,18 @@ namespace Sender
         Form2 form;
         Byte[] inData;
 
-
-
         public Form1()
         {
-            UnityCommunicationHub.InitializeUnityCommunication();
 
-            this.FormClosing += Form1_FormClosing;
+            this.FormClosing += Globals.CloseAllForms;
 
             //Initializes read buffer
             inData = new Byte[32];
 
             //Opens serial port for communication
-            serialPort1 = new SerialPort("COM5", 115200);
-            serialPort1.Open();
-            serialPort1.Write("s");
+            //serialPort1 = new SerialPort("COM5", 115200);
+            //serialPort1.Open();
+            //serialPort1.Write("s");
 
             InitializeComponent();
             form = new Form2();
@@ -53,8 +50,16 @@ namespace Sender
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Globals.T1DesiredPosition = (float)System.Convert.ToDouble(toSend);
-            UnityCommunicationHub.TwoWayTransmission();
+            if (UnityCommunicationHub.connected)
+            {
+                Globals.T1DesiredPosition = (float)System.Convert.ToDouble(toSend);
+                UnityCommunicationHub.TwoWayTransmission();
+            }
+            else
+            {
+                Console.WriteLine("ERROR: CONNECT TO UNITY FIRST");
+                textBox1.Text = "ERROR: CONNECT TO UNITY FIRST";
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -84,16 +89,6 @@ namespace Sender
             }
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            DialogResult result = MessageBox.Show("Really close this form?", string.Empty, MessageBoxButtons.YesNo);
-            UnityCommunicationHub.PurgeFileSystem();
-            if (result == DialogResult.No)
-            {
-                e.Cancel = true;
-            }
-        }
-
         //Converts 3 bytes to signed Int32 (from OpenBCI)
         int interpret24bitAsInt32(byte byte1, byte byte2, byte byte3)
             {
@@ -112,6 +107,12 @@ namespace Sender
                 }
                 return (newInt);
             }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            UnityCommunicationHub.InitializeUnityCommunication();
+
         }
+    }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace Sender
         private static string WFAReadyToGo = @"c:\BCIDataDirectory\WFAReady.txt";
 
         private static bool initialized = false;
+
+        public static bool connected = false;
 
         //initializes file communication system with Unity. Should ONLY be called once at program start.
         public static bool InitializeUnityCommunication()
@@ -64,11 +67,18 @@ namespace Sender
                 sw.WriteLine("START");
             }
             //wait for confirmation step
+            Stopwatch watch = Stopwatch.StartNew();
+            watch.Start();
             while (!File.Exists(unityReadyToGo))
             {
-
+                if(watch.ElapsedMilliseconds > Globals.TimeToConnectToUnity)
+                {
+                    Console.WriteLine("Unity connection attempt stopped");
+                    return false;
+                }
             }
             initialized = true;
+            connected = true;
             return true;
         }
 
@@ -227,6 +237,8 @@ namespace Sender
             File.Delete(filePath);
             File.Delete(mutexFileTurn);
             File.Delete(mutexUnityTurn);
+            connected = false;
+            initialized = false;
         }
 
     }

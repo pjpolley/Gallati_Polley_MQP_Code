@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Sender
 {
     public static class Globals
     {
+        public static Form welcomeScreen = null;
+        public static Form form1 = null;
+        public static Form form2 = null;
+
+        //time allocated to attempt to connect to unity
+        public static int TimeToConnectToUnity = 10000;//10 seconds
+
         //data read in from the BCI board
         public static float input1 = 0;
         public static float input2 = 0;
@@ -49,5 +57,12 @@ namespace Sender
         public static float D1ActualPosition = 0;
         public static float D2ActualPosition = 0;
         public static float D3ActualPosition = 0;
+
+        //exits the application
+        public static void CloseAllForms(object sender, FormClosingEventArgs e)
+        {
+            UnityCommunicationHub.PurgeFileSystem();
+            Application.Exit();
+        }
     }
 }

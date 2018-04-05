@@ -42,3 +42,4 @@ C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Send
 C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.csproj.CoreCompileInputs.cache
 C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.exe
 C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.pdb
+C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.WelcomeScreen.resources
