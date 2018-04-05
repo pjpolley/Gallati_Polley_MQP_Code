@@ -8,7 +8,7 @@ namespace Sender
 {
     class PatsControlScheme : ControlSystemInterface
     {
-        float timeNeededForChange = 0.2f;
+        float timeNeededForChange = 200f;//in milliseconds
         Node root = null;
 
 

@@ -12,6 +12,8 @@ namespace Sender
 {
     public partial class NeuralTreeWindow : Form
     {
+        TreeNode activeNode = null;
+
         public NeuralTreeWindow()
         {
             this.FormClosing += Globals.CloseAllForms;
@@ -23,14 +25,40 @@ namespace Sender
             NeuronTreeView.Nodes.Add(testNode);
         }
 
-        private void NeuronTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        private void NeuronTreeView_NodeClicked(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            activeNode = e.Node;
+            Console.WriteLine(e.Node.Text + " Clicked");
+        }
+
+        private void setHandPositionButton_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void NeuronTreeView_NodeClicked(object sender, TreeNodeMouseClickEventArgs e)
+        private void AddAnotherLayerButton_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(e.Node.Text + " Clicked");
+
+        }
+
+        private void removeLayerButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void changeNameButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void setNumberOfPositionsPerLayerButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void handDelayButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -9,6 +9,10 @@ namespace Sender
 {
     public static class Globals
     {
+        //frequency of transmission from BCI chip to this program
+        public static float transmissionRate;
+
+        //form constants for efficient loading
         public static Form welcomeScreen = null;
         public static Form treeScreen = null;
         public static Form form1 = null;
