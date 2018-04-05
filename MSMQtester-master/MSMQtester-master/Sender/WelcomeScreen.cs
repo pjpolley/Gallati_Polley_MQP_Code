@@ -32,7 +32,12 @@ namespace Sender
 
         private void NeuralTreeButton_Click(object sender, EventArgs e)
         {
-
+            if (Globals.treeScreen == null)
+            {
+                Globals.treeScreen = new NeuralTreeWindow();
+            }
+            Globals.treeScreen.Show();
+            this.Hide();
         }
     }
 }

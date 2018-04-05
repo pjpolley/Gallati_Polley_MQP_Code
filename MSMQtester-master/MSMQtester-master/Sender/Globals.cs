@@ -10,6 +10,7 @@ namespace Sender
     public static class Globals
     {
         public static Form welcomeScreen = null;
+        public static Form treeScreen = null;
         public static Form form1 = null;
         public static Form form2 = null;
 
