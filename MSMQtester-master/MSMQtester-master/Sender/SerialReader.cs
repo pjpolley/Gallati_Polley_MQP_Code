@@ -10,13 +10,13 @@ namespace Sender
 {
     class SerialReader
     {
-        private double textOut;
+        volatile private int textOut;
         private Mutex bciDataLock;
         private SerialPort serialPort1;
         private int rate;
 
         //Scale for OpenBCI data to mV (highest setting)
-        private static double scale = 0.02235;
+        private static float scale = 0.02235f;
 
         public SerialReader()
         {
@@ -46,16 +46,14 @@ namespace Sender
             dataReader.Start();
         }
 
-        //Get current serial data
-        public double GetData()
+        public int GetData()
         {
             bciDataLock.WaitOne();
-            double returnData = textOut;
+            int returnData = textOut;
             bciDataLock.ReleaseMutex();
             return returnData;
         }
 
-        //Private function to read from serial
         private void getData()
         {
             var inData = new Byte[32];
@@ -75,7 +73,7 @@ namespace Sender
                     if (inData[31] > 0xBF && inData[31] < 0xD0 && inData[0] <= rate)
                     {
                         int outVal = interpret24bitAsInt32(inData[1], inData[2], inData[3]);
-                        textOut = outVal * scale;
+                        textOut = (int)(outVal * scale);
                     }
                 }
                 bciDataLock.ReleaseMutex();
