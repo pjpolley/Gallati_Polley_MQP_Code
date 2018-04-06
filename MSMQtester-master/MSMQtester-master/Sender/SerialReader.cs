@@ -10,7 +10,7 @@ namespace Sender
 {
     class SerialReader
     {
-        volatile private int textOut;
+        volatile private int[] dataOut;
         private Mutex bciDataLock;
         private SerialPort serialPort1;
         private int rate;
@@ -24,6 +24,7 @@ namespace Sender
             serialPort1 = new SerialPort("COM5", 115200);
             serialPort1.Open();
             serialPort1.Write("s");
+            dataOut = new int[8];
 
             setRate(250);
         }
@@ -46,10 +47,10 @@ namespace Sender
             dataReader.Start();
         }
 
-        public int GetData()
+        public int[] GetData()
         {
             bciDataLock.WaitOne();
-            int returnData = textOut;
+            int[] returnData = dataOut;
             bciDataLock.ReleaseMutex();
             return returnData;
         }
@@ -72,8 +73,11 @@ namespace Sender
                     serialPort1.Read(inData, 0, 32);
                     if (inData[31] > 0xBF && inData[31] < 0xD0 && inData[0] <= rate)
                     {
-                        int outVal = interpret24bitAsInt32(inData[1], inData[2], inData[3]);
-                        textOut = (int)(outVal * scale);
+                        for (int i = 0; i < 8; i++)
+                        {
+                            int outVal = interpret24bitAsInt32(inData[i * 3 + 1], inData[i * 3 + 2], inData[i * 3 + 3]);
+                            dataOut[i] = (int)(outVal * scale);
+                        }
                     }
                 }
                 bciDataLock.ReleaseMutex();

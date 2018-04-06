@@ -65,6 +65,7 @@
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="NeuralNet.cs" />
     <Compile Include="NeuralTreeWindow.cs">
       <SubType>Form</SubType>
     </Compile>
