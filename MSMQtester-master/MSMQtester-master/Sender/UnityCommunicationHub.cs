@@ -100,6 +100,7 @@ namespace Sender
         }
 
         //returns true if it was able to aquire the file to read and then write to the file, false otherwise
+        //input true unless using as an intermediate step
         public static bool ReadData(bool turnOverToUnityAfter)
         {
             if (File.Exists(mutexFileTurn))
@@ -108,55 +109,63 @@ namespace Sender
                 string line = "";
                 using (StreamReader sr = new StreamReader(filePath))
                 {
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        switch (line.Substring(0, 2))
+                    if((line = sr.ReadLine()) != null){
+                        //make sure we're the recipient
+                        if(line.Equals("TO WFA"))
                         {
-                            case "T1":
-                                Globals.T1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "T2":
-                                Globals.T2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "A1":
-                                Globals.A1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "A2":
-                                Globals.A2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "A3":
-                                Globals.A3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "B1":
-                                Globals.B1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "B2":
-                                Globals.B2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "B3":
-                                Globals.B3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "C1":
-                                Globals.C1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "C2":
-                                Globals.C2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "C3":
-                                Globals.C3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "D1":
-                                Globals.D1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "D2":
-                                Globals.D2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                            case "D3":
-                                Globals.D3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
-                                break;
-                        }
+                            //get data if we're the recipient
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                switch (line.Substring(0, 2))
+                                {
+                                    case "T1":
+                                        Globals.T1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "T2":
+                                        Globals.T2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "A1":
+                                        Globals.A1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "A2":
+                                        Globals.A2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "A3":
+                                        Globals.A3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "B1":
+                                        Globals.B1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "B2":
+                                        Globals.B2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "B3":
+                                        Globals.B3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "C1":
+                                        Globals.C1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "C2":
+                                        Globals.C2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "C3":
+                                        Globals.C3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "D1":
+                                        Globals.D1ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "D2":
+                                        Globals.D2ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                    case "D3":
+                                        Globals.D3ActualPosition = (float)System.Convert.ToDouble(line.Substring(2));
+                                        break;
+                                }
 
+                            }
+                        }
                     }
+
                 }
 
                 if (turnOverToUnityAfter)
@@ -174,38 +183,44 @@ namespace Sender
         //write the global variables to the file to transmit to unity. automatically switches to unity reading after
         public static bool WriteData(bool turnOverToUnityAfter)
         {
-            if (File.Exists(mutexFileTurn))
+            //get the most recent data
+            switchToUnity();
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            while (!File.Exists(mutexFileTurn))
             {
-                //and now write your own data to the file
-                File.Delete(filePath);
-                using (StreamWriter sw = new StreamWriter(filePath))
+                if(timer.ElapsedMilliseconds > 5000)
                 {
-                    sw.WriteLine("T1" + Globals.T1DesiredPosition);
-                    sw.WriteLine("T2" + Globals.T2DesiredPosition);
-                    sw.WriteLine("A1" + Globals.A1DesiredPosition);
-                    sw.WriteLine("A2" + Globals.A2DesiredPosition);
-                    sw.WriteLine("A3" + Globals.A3DesiredPosition);
-                    sw.WriteLine("B1" + Globals.B1DesiredPosition);
-                    sw.WriteLine("B2" + Globals.B2DesiredPosition);
-                    sw.WriteLine("B3" + Globals.B3DesiredPosition);
-                    sw.WriteLine("C1" + Globals.C1DesiredPosition);
-                    sw.WriteLine("C2" + Globals.C2DesiredPosition);
-                    sw.WriteLine("C3" + Globals.C3DesiredPosition);
-                    //sw.WriteLine("D1" + Globals.D1DesiredPosition);
-                    sw.WriteLine("D2" + Globals.D2DesiredPosition);
-                    sw.WriteLine("D3" + Globals.D3DesiredPosition);
-                    sw.WriteLine("From sender");
+                    Console.WriteLine("Could not read from unity");
+                    throw new Exception();
                 }
-                if (turnOverToUnityAfter)
-                {
-                    switchToUnity();
-                }
-                return true;
             }
-            else
+            //and now write your own data to the file
+            File.Delete(filePath);
+            using (StreamWriter sw = new StreamWriter(filePath))
             {
-                return false;
+                sw.WriteLine("TO UNITY");
+                sw.WriteLine("T1" + Globals.T1DesiredPosition);
+                sw.WriteLine("T2" + Globals.T2DesiredPosition);
+                sw.WriteLine("A1" + Globals.A1DesiredPosition);
+                sw.WriteLine("A2" + Globals.A2DesiredPosition);
+                sw.WriteLine("A3" + Globals.A3DesiredPosition);
+                sw.WriteLine("B1" + Globals.B1DesiredPosition);
+                sw.WriteLine("B2" + Globals.B2DesiredPosition);
+                sw.WriteLine("B3" + Globals.B3DesiredPosition);
+                sw.WriteLine("C1" + Globals.C1DesiredPosition);
+                sw.WriteLine("C2" + Globals.C2DesiredPosition);
+                sw.WriteLine("C3" + Globals.C3DesiredPosition);
+                //sw.WriteLine("D1" + Globals.D1DesiredPosition);
+                sw.WriteLine("D2" + Globals.D2DesiredPosition);
+                sw.WriteLine("D3" + Globals.D3DesiredPosition);
+                sw.WriteLine("From sender");
             }
+            if (turnOverToUnityAfter)
+            {
+                switchToUnity();
+            }
+            return true;
         }
 
         public static void switchToUnity()

@@ -36,77 +36,81 @@ public class RotateHandParts : MonoBehaviour
         {
             // Read and show each line from the file.
             string line = "";
-            float data = 0;
+
             using (StreamReader sr = new StreamReader(filePath))
             {
-                while ((line = sr.ReadLine()) != null)
+                if ((line = sr.ReadLine()) != null)
                 {
-                    switch (line.Substring(0, 2)){
-                        case "T1":
-                            data = parseInput(line.Substring(2));
-                            Globals.T1DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "T2":
-                            data = parseInput(line.Substring(2));
-                            Globals.T2DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "A1":
-                            data = parseInput(line.Substring(2));
-                            Globals.A1DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "A2":
-                            data = parseInput(line.Substring(2));
-                            Globals.A2DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "A3":
-                            data = parseInput(line.Substring(2));
-                            Globals.A3DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "B1":
-                            data = parseInput(line.Substring(2));
-                            Globals.B1DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "B2":
-                            data = parseInput(line.Substring(2));
-                            Globals.B2DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "B3":
-                            data = parseInput(line.Substring(2));
-                            Globals.B3DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "C1":
-                            data = parseInput(line.Substring(2));
-                            Globals.C1DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "C2":
-                            data = parseInput(line.Substring(2));
-                            Globals.C2DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "C3":
-                            data = parseInput(line.Substring(2));
-                            Globals.C3DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "D1":
-                            data = parseInput(line.Substring(2));
-                            Globals.D1DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "D2":
-                            data = parseInput(line.Substring(2));
-                            Globals.D2DesiredPosition = optimizeInputAngles(data);
-                            break;
-                        case "D3":
-                            data = parseInput(line.Substring(2));
-                            Globals.D3DesiredPosition = optimizeInputAngles(data);
-                            break;
+                    //make sure we're the recipient
+                    if (line.Equals("TO UNITY"))
+                    {
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            float data = 0;
+                            switch (line.Substring(0, 2))
+                            {
+                                case "T1":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.T1DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "T2":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.T2DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "A1":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.A1DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "A2":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.A2DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "A3":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.A3DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "B1":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.B1DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "B2":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.B2DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "B3":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.B3DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "C1":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.C1DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "C2":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.C2DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "C3":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.C3DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "D1":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.D1DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "D2":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.D2DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                                case "D3":
+                                    data = parseInput(line.Substring(2));
+                                    Globals.D3DesiredPosition = optimizeInputAngles(data);
+                                    break;
+                            }
+                        }
                     }
-
                 }
             }
             switchToWFA();
-        }
-        else
-        {
-            //Debug.Log("Waiting for control command");
         }
     }
 
@@ -142,6 +146,7 @@ public class RotateHandParts : MonoBehaviour
         
         using (StreamWriter sw = new StreamWriter(filePath))
         {
+            sw.WriteLine("TO WFA");
             sw.WriteLine("T1" + Globals.T1ActualPosition);
             sw.WriteLine("T2" + Globals.T2ActualPosition);
             sw.WriteLine("A1" + Globals.A1ActualPosition);

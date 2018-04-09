@@ -39,6 +39,7 @@
             this.handDelayBox = new System.Windows.Forms.TextBox();
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.hardResetButton = new System.Windows.Forms.Button();
+            this.saveCommandStructure = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NeuronTreeView
@@ -138,12 +139,24 @@
             this.hardResetButton.TabIndex = 10;
             this.hardResetButton.Text = "Hard Reset";
             this.hardResetButton.UseVisualStyleBackColor = true;
+            this.hardResetButton.Click += new System.EventHandler(this.hardResetButton_Click);
+            // 
+            // saveCommandStructure
+            // 
+            this.saveCommandStructure.Location = new System.Drawing.Point(781, 993);
+            this.saveCommandStructure.Name = "saveCommandStructure";
+            this.saveCommandStructure.Size = new System.Drawing.Size(356, 124);
+            this.saveCommandStructure.TabIndex = 11;
+            this.saveCommandStructure.Text = "Save Command Structure";
+            this.saveCommandStructure.UseVisualStyleBackColor = true;
+            this.saveCommandStructure.Click += new System.EventHandler(this.saveCommandStructure_Click);
             // 
             // NeuralTreeWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1537, 1129);
+            this.Controls.Add(this.saveCommandStructure);
             this.Controls.Add(this.hardResetButton);
             this.Controls.Add(this.removeLayerButton);
             this.Controls.Add(this.handDelayBox);
@@ -175,5 +188,6 @@
         private System.Windows.Forms.TextBox handDelayBox;
         private System.Windows.Forms.Button removeLayerButton;
         private System.Windows.Forms.Button hardResetButton;
+        private System.Windows.Forms.Button saveCommandStructure;
     }
 }

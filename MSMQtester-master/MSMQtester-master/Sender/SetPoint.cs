@@ -6,22 +6,57 @@ using System.Threading.Tasks;
 
 namespace Sender
 {
-    class SetPoint
+    public class SetPoint
     {
-        String name;
-        float T1Position;
-        float T2Position;
-        float A1Position;
-        float A2Position;
-        float A3Position;
-        float B1Position;
-        float B2Position;
-        float B3Position;
-        float C1Position;
-        float C2Position;
-        float C3Position;
-        float D1Position;
-        float D2Position;
-        float D3Position;
+        public float T1Position = 0.0f;
+        public float T2Position = 0.0f;
+        public float A1Position = 0.0f;
+        public float A2Position = 0.0f;
+        public float A3Position = 0.0f;
+        public float B1Position = 0.0f;
+        public float B2Position = 0.0f;
+        public float B3Position = 0.0f;
+        public float C1Position = 0.0f;
+        public float C2Position = 0.0f;
+        public float C3Position = 0.0f;
+        public float D1Position = 0.0f;
+        public float D2Position = 0.0f;
+        public float D3Position = 0.0f;
+
+        public SetPoint()
+        {
+            T1Position = 0.0f;
+            T2Position = 0.0f;
+            A1Position = 0.0f;
+            A2Position = 0.0f;
+            A3Position = 0.0f;
+            B1Position = 0.0f;
+            B2Position = 0.0f;
+            B3Position = 0.0f;
+            C1Position = 0.0f;
+            C2Position = 0.0f;
+            C3Position = 0.0f;
+            D1Position = 0.0f;
+            D2Position = 0.0f;
+            D3Position = 0.0f;
+        }
+
+        public SetPoint(float T1, float T2, float A1, float A2, float A3, float B1, float B2, float B3, float C1, float C2, float C3, float D1, float D2, float D3)
+        {
+            this.A1Position = A1;
+            this.A2Position = A2;
+            this.A3Position = A3;
+            this.B1Position = B1;
+            this.B2Position = B2;
+            this.B3Position = B3;
+            this.C1Position = C1;
+            this.C2Position = C2;
+            this.C3Position = C3;
+            this.D1Position = D1;
+            this.D2Position = D2;
+            this.D3Position = D3;
+            this.T1Position = T1;
+            this.T2Position = T2;
+        }
     }
 }

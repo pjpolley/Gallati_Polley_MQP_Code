@@ -9,6 +9,9 @@ namespace Sender
 {
     public static class Globals
     {
+        //Place to save tree data
+        public static string TreeSaveLocation = @"c:\BCIDataDirectory\NeuralTree.txt";
+
         //frequency of transmission from BCI chip to this program
         public static float transmissionRate;
 
@@ -62,6 +65,10 @@ namespace Sender
         public static float D1ActualPosition = 0;
         public static float D2ActualPosition = 0;
         public static float D3ActualPosition = 0;
+
+        //defines for the neural tree
+        public static int ROOTNODE = 0;
+        public static int NULLPARENT = -1;
 
         //exits the application
         public static void CloseAllForms(object sender, FormClosingEventArgs e)
