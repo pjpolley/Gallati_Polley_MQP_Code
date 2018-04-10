@@ -86,6 +86,7 @@
             this.desiredNameBox.Name = "desiredNameBox";
             this.desiredNameBox.Size = new System.Drawing.Size(381, 31);
             this.desiredNameBox.TabIndex = 4;
+            this.desiredNameBox.Text = "Name Here";
             // 
             // setNumberOfPositionsPerLayerButton
             // 
@@ -113,6 +114,7 @@
             this.positionsPerLayerBox.Name = "positionsPerLayerBox";
             this.positionsPerLayerBox.Size = new System.Drawing.Size(381, 31);
             this.positionsPerLayerBox.TabIndex = 7;
+            this.positionsPerLayerBox.Text = "4";
             // 
             // handDelayBox
             // 
@@ -120,6 +122,7 @@
             this.handDelayBox.Name = "handDelayBox";
             this.handDelayBox.Size = new System.Drawing.Size(381, 31);
             this.handDelayBox.TabIndex = 8;
+            this.handDelayBox.Text = "200";
             // 
             // removeLayerButton
             // 

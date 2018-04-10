@@ -25,20 +25,20 @@ namespace Sender
 
         public SetPoint()
         {
-            T1Position = 0.0f;
-            T2Position = 0.0f;
-            A1Position = 0.0f;
-            A2Position = 0.0f;
-            A3Position = 0.0f;
-            B1Position = 0.0f;
-            B2Position = 0.0f;
-            B3Position = 0.0f;
-            C1Position = 0.0f;
-            C2Position = 0.0f;
-            C3Position = 0.0f;
-            D1Position = 0.0f;
-            D2Position = 0.0f;
-            D3Position = 0.0f;
+            this.T1Position = 0.0f;
+            this.T2Position = 0.0f;
+            this.A1Position = 0.0f;
+            this.A2Position = 0.0f;
+            this.A3Position = 0.0f;
+            this.B1Position = 0.0f;
+            this.B2Position = 0.0f;
+            this.B3Position = 0.0f;
+            this.C1Position = 0.0f;
+            this.C2Position = 0.0f;
+            this.C3Position = 0.0f;
+            this.D1Position = 0.0f;
+            this.D2Position = 0.0f;
+            this.D3Position = 0.0f;
         }
 
         public SetPoint(float T1, float T2, float A1, float A2, float A3, float B1, float B2, float B3, float C1, float C2, float C3, float D1, float D2, float D3)

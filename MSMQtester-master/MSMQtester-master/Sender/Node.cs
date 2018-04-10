@@ -40,20 +40,24 @@ namespace Sender
 
         public void setHandPosition(SetPoint input)
         {
-            this.T1Position = input.T1Position;
-            this.T2Position = input.T2Position;
-            this.A1Position = input.A1Position;
-            this.A2Position = input.A2Position;
-            this.A3Position = input.A3Position;
-            this.B1Position = input.B1Position;
-            this.B2Position = input.B2Position;
-            this.B3Position = input.B3Position;
-            this.C1Position = input.C1Position;
-            this.C2Position = input.C2Position;
-            this.C3Position = input.C3Position;
-            this.D1Position = input.D1Position;
-            this.D2Position = input.D2Position;
-            this.D3Position = input.D3Position;
+            //needed for error catching
+            if (input != null)
+            {
+                this.T1Position = input.T1Position;
+                this.T2Position = input.T2Position;
+                this.A1Position = input.A1Position;
+                this.A2Position = input.A2Position;
+                this.A3Position = input.A3Position;
+                this.B1Position = input.B1Position;
+                this.B2Position = input.B2Position;
+                this.B3Position = input.B3Position;
+                this.C1Position = input.C1Position;
+                this.C2Position = input.C2Position;
+                this.C3Position = input.C3Position;
+                this.D1Position = input.D1Position;
+                this.D2Position = input.D2Position;
+                this.D3Position = input.D3Position;
+            }
         }
 
         public SetPoint getHandPosition()

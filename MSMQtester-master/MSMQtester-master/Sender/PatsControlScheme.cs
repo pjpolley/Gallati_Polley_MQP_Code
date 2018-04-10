@@ -51,28 +51,38 @@ namespace Sender
             if (File.Exists(Globals.TreeSaveLocation))
             {
                 string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                List<Node> retrievedNodes = null;
                 try
                 {
-                    List<Node> retrievedNodes = JsonConvert.DeserializeObject<List<Node>>(inputData);
-                    if (retrievedNodes != null)
-                    {
-                        bool foundRoot = false;
-                        foreach (Node n in retrievedNodes)
-                        {
-                            allNodes.Add(n.id, n);
-                            if (!foundRoot && n.parent == Globals.NULLPARENT)
-                            {
-                                root = n;
-                                foundRoot = true;
-                            }
-                        }
-                    }
-                    return true;
+                    retrievedNodes = JsonConvert.DeserializeObject<List<Node>>(inputData);
                 }
                 catch (Exception e)
                 {
                     return false;
                 }
+                for(int i = 0; i < retrievedNodes.Count; i++)
+                {
+                    if(retrievedNodes[i].name == null || retrievedNodes[i].id < 0 || retrievedNodes[i].getHandPosition() == null)
+                    {
+                        //check each node to make sure they saved correctly
+                        return false;
+                    }
+                }
+                if (retrievedNodes != null)
+                {
+                    bool foundRoot = false;
+                    foreach (Node n in retrievedNodes)
+                    {
+                        allNodes.Add(n.id, n);
+                        if (!foundRoot && n.parent == Globals.NULLPARENT)
+                        {
+                            root = n;
+                            foundRoot = true;
+                        }
+                    }
+                    return true;
+                }
+                return false;
             }
             else
             {
@@ -84,13 +94,19 @@ namespace Sender
         {
             this.allNodes.Clear();
             this.root = createNewNode(Globals.ROOTNODE, positionsPerSplit, Globals.NULLPARENT);
-            this.timeNeededForChange = 200;
             
+            this.timeNeededForChange = 200;
         }
 
         public Node createNewNode(int id, int positionsPerSplit, int parentID)
         {
-            return new Node("Extended Hand", new SetPoint(), id, new List<int>(positionsPerSplit), parentID);
+            Node newNode = new Node("Extended Hand", new SetPoint(), id, new List<int>(positionsPerSplit), parentID);
+            this.allNodes.Add(newNode.id, newNode);
+            if(parentID != Globals.NULLPARENT)
+            {
+                allNodes[parentID].children.Add(id);
+            }
+            return newNode;
         }
 
         private List<Node> iterateThroughTree(Node root)
