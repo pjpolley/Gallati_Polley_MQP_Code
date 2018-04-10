@@ -14,20 +14,20 @@ namespace Sender
         public List<int> children;
         public int parent = Globals.NULLPARENT;//indicates the root node
 
-        private float T1Position = 0.0f;
-        private float T2Position = 0.0f;
-        private float A1Position = 0.0f;
-        private float A2Position = 0.0f;
-        private float A3Position = 0.0f;
-        private float B1Position = 0.0f;
-        private float B2Position = 0.0f;
-        private float B3Position = 0.0f;
-        private float C1Position = 0.0f;
-        private float C2Position = 0.0f;
-        private float C3Position = 0.0f;
-        private float D1Position = 0.0f;
-        private float D2Position = 0.0f;
-        private float D3Position = 0.0f;
+        public float T1Position = 0.0f;
+        public float T2Position = 0.0f;
+        public float A1Position = 0.0f;
+        public float A2Position = 0.0f;
+        public float A3Position = 0.0f;
+        public float B1Position = 0.0f;
+        public float B2Position = 0.0f;
+        public float B3Position = 0.0f;
+        public float C1Position = 0.0f;
+        public float C2Position = 0.0f;
+        public float C3Position = 0.0f;
+        public float D1Position = 0.0f;
+        public float D2Position = 0.0f;
+        public float D3Position = 0.0f;
 
         public Node(string name, SetPoint handPosition, int id, List<int> children, int parent)
         {

@@ -9,8 +9,6 @@ namespace Sender
     {
         TreeNode activeNode = null;
 
-        Node rootNode;
-
         PatsControlScheme controls;
 
         public NeuralTreeWindow()
@@ -248,6 +246,31 @@ namespace Sender
             TreeNode newNode = new TreeNode(controls.root.name);
             newNode.Tag = controls.root.id;
             NeuronTreeView.Nodes.Add(newNode);
+        }
+
+        private void ThumbSelectButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void IndexSelectButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MiddleSelectButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RingSelectButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PinkySelectButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
