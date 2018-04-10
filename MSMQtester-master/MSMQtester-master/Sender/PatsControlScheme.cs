@@ -13,6 +13,8 @@ namespace Sender
         public float timeNeededForChange = 200f;//in milliseconds
         public Node root = null;
         public Dictionary<int, Node> allNodes = new Dictionary<int, Node>();
+        //max value is 9 due to indexing implementation
+        public int childrenPerNode = 4;//default value
 
         public void DetermineSetpointsFromInputs()
         {
@@ -24,33 +26,57 @@ namespace Sender
 
         }
 
-        public void GetDataFromFile()
+        public void Initialize()
         {
-            if (!File.Exists(Globals.TreeSaveLocation))
+            if (!GetDataFromFile())
             {
-                using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
+                instantiateNewTree(4);
+                childrenPerNode = 4;
+            }
+            else
+            {
+                if (root.children.Count > 0)
                 {
-                    sw.WriteLine("");
+                    childrenPerNode = root.children.Count;
+                }
+                else
+                {
+                    childrenPerNode = 4;
                 }
             }
-            string inputData = File.ReadAllText(Globals.TreeSaveLocation);
-            List<Node> retrievedNodes = JsonConvert.DeserializeObject<List<Node>>(inputData);
-            if (retrievedNodes != null)
+        }
+
+        public bool GetDataFromFile()
+        {
+            if (File.Exists(Globals.TreeSaveLocation))
             {
-                bool foundRoot = false;
-                foreach (Node n in retrievedNodes)
+                string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                try
                 {
-                    allNodes.Add(n.id, n);
-                    if (!foundRoot && n.parent == Globals.NULLPARENT)
+                    List<Node> retrievedNodes = JsonConvert.DeserializeObject<List<Node>>(inputData);
+                    if (retrievedNodes != null)
                     {
-                        root = n;
-                        foundRoot = true;
+                        bool foundRoot = false;
+                        foreach (Node n in retrievedNodes)
+                        {
+                            allNodes.Add(n.id, n);
+                            if (!foundRoot && n.parent == Globals.NULLPARENT)
+                            {
+                                root = n;
+                                foundRoot = true;
+                            }
+                        }
                     }
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
                 }
             }
             else
             {
-                instantiateNewTree(4);
+                return false;
             }
         }
 

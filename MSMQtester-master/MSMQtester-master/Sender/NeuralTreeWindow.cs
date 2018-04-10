@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Sender
@@ -17,17 +18,59 @@ namespace Sender
             this.FormClosing += Globals.CloseAllForms;
             InitializeComponent();
 
+            //initialize tree structure
             controls = new PatsControlScheme();
-            controls.GetDataFromFile();
+            controls.Initialize();
 
-            TreeNode testNode = new TreeNode("Test");
-            Node testOld = new Node(Globals.ROOTNODE, new List<int>(), Globals.NULLPARENT);
-            testOld.setHandPosition(new SetPoint());
-            testNode.Tag = testOld;
-            Node test = (Node)testNode.Tag;
-            controls.allNodes.Add(0, test);
-            testNode.Nodes.Add("Test child");
-            NeuronTreeView.Nodes.Add(testNode);
+            //set up the list to populate with all display nodes
+            List<TreeNode> allFrontendNodes = new List<TreeNode>();
+
+            //add nodes to list
+            foreach(Node n in controls.allNodes.Values)
+            {
+                TreeNode newDisplayNode = new TreeNode()
+                {
+                    Name = n.name,
+                    Tag = n.id,
+                };
+                allFrontendNodes.Add(newDisplayNode);
+            }
+            //order by index from lowest to highest. indexes are calculated so that lower nodes are higher in the tree
+            List<TreeNode> newList = allFrontendNodes.OrderBy(o => (int)o.Tag).ToList();
+
+            //make sure the list of nodes is clear
+            NeuronTreeView.Nodes.Clear();
+
+            //sequentially add all the nodes to the tree
+            foreach (TreeNode n in newList)
+            {
+                //figure out what the parent id is
+                int parentID = controls.allNodes[(int)n.Tag].parent;
+                //if it's the root node, just add it to the tree
+                if(parentID == Globals.NULLPARENT)
+                {
+                    NeuronTreeView.Nodes.Add(n);
+                }
+                //in the case that it's a child node, figure out what display node to add it to
+                else
+                {
+                    int i = 0;
+                    bool foundParent = false;
+                    //iterate through until you find the parent
+                    while (!foundParent)
+                    {
+                        if ((int)NeuronTreeView.Nodes[i].Tag == parentID)
+                        {
+                            foundParent = true;
+                        }
+                        else {
+                            i++;
+                        }
+                    }
+                    //once we find the parent, add it to the parent's children
+                    NeuronTreeView.Nodes[i].Nodes.Add(n);
+                }
+            }
         }
 
         private void NeuronTreeView_NodeClicked(object sender, TreeNodeMouseClickEventArgs e)
@@ -56,17 +99,35 @@ namespace Sender
                 T1Position = Globals.T1ActualPosition,
                 T2Position = Globals.T2ActualPosition
             };
-            //activeNode.
+            controls.allNodes[(int)activeNode.Tag].setHandPosition(newPoint);
         }
 
         private void AddAnotherLayerButton_Click(object sender, EventArgs e)
         {
-
+            Node thisNode = controls.allNodes[(int)activeNode.Tag];
+            for(int i = 0; i < controls.childrenPerNode; i++)
+            {
+                //calculate the id for the new node
+                int newID = thisNode.id * 10 + i;
+                //create a new node in the backend
+                controls.createNewNode(newID, controls.childrenPerNode, thisNode.id);
+                //and then add it to the frontend
+                TreeNode newDisplayNode = new TreeNode()
+                {
+                    Name = controls.allNodes[newID].name,
+                    Tag = controls.allNodes[newID].id,
+                };
+                activeNode.Nodes.Add(newDisplayNode);
+            }
         }
 
         private void removeLayerButton_Click(object sender, EventArgs e)
         {
+            Node thisNode = controls.allNodes[(int)activeNode.Tag];
+            for (int i = 0; i < controls.childrenPerNode; i++)
+            {
 
+            }
         }
 
         private void changeNameButton_Click(object sender, EventArgs e)
