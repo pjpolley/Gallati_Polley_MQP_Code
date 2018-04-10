@@ -27,6 +27,8 @@ namespace Sender
             controls = new PatsControlScheme();
             controls.Initialize();
 
+            loadPositions(controls.root);
+
             List<Node> newList = controls.allNodes.Values.ToList<Node>();
             //order the list from lowest to highest to ensure all nodes are populated in order
             newList.OrderBy(o => o.id);
@@ -66,6 +68,11 @@ namespace Sender
             Console.WriteLine(e.Node.Text + " Clicked");
             Console.WriteLine("Tag is: " + e.Node.Tag);
             Node thisNode = controls.allNodes[(int)e.Node.Tag];
+            loadPositions(thisNode);
+        }
+
+        private void loadPositions(Node thisNode)
+        {
             Globals.A1DesiredPosition = thisNode.A1Position;
             Globals.A2DesiredPosition = thisNode.A2Position;
             Globals.A3DesiredPosition = thisNode.A3Position;
@@ -88,20 +95,20 @@ namespace Sender
             UnityCommunicationHub.ReadData(true);
             SetPoint newPoint = new SetPoint
             {
-                A1Position = Globals.A1ActualPosition,
-                A2Position = Globals.A2ActualPosition,
-                A3Position = Globals.A3ActualPosition,
-                B1Position = Globals.B1ActualPosition,
-                B2Position = Globals.B2ActualPosition,
-                B3Position = Globals.B3ActualPosition,
-                C1Position = Globals.C1ActualPosition,
-                C2Position = Globals.C2ActualPosition,
-                C3Position = Globals.C3ActualPosition,
-                D1Position = Globals.D1ActualPosition,
-                D2Position = Globals.D2ActualPosition,
-                D3Position = Globals.D3ActualPosition,
-                T1Position = Globals.T1ActualPosition,
-                T2Position = Globals.T2ActualPosition
+                A1Position = Globals.A1DesiredPosition,
+                A2Position = Globals.A2DesiredPosition,
+                A3Position = Globals.A3DesiredPosition,
+                B1Position = Globals.B1DesiredPosition,
+                B2Position = Globals.B2DesiredPosition,
+                B3Position = Globals.B3DesiredPosition,
+                C1Position = Globals.C1DesiredPosition,
+                C2Position = Globals.C2DesiredPosition,
+                C3Position = Globals.C3DesiredPosition,
+                D1Position = Globals.D1DesiredPosition,
+                D2Position = Globals.D2DesiredPosition,
+                D3Position = Globals.D3DesiredPosition,
+                T1Position = Globals.T1DesiredPosition,
+                T2Position = Globals.T2DesiredPosition
             };
             controls.allNodes[(int)activeNode.Tag].setHandPosition(newPoint);
         }
@@ -335,6 +342,74 @@ namespace Sender
         private void updateFingerDisplay()
         {
             currentlyModifyingBox.Text = "Modifying " + Globals.valuesToStrings[fingerSelected] + " " + Globals.valuesToStrings[jointSelected];
+
+            if (fingerSelected == Globals.THUMB)
+            {
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.T2DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.T1DesiredPosition.ToString();
+                }
+            }
+            else if (fingerSelected == Globals.POINTER)
+            {
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.A3DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.A2DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.INNERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.A1DesiredPosition.ToString();
+                }
+            }
+            else if (fingerSelected == Globals.MIDDLE)
+            {
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.B3DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.B2DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.INNERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.B1DesiredPosition.ToString();
+                }
+            }
+            else if (fingerSelected == Globals.RING)
+            {
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.C3DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.C2DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.INNERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.C1DesiredPosition.ToString();
+                }
+            }
+            else if (fingerSelected == Globals.PINKY)
+            {
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.D2DesiredPosition.ToString();
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    DesiredAngleInput.Text = Globals.D1DesiredPosition.ToString();
+                }
+            }
         }
 
         private void setDesiredAngle()
@@ -342,32 +417,87 @@ namespace Sender
             float desiredAngle = (float)System.Convert.ToDouble(DesiredAngleInput.Text);
             if (fingerSelected == Globals.THUMB)
             {
-                if (jointSelected == Globals.OUTERJOINT) Globals.T2DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.MIDDLEJOINT) Globals.T1DesiredPosition = desiredAngle;
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    Globals.T2DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    Globals.T1DesiredPosition = desiredAngle;
+                }
             }
             else if (fingerSelected == Globals.POINTER)
             {
-                if (jointSelected == Globals.OUTERJOINT) Globals.A3DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.MIDDLEJOINT) Globals.A2DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.INNERJOINT) Globals.A3DesiredPosition = desiredAngle;
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    Globals.A3DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    Globals.A2DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.INNERJOINT)
+                {
+                    Globals.A1DesiredPosition = desiredAngle;
+                }
             }
             else if (fingerSelected == Globals.MIDDLE)
             {
-                if (jointSelected == Globals.OUTERJOINT) Globals.B3DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.MIDDLEJOINT) Globals.B2DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.INNERJOINT) Globals.B3DesiredPosition = desiredAngle;
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    Globals.B3DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    Globals.B2DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.INNERJOINT)
+                {
+                    Globals.B1DesiredPosition = desiredAngle;
+                }
             }
             else if (fingerSelected == Globals.RING)
             {
-                if (jointSelected == Globals.OUTERJOINT) Globals.C3DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.MIDDLEJOINT) Globals.C2DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.INNERJOINT) Globals.C3DesiredPosition = desiredAngle;
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    Globals.C3DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    Globals.C2DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.INNERJOINT)
+                {
+                    Globals.C1DesiredPosition = desiredAngle;
+                }
             }
             else if (fingerSelected == Globals.PINKY)
             {
-                if (jointSelected == Globals.OUTERJOINT) Globals.D2DesiredPosition = desiredAngle;
-                else if (jointSelected == Globals.MIDDLEJOINT) Globals.D1DesiredPosition = desiredAngle;
+                if (jointSelected == Globals.OUTERJOINT)
+                {
+                    Globals.D2DesiredPosition = desiredAngle;
+                }
+                else if (jointSelected == Globals.MIDDLEJOINT)
+                {
+                    Globals.D1DesiredPosition = desiredAngle;
+                }
             }
+        }
+
+        private void IncreaseAngleButton_Click(object sender, EventArgs e)
+        {
+            float desiredAngle = (float)System.Convert.ToDouble(DesiredAngleInput.Text) + 1.0f;
+            DesiredAngleInput.Text = desiredAngle.ToString();
+            setDesiredAngle();
+            UnityCommunicationHub.TwoWayTransmission();
+        }
+
+        private void DecreaseAngleButton_Click(object sender, EventArgs e)
+        {
+            float desiredAngle = (float)System.Convert.ToDouble(DesiredAngleInput.Text) - 1.0f;
+            DesiredAngleInput.Text = desiredAngle.ToString();
+            setDesiredAngle();
+            UnityCommunicationHub.TwoWayTransmission();
         }
 
         private void DesiredAngleInput_KeyDown(object sender, KeyEventArgs e)
@@ -375,8 +505,8 @@ namespace Sender
             if(e.KeyCode == Keys.Enter)
             {
                 setDesiredAngle();
-                Console.WriteLine("Attempting communication");
                 UnityCommunicationHub.TwoWayTransmission();
+                e.Handled = e.SuppressKeyPress = true;
             }
         }
     }

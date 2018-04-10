@@ -225,7 +225,19 @@ namespace Sender
 
         public static void switchToUnity()
         {
-            File.Delete(mutexFileTurn);
+            bool ready = false;
+            while (!ready)
+            {
+                try
+                {
+                    File.Delete(mutexFileTurn);
+                    ready = true;
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
             using (StreamWriter sw = new StreamWriter(mutexUnityTurn))
             {
                 sw.WriteLine("G");

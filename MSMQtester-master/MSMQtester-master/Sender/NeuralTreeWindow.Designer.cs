@@ -292,6 +292,7 @@
             this.DecreaseAngleButton.TabIndex = 24;
             this.DecreaseAngleButton.Text = "3";
             this.DecreaseAngleButton.UseVisualStyleBackColor = true;
+            this.DecreaseAngleButton.Click += new System.EventHandler(this.DecreaseAngleButton_Click);
             // 
             // IncreaseAngleButton
             // 
@@ -302,6 +303,7 @@
             this.IncreaseAngleButton.TabIndex = 25;
             this.IncreaseAngleButton.Text = "4";
             this.IncreaseAngleButton.UseVisualStyleBackColor = true;
+            this.IncreaseAngleButton.Click += new System.EventHandler(this.IncreaseAngleButton_Click);
             // 
             // NeuralTreeWindow
             // 
