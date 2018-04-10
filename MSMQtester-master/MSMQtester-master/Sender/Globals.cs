@@ -70,6 +70,27 @@ namespace Sender
         public static int ROOTNODE = 0;
         public static int NULLPARENT = -1;
 
+        //defines for the neural tree
+        public static int THUMB = 0;
+        public static int POINTER = 1;
+        public static int MIDDLE = 2;
+        public static int RING = 3;
+        public static int PINKY = 4;
+        public static int OUTERJOINT = 10;
+        public static int MIDDLEJOINT = 11;
+        public static int INNERJOINT = 12;
+        public static Dictionary<int, string> valuesToStrings = new Dictionary<int, string>()
+        {
+            {THUMB, "Thumb"},
+            {POINTER, "Index Finger"},
+            {MIDDLE, "Middle Finger"},
+            {RING, "Ring Finger"},
+            {PINKY, "Pinky"},
+            {OUTERJOINT, "outer joint"},
+            {INNERJOINT, "inner joint"},
+            {MIDDLEJOINT, "middle joint"},
+        };
+
         //exits the application
         public static void CloseAllForms(object sender, FormClosingEventArgs e)
         {

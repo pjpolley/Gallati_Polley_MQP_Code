@@ -11,10 +11,17 @@ namespace Sender
 
         PatsControlScheme controls;
 
+        private int fingerSelected = Globals.THUMB;
+        private int jointSelected = Globals.OUTERJOINT;
+
         public NeuralTreeWindow()
         {
             this.FormClosing += Globals.CloseAllForms;
             InitializeComponent();
+
+            updateFingerDisplay();
+
+            UnityCommunicationHub.InitializeUnityCommunication();
 
             //initialize tree structure
             controls = new PatsControlScheme();
@@ -58,6 +65,22 @@ namespace Sender
             activeNode = e.Node;
             Console.WriteLine(e.Node.Text + " Clicked");
             Console.WriteLine("Tag is: " + e.Node.Tag);
+            Node thisNode = controls.allNodes[(int)e.Node.Tag];
+            Globals.A1DesiredPosition = thisNode.A1Position;
+            Globals.A2DesiredPosition = thisNode.A2Position;
+            Globals.A3DesiredPosition = thisNode.A3Position;
+            Globals.B1DesiredPosition = thisNode.B1Position;
+            Globals.B2DesiredPosition = thisNode.B2Position;
+            Globals.B3DesiredPosition = thisNode.B3Position;
+            Globals.C1DesiredPosition = thisNode.C1Position;
+            Globals.C2DesiredPosition = thisNode.C2Position;
+            Globals.C3DesiredPosition = thisNode.C3Position;
+            Globals.D1DesiredPosition = thisNode.D1Position;
+            Globals.D2DesiredPosition = thisNode.D2Position;
+            Globals.D3DesiredPosition = thisNode.D3Position;
+            Globals.T1DesiredPosition = thisNode.T1Position;
+            Globals.T2DesiredPosition = thisNode.T2Position;
+            UnityCommunicationHub.TwoWayTransmission();
         }
 
         private void setHandPositionButton_Click(object sender, EventArgs e)
@@ -250,27 +273,111 @@ namespace Sender
 
         private void ThumbSelectButton_Click(object sender, EventArgs e)
         {
-
+            fingerSelected = Globals.THUMB;
+            InnerJointButton.Hide();
+            if(jointSelected == Globals.INNERJOINT)
+            {
+                jointSelected = Globals.MIDDLEJOINT;
+            }
+            updateFingerDisplay();
         }
 
         private void IndexSelectButton_Click(object sender, EventArgs e)
         {
-
+            fingerSelected = Globals.POINTER;
+            updateFingerDisplay();
+            InnerJointButton.Show();
         }
 
         private void MiddleSelectButton_Click(object sender, EventArgs e)
         {
-
+            fingerSelected = Globals.MIDDLE;
+            updateFingerDisplay();
+            InnerJointButton.Show();
         }
 
         private void RingSelectButton_Click(object sender, EventArgs e)
         {
-
+            fingerSelected = Globals.RING;
+            updateFingerDisplay();
+            InnerJointButton.Show();
         }
 
         private void PinkySelectButton_Click(object sender, EventArgs e)
         {
+            fingerSelected = Globals.PINKY;
+            InnerJointButton.Hide();
+            if (jointSelected == Globals.INNERJOINT)
+            {
+                jointSelected = Globals.MIDDLEJOINT;
+            }
+            updateFingerDisplay();
+        }
 
+        private void OuterJointButton_Click(object sender, EventArgs e)
+        {
+            jointSelected = Globals.OUTERJOINT;
+            updateFingerDisplay();
+        }
+
+        private void MiddleJointButton_Click(object sender, EventArgs e)
+        {
+            jointSelected = Globals.MIDDLEJOINT;
+            updateFingerDisplay();
+        }
+
+        private void InnerJointButton_Click(object sender, EventArgs e)
+        {
+            jointSelected = Globals.INNERJOINT;
+            updateFingerDisplay();
+        }
+
+        private void updateFingerDisplay()
+        {
+            currentlyModifyingBox.Text = "Modifying " + Globals.valuesToStrings[fingerSelected] + " " + Globals.valuesToStrings[jointSelected];
+        }
+
+        private void setDesiredAngle()
+        {
+            float desiredAngle = (float)System.Convert.ToDouble(DesiredAngleInput.Text);
+            if (fingerSelected == Globals.THUMB)
+            {
+                if (jointSelected == Globals.OUTERJOINT) Globals.T2DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.MIDDLEJOINT) Globals.T1DesiredPosition = desiredAngle;
+            }
+            else if (fingerSelected == Globals.POINTER)
+            {
+                if (jointSelected == Globals.OUTERJOINT) Globals.A3DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.MIDDLEJOINT) Globals.A2DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.INNERJOINT) Globals.A3DesiredPosition = desiredAngle;
+            }
+            else if (fingerSelected == Globals.MIDDLE)
+            {
+                if (jointSelected == Globals.OUTERJOINT) Globals.B3DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.MIDDLEJOINT) Globals.B2DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.INNERJOINT) Globals.B3DesiredPosition = desiredAngle;
+            }
+            else if (fingerSelected == Globals.RING)
+            {
+                if (jointSelected == Globals.OUTERJOINT) Globals.C3DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.MIDDLEJOINT) Globals.C2DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.INNERJOINT) Globals.C3DesiredPosition = desiredAngle;
+            }
+            else if (fingerSelected == Globals.PINKY)
+            {
+                if (jointSelected == Globals.OUTERJOINT) Globals.D2DesiredPosition = desiredAngle;
+                else if (jointSelected == Globals.MIDDLEJOINT) Globals.D1DesiredPosition = desiredAngle;
+            }
+        }
+
+        private void DesiredAngleInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                setDesiredAngle();
+                Console.WriteLine("Attempting communication");
+                UnityCommunicationHub.TwoWayTransmission();
+            }
         }
     }
 }

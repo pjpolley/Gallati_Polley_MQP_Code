@@ -50,8 +50,10 @@
             this.InnerJointButton = new System.Windows.Forms.Button();
             this.MiddleJointButton = new System.Windows.Forms.Button();
             this.OuterJointButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.DesiredAngleInput = new System.Windows.Forms.TextBox();
             this.currentlyModifyingBox = new System.Windows.Forms.Label();
+            this.DecreaseAngleButton = new System.Windows.Forms.Button();
+            this.IncreaseAngleButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NeuronTreeView
@@ -242,6 +244,7 @@
             this.InnerJointButton.TabIndex = 21;
             this.InnerJointButton.Text = "Select Inner Joint";
             this.InnerJointButton.UseVisualStyleBackColor = true;
+            this.InnerJointButton.Click += new System.EventHandler(this.InnerJointButton_Click);
             // 
             // MiddleJointButton
             // 
@@ -251,6 +254,7 @@
             this.MiddleJointButton.TabIndex = 20;
             this.MiddleJointButton.Text = "Select Middle Joint";
             this.MiddleJointButton.UseVisualStyleBackColor = true;
+            this.MiddleJointButton.Click += new System.EventHandler(this.MiddleJointButton_Click);
             // 
             // OuterJointButton
             // 
@@ -260,13 +264,15 @@
             this.OuterJointButton.TabIndex = 19;
             this.OuterJointButton.Text = "Select Outer Joint";
             this.OuterJointButton.UseVisualStyleBackColor = true;
+            this.OuterJointButton.Click += new System.EventHandler(this.OuterJointButton_Click);
             // 
-            // textBox1
+            // DesiredAngleInput
             // 
-            this.textBox1.Location = new System.Drawing.Point(1350, 700);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(82, 31);
-            this.textBox1.TabIndex = 22;
+            this.DesiredAngleInput.Location = new System.Drawing.Point(1350, 700);
+            this.DesiredAngleInput.Name = "DesiredAngleInput";
+            this.DesiredAngleInput.Size = new System.Drawing.Size(82, 31);
+            this.DesiredAngleInput.TabIndex = 22;
+            this.DesiredAngleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DesiredAngleInput_KeyDown);
             // 
             // currentlyModifyingBox
             // 
@@ -277,13 +283,35 @@
             this.currentlyModifyingBox.TabIndex = 23;
             this.currentlyModifyingBox.Text = "Thumb Outer Joint Angle";
             // 
+            // DecreaseAngleButton
+            // 
+            this.DecreaseAngleButton.Font = new System.Drawing.Font("Webdings", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.DecreaseAngleButton.Location = new System.Drawing.Point(1295, 696);
+            this.DecreaseAngleButton.Name = "DecreaseAngleButton";
+            this.DecreaseAngleButton.Size = new System.Drawing.Size(49, 60);
+            this.DecreaseAngleButton.TabIndex = 24;
+            this.DecreaseAngleButton.Text = "3";
+            this.DecreaseAngleButton.UseVisualStyleBackColor = true;
+            // 
+            // IncreaseAngleButton
+            // 
+            this.IncreaseAngleButton.Font = new System.Drawing.Font("Webdings", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.IncreaseAngleButton.Location = new System.Drawing.Point(1438, 696);
+            this.IncreaseAngleButton.Name = "IncreaseAngleButton";
+            this.IncreaseAngleButton.Size = new System.Drawing.Size(51, 60);
+            this.IncreaseAngleButton.TabIndex = 25;
+            this.IncreaseAngleButton.Text = "4";
+            this.IncreaseAngleButton.UseVisualStyleBackColor = true;
+            // 
             // NeuralTreeWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1537, 1129);
+            this.Controls.Add(this.IncreaseAngleButton);
+            this.Controls.Add(this.DecreaseAngleButton);
             this.Controls.Add(this.currentlyModifyingBox);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.DesiredAngleInput);
             this.Controls.Add(this.InnerJointButton);
             this.Controls.Add(this.MiddleJointButton);
             this.Controls.Add(this.OuterJointButton);
@@ -337,7 +365,9 @@
         private System.Windows.Forms.Button InnerJointButton;
         private System.Windows.Forms.Button MiddleJointButton;
         private System.Windows.Forms.Button OuterJointButton;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox DesiredAngleInput;
         private System.Windows.Forms.Label currentlyModifyingBox;
+        private System.Windows.Forms.Button DecreaseAngleButton;
+        private System.Windows.Forms.Button IncreaseAngleButton;
     }
 }
