@@ -109,24 +109,10 @@ namespace Sender
             return newNode;
         }
 
-        private List<Node> iterateThroughTree(Node root)
-        {
-            List<Node> output = new List<Node>();
-            output.Add(root);
-            foreach(int n in root.children)
-            {
-                if (allNodes.ContainsKey(n))
-                {
-                    output.Concat(iterateThroughTree(allNodes[n]));
-                }
-            }
-            return output;
-        }
-
         public void pushDataToFile()
         {
-            List<Node> allNodes = iterateThroughTree(root);
-            string output = JsonConvert.SerializeObject(allNodes);
+            List<Node> listOfNodes = allNodes.Values.ToList<Node>();
+            string output = JsonConvert.SerializeObject(listOfNodes);
             using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
             {
                 sw.WriteLine(output);

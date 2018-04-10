@@ -45,23 +45,12 @@ namespace Sender
                 //in the case that it's a child node, figure out what display node to add it to
                 else
                 {
-                    int i = 0;
-                    bool foundParent = false;
                     //iterate through until you find the parent
-                    while (!foundParent)
-                    {
-                        if ((int)NeuronTreeView.Nodes[i].Tag == parentID)
-                        {
-                            foundParent = true;
-                        }
-                        else {
-                            i++;
-                        }
-                    }
+                    TreeNode parentNode = findNodeInTree(parentID);
                     //once we find the parent, add it to the parent's children
                     TreeNode newNode = new TreeNode(n.name);
                     newNode.Tag = n.id;
-                    NeuronTreeView.Nodes[i].Nodes.Add(newNode);
+                    parentNode.Nodes.Add(newNode);
                 }
             }
         }
@@ -99,6 +88,10 @@ namespace Sender
         private void AddAnotherLayerButton_Click(object sender, EventArgs e)
         {
             Node thisNode = controls.allNodes[(int)activeNode.Tag];
+            if(thisNode.children.Count != 0)
+            {
+                return;//node already has children. do nothing
+            }
             for(int i = 0; i < controls.childrenPerNode; i++)
             {
                 //calculate the id for the new node
@@ -125,7 +118,7 @@ namespace Sender
 
         private void changeNameButton_Click(object sender, EventArgs e)
         {
-            activeNode.Name = desiredNameBox.Text;
+            activeNode.Text = desiredNameBox.Text;
             controls.allNodes[(int)activeNode.Tag].name = desiredNameBox.Text;
         }
 
@@ -153,52 +146,84 @@ namespace Sender
             {
                 foreach(TreeNode n in NeuronTreeView.Nodes)
                 {
-                    //calculate the id for the new node
-                    int newID = ((int)n.Tag * 10) + newChildrenPerNode;
-                    //create a new node in the backend
-                    controls.createNewNode(newID, controls.childrenPerNode, (int)n.Tag);
-                    //and then add it to the frontend
-                    TreeNode newDisplayNode = new TreeNode()
+                    while (n.Nodes.Count < newChildrenPerNode)
                     {
-                        Name = controls.allNodes[newID].name,
-                        Tag = controls.allNodes[newID].id,
-                    };
-                    n.Nodes.Add(newDisplayNode);
+                        //calculate the id for the new node
+                        int newID = ((int)n.Tag * 10) + n.Nodes.Count + 1;
+                        //create a new node in the backend
+                        controls.createNewNode(newID, controls.childrenPerNode, (int)n.Tag);
+                        //and then add it to the frontend
+                        TreeNode newDisplayNode = new TreeNode(controls.allNodes[newID].name);
+                        newDisplayNode.Tag = controls.allNodes[newID].id;
+                        n.Nodes.Add(newDisplayNode);
+                    }
                 }
             }
             else
             {
                 //set up the list to populate with all display nodes
-                List<TreeNode> allFrontendNodes = new List<TreeNode>();
-
-                //add nodes to list
-                foreach (Node n in controls.allNodes.Values)
-                {
-                    TreeNode newDisplayNode = new TreeNode()
-                    {
-                        Name = n.name,
-                        Tag = n.id,
-                    };
-                    allFrontendNodes.Add(newDisplayNode);
-                }
-
                 //order by index from highest to lowest. indexes are calculated so that lower nodes are higher in the tree
-                List<TreeNode> newList = allFrontendNodes.OrderByDescending(o => (int)o.Tag).ToList();
+                List<Node> newList = controls.allNodes.Values.OrderByDescending(o => o.id).ToList();
 
-                //sequentially add all the nodes to the tree
-                foreach (TreeNode n in newList)
+                foreach (Node n in newList)
                 {
                     //figure out what the id is
-                    int ID = (int)n.Tag;
+                    int ID = n.id;
 
                     //and delete nodes as its children until it fits
-                    while(n.Nodes.Count > newChildrenPerNode)
+                    while(n.children.Count > newChildrenPerNode)
                     {
-                        controls.allNodes.Remove((int)n.Nodes[n.Nodes.Count].Tag);
-                        n.Nodes.RemoveAt(n.Nodes.Count);
+                        int idOfChildToDestroy = n.children.Last<int>();
+                        TreeNode frontEndNode = findNodeInTree(idOfChildToDestroy);
+                        frontEndNode.Remove();
+                        int idOfParent = controls.allNodes[idOfChildToDestroy].parent;
+                        controls.allNodes[idOfParent].children.Remove(idOfChildToDestroy);
+                        controls.allNodes.Remove(idOfChildToDestroy);
+
                     }
                     
                 }
+            }
+        }
+
+        private TreeNode findNodeInTree(int id)
+        {
+            TreeNode root = NeuronTreeView.Nodes[0];
+            if((int)root.Tag == id)
+            {
+                return root;
+            }
+            else
+            {
+                foreach(TreeNode n in root.Nodes)
+                {
+                    TreeNode checkedNode = recursiveFindNode(n, id);
+                    if(checkedNode != null)
+                    {
+                        return checkedNode;
+                    }
+                }
+                return null;
+            }
+        }
+
+        private TreeNode recursiveFindNode(TreeNode n, int id)
+        {
+            if ((int)n.Tag == id)
+            {
+                return n;
+            }
+            else
+            {
+                TreeNode foundNode;
+                foreach (TreeNode child in n.Nodes) {
+                    foundNode = recursiveFindNode(child, id);
+                    if(foundNode != null)
+                    {
+                        return child;
+                    }
+                }
+                return null;
             }
         }
 
