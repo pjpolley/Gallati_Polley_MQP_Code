@@ -10,7 +10,7 @@ namespace Sender
 {
     class PatsControlScheme : ControlSystemInterface
     {
-        public float timeNeededForChange = 200f;//in milliseconds
+        public int timeNeededForChange = 200;//in milliseconds
         public Node root = null;
         public Dictionary<int, Node> allNodes = new Dictionary<int, Node>();
         //max value is 9 due to indexing implementation

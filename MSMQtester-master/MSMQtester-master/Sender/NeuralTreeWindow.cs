@@ -509,5 +509,24 @@ namespace Sender
                 e.Handled = e.SuppressKeyPress = true;
             }
         }
+
+        volatile bool continueControlling = true;
+
+        private void beginControllingHandButton_Click(object sender, EventArgs e)
+        {
+            SerialReader reader = new SerialReader();
+            continueControlling = true;
+            Node currentNode = controls.root;
+            int rate = reader.getRate();
+            int desiredMillisecondDelay = controls.timeNeededForChange;
+            int arraySize = (desiredMillisecondDelay / 1000) * rate;
+            List<double> mostRecentValues = new List<double>(arraySize);
+            int lastIndex = 0;
+            reader.Read();
+            while (continueControlling)
+            {
+                
+            }
+        }
     }
 }

@@ -21,12 +21,17 @@ namespace Sender
         public SerialReader()
         {
             bciDataLock = new Mutex();
-            //serialPort1 = new SerialPort("COM5", 115200);
-            //serialPort1.Open();
-            //serialPort1.Write("s");
+            serialPort1 = new SerialPort("COM5", 115200);
+            serialPort1.Open();
+            serialPort1.Write("s");
             dataOut = new int[8];
 
             setRate(250);
+        }
+
+        public int getRate()
+        {
+            return this.rate;
         }
 
         //Set rate in Hz

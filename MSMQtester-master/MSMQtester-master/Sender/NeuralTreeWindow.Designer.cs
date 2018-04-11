@@ -54,6 +54,7 @@
             this.currentlyModifyingBox = new System.Windows.Forms.Label();
             this.DecreaseAngleButton = new System.Windows.Forms.Button();
             this.IncreaseAngleButton = new System.Windows.Forms.Button();
+            this.beginControllingHandButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NeuronTreeView
@@ -305,11 +306,22 @@
             this.IncreaseAngleButton.UseVisualStyleBackColor = true;
             this.IncreaseAngleButton.Click += new System.EventHandler(this.IncreaseAngleButton_Click);
             // 
+            // beginControllingHandButton
+            // 
+            this.beginControllingHandButton.Location = new System.Drawing.Point(1262, 762);
+            this.beginControllingHandButton.Name = "beginControllingHandButton";
+            this.beginControllingHandButton.Size = new System.Drawing.Size(263, 151);
+            this.beginControllingHandButton.TabIndex = 26;
+            this.beginControllingHandButton.Text = "Control Hand";
+            this.beginControllingHandButton.UseVisualStyleBackColor = true;
+            this.beginControllingHandButton.Click += new System.EventHandler(this.beginControllingHandButton_Click);
+            // 
             // NeuralTreeWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1537, 1129);
+            this.ClientSize = new System.Drawing.Size(1696, 1179);
+            this.Controls.Add(this.beginControllingHandButton);
             this.Controls.Add(this.IncreaseAngleButton);
             this.Controls.Add(this.DecreaseAngleButton);
             this.Controls.Add(this.currentlyModifyingBox);
@@ -371,5 +383,6 @@
         private System.Windows.Forms.Label currentlyModifyingBox;
         private System.Windows.Forms.Button DecreaseAngleButton;
         private System.Windows.Forms.Button IncreaseAngleButton;
+        private System.Windows.Forms.Button beginControllingHandButton;
     }
 }
