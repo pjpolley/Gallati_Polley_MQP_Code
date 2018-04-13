@@ -86,6 +86,12 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="NeuralNet.cs" />
+    <Compile Include="NeuralNetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NeuralNetForm.Designer.cs">
+      <DependentUpon>NeuralNetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="NeuralTreeWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NeuralNetForm.resx">
+      <DependentUpon>NeuralNetForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NeuralTreeWindow.resx">
       <DependentUpon>NeuralTreeWindow.cs</DependentUpon>
