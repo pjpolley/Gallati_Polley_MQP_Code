@@ -37,7 +37,7 @@
             // NeuralTreeButton
             // 
             this.NeuralTreeButton.Location = new System.Drawing.Point(33, 19);
-            this.NeuralTreeButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.NeuralTreeButton.Margin = new System.Windows.Forms.Padding(2);
             this.NeuralTreeButton.Name = "NeuralTreeButton";
             this.NeuralTreeButton.Size = new System.Drawing.Size(108, 77);
             this.NeuralTreeButton.TabIndex = 0;
@@ -48,7 +48,7 @@
             // NeuralNetButton
             // 
             this.NeuralNetButton.Location = new System.Drawing.Point(144, 19);
-            this.NeuralNetButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.NeuralNetButton.Margin = new System.Windows.Forms.Padding(2);
             this.NeuralNetButton.Name = "NeuralNetButton";
             this.NeuralNetButton.Size = new System.Drawing.Size(108, 77);
             this.NeuralNetButton.TabIndex = 1;
@@ -59,7 +59,7 @@
             // BasicFunctionalityButton
             // 
             this.BasicFunctionalityButton.Location = new System.Drawing.Point(255, 19);
-            this.BasicFunctionalityButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.BasicFunctionalityButton.Margin = new System.Windows.Forms.Padding(2);
             this.BasicFunctionalityButton.Name = "BasicFunctionalityButton";
             this.BasicFunctionalityButton.Size = new System.Drawing.Size(108, 77);
             this.BasicFunctionalityButton.TabIndex = 2;
@@ -70,7 +70,7 @@
             // clearDataButton
             // 
             this.clearDataButton.Location = new System.Drawing.Point(144, 151);
-            this.clearDataButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.clearDataButton.Margin = new System.Windows.Forms.Padding(2);
             this.clearDataButton.Name = "clearDataButton";
             this.clearDataButton.Size = new System.Drawing.Size(108, 77);
             this.clearDataButton.TabIndex = 3;
@@ -86,7 +86,7 @@
             this.Controls.Add(this.BasicFunctionalityButton);
             this.Controls.Add(this.NeuralNetButton);
             this.Controls.Add(this.NeuralTreeButton);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "WelcomeScreen";
             this.Text = "WelcomeScreen";
             this.ResumeLayout(false);

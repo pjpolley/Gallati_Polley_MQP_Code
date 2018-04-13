@@ -11,6 +11,8 @@ namespace Sender
     {
         //Place to save tree data
         public static string TreeSaveLocation = @"c:\BCIDataDirectory\NeuralTree.txt";
+        public static string DefaultHandPositionsLocation = @"c:\BCIDataDirectory\DefaultHandPositions.txt";
+        
 
         //frequency of transmission from BCI chip to this program
         public static float transmissionRate;

@@ -30,6 +30,30 @@ namespace Sender
             net = new NeuralNet(8, 10, 5);
             serial = new SerialReader();
 
+            UnityCommunicationHub.InitializeUnityCommunication();
+            UnityCommunicationHub.TwoWayTransmission();
+
+            currentHandPosition.A1Position = Globals.A1ActualPosition;
+            currentHandPosition.A2Position = Globals.A2ActualPosition;
+            currentHandPosition.A3Position = Globals.A3ActualPosition;
+            currentHandPosition.B1Position = Globals.B1ActualPosition;
+            currentHandPosition.B2Position = Globals.B2ActualPosition;
+            currentHandPosition.B3Position = Globals.B3ActualPosition;
+            currentHandPosition.C1Position = Globals.C1ActualPosition;
+            currentHandPosition.C2Position = Globals.C2ActualPosition;
+            currentHandPosition.C3Position = Globals.C3ActualPosition;
+            currentHandPosition.D1Position = Globals.D1ActualPosition;
+            currentHandPosition.D2Position = Globals.D2ActualPosition;
+            currentHandPosition.D3Position = Globals.D3ActualPosition;
+            currentHandPosition.T1Position = Globals.T1ActualPosition;
+            currentHandPosition.T2Position = Globals.T2ActualPosition;
+
+            NodeSavingReading setpointLoader = new NodeSavingReading();
+            List<SetPoint> setPointList = setpointLoader.GetSetPointDataFromFile(Globals.DefaultHandPositionsLocation);
+            foreach (var setPoint in setPointList)
+            {
+                DefaultPositionsBox.Items.Add(setPoint);
+            }
         }
 
         private void Run()

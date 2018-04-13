@@ -21,6 +21,16 @@ namespace Sender
             }
         }
 
+        public void pushDataToFile(String fileLocation, List<SetPoint> pointsToSave)
+        {
+            List<SetPoint> listofSetPoints = pointsToSave.ToList<SetPoint>();
+            string output = JsonConvert.SerializeObject(listofSetPoints);
+            using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
+            {
+                sw.WriteLine(output);
+            }
+        }
+
         public List<Node> GetDataFromFile(String fileLocation)
         {
             if (File.Exists(fileLocation))
@@ -29,6 +39,26 @@ namespace Sender
                 try
                 {
                     return JsonConvert.DeserializeObject<List<Node>>(inputData);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<SetPoint> GetSetPointDataFromFile(String fileLocation)
+        {
+            if (File.Exists(fileLocation))
+            {
+                string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                try
+                {
+                    return JsonConvert.DeserializeObject<List<SetPoint>>(inputData);
                 }
                 catch (Exception e)
                 {
