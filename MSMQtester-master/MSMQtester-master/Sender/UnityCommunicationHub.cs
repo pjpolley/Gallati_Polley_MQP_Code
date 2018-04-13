@@ -101,7 +101,7 @@ namespace Sender
 
         //returns true if it was able to aquire the file to read and then write to the file, false otherwise
         //input true unless using as an intermediate step
-        public static bool ReadData(bool turnOverToUnityAfter)
+        public static bool ReadData(bool turnOverToUnityAfter = true)
         {
             if (File.Exists(mutexFileTurn))
             {

@@ -92,6 +92,7 @@
     <Compile Include="NeuralTreeWindow.Designer.cs">
       <DependentUpon>NeuralTreeWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeSavingReading.cs" />
     <Compile Include="PatsControlScheme.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
