@@ -23,18 +23,15 @@ namespace Sender
         public NeuralNetForm()
         {
             InitializeComponent();
-        }
 
-        private void NeuralNetForm_Load(object sender, EventArgs e)
-        {
             net = new NeuralNet(8, 10);
-            
-            //serial = new SerialReader();
+
+            serial = new SerialReader();
 
             UnityCommunicationHub.InitializeUnityCommunication();
             UnityCommunicationHub.TwoWayTransmission();
 
-            Console.WriteLine("TEST");
+            
 
             currentHandPosition.A1Position = Globals.A1ActualPosition;
             currentHandPosition.A2Position = Globals.A2ActualPosition;
@@ -57,6 +54,11 @@ namespace Sender
             {
                 DefaultPositionsBox.Items.Add(setPoint);
             }
+        }
+
+        private void NeuralNetForm_Load(object sender, EventArgs e)
+        {
+            
         }
 
         private void Run()
@@ -113,6 +115,16 @@ namespace Sender
         {
             Thread testThread = new Thread(Run);
             testThread.Start();
+        }
+
+        private void ReconfigureButton_Click(object sender, EventArgs e)
+        {
+            CertaintyPrompt prompt = new CertaintyPrompt();
+
+            if (prompt.ShowDialog() == DialogResult.OK && prompt.Continue)
+            {
+                net.Validate(8, 10);
+            }
         }
     }
 }

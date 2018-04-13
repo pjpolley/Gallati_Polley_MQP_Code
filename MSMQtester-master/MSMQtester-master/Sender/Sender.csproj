@@ -74,6 +74,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CertaintyPrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CertaintyPrompt.Designer.cs">
+      <DependentUpon>CertaintyPrompt.cs</DependentUpon>
+    </Compile>
     <Compile Include="ControlSystemInterface.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -116,6 +122,9 @@
     <Compile Include="WelcomeScreen.Designer.cs">
       <DependentUpon>WelcomeScreen.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CertaintyPrompt.resx">
+      <DependentUpon>CertaintyPrompt.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

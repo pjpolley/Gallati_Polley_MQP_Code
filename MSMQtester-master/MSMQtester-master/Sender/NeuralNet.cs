@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Accord.Math;
 using Accord.Neuro;
 using Accord.Neuro.Learning;
@@ -12,8 +13,9 @@ namespace Sender
 {
     class NeuralNet
     {
-        double[][] dataset_in = new double[8][] { new double[3] { 0, 0, 0 }, new double[3] { 0, 0, 1 }, new double[3] { 0, 1, 0 }, new double[3] { 0, 1, 1 }, new double[3] { 1, 0, 0 }, new double[3] { 1, 0, 1 }, new double[3] { 1, 1, 0 }, new double[3] { 1, 1, 1 } };
-        double[][] dataset_out = new double[8][] { new double[1] { 0 }, new double[1] { 0 }, new double[1] { 1 }, new double[1] { 1 }, new double[1] { 1 }, new double[1] { 1 }, new double[1] { 0 }, new double[1] { 0 } };
+        double[][] dataset_in = new double[3][]{new double[8], new double[8], new double[8] };
+        double[][] dataset_out = new double[3][] {new double[10], new double[10], new double[10]};
+    
 
         private ActivationNetwork network;
         private KFoldData topResults;
@@ -70,6 +72,8 @@ namespace Sender
             network.Save(ANNfilename);
             reader.pushDataToFile(KFoldFilename,topResults);
         }
+
+        
 
         public async void Validate(int inputSize, int outputSize)
         {

@@ -33,12 +33,13 @@
             this.logButton = new System.Windows.Forms.Button();
             this.DefaultPositionsBox = new System.Windows.Forms.ListBox();
             this.SaveButton = new System.Windows.Forms.Button();
+            this.ReconfigureButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // TestButton
             // 
             this.TestButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.TestButton.Location = new System.Drawing.Point(12, 24);
+            this.TestButton.Location = new System.Drawing.Point(12, 18);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(99, 43);
             this.TestButton.TabIndex = 0;
@@ -48,7 +49,7 @@
             // 
             // TrainButton
             // 
-            this.TrainButton.Location = new System.Drawing.Point(12, 83);
+            this.TrainButton.Location = new System.Drawing.Point(12, 67);
             this.TrainButton.Name = "TrainButton";
             this.TrainButton.Size = new System.Drawing.Size(99, 43);
             this.TrainButton.TabIndex = 1;
@@ -69,15 +70,15 @@
             // DefaultPositionsBox
             // 
             this.DefaultPositionsBox.FormattingEnabled = true;
-            this.DefaultPositionsBox.Location = new System.Drawing.Point(138, 24);
+            this.DefaultPositionsBox.Location = new System.Drawing.Point(138, 18);
             this.DefaultPositionsBox.Name = "DefaultPositionsBox";
-            this.DefaultPositionsBox.Size = new System.Drawing.Size(134, 134);
+            this.DefaultPositionsBox.Size = new System.Drawing.Size(134, 147);
             this.DefaultPositionsBox.TabIndex = 3;
             this.DefaultPositionsBox.SelectedIndexChanged += new System.EventHandler(this.DefaultPositionsBox_SelectedIndexChanged);
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(12, 183);
+            this.SaveButton.Location = new System.Drawing.Point(12, 116);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.SaveButton.Size = new System.Drawing.Size(99, 43);
@@ -86,11 +87,22 @@
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
+            // ReconfigureButton
+            // 
+            this.ReconfigureButton.Location = new System.Drawing.Point(12, 183);
+            this.ReconfigureButton.Name = "ReconfigureButton";
+            this.ReconfigureButton.Size = new System.Drawing.Size(99, 43);
+            this.ReconfigureButton.TabIndex = 6;
+            this.ReconfigureButton.Text = "Reconfigure Network";
+            this.ReconfigureButton.UseVisualStyleBackColor = true;
+            this.ReconfigureButton.Click += new System.EventHandler(this.ReconfigureButton_Click);
+            // 
             // NeuralNetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.ReconfigureButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.DefaultPositionsBox);
             this.Controls.Add(this.logButton);
@@ -110,5 +122,6 @@
         private System.Windows.Forms.Button logButton;
         private System.Windows.Forms.ListBox DefaultPositionsBox;
         private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Button ReconfigureButton;
     }
 }
