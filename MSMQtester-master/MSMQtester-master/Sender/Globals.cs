@@ -94,6 +94,10 @@ namespace Sender
             {MIDDLEJOINT, "middle joint"},
         };
 
+        //constants for the command tree
+        public static int threshholdAquisitionTime = 5000;//5 seconds to get the limits
+        public static int inputNode = 2;
+
         //exits the application
         public static void CloseAllForms(object sender, FormClosingEventArgs e)
         {

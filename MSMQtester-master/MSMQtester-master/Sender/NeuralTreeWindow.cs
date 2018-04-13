@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -186,6 +187,7 @@ namespace Sender
                         n.Nodes.Add(newDisplayNode);
                     }
                 }
+                controls.childrenPerNode = newChildrenPerNode;
             }
             else
             {
@@ -211,6 +213,7 @@ namespace Sender
                     }
                     
                 }
+                controls.childrenPerNode = newChildrenPerNode;
             }
         }
 
@@ -519,13 +522,97 @@ namespace Sender
             Node currentNode = controls.root;
             int rate = reader.getRate();
             int desiredMillisecondDelay = controls.timeNeededForChange;
-            int arraySize = (desiredMillisecondDelay / 1000) * rate;
-            List<double> mostRecentValues = new List<double>(arraySize);
-            int lastIndex = 0;
+            //int arraySize = (desiredMillisecondDelay / 1000) * rate;
             reader.Read();
+
+            double lowConcentration;
+            double highConcentration;
+
+            //first get threshholds
+            Stopwatch timer = new Stopwatch();
+            int reads = 0;
+            decimal allReads = 0;
+            MessageBox.Show("First try to let your mind wander until the next popup appears. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
+            timer.Start();
+            while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
+            {
+                allReads += (decimal)reader.GetData()[Globals.inputNode];
+                reads++;
+            }
+            timer.Reset();
+            lowConcentration = (double)(allReads / reads);
+
+            reads = 0;
+            allReads = 0;
+
+            MessageBox.Show("Good. Next try to focus as hard as possible something. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
+            timer.Start();
+            while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
+            {
+                allReads += (decimal)reader.GetData()[Globals.inputNode];
+                reads++;
+            }
+            timer.Reset();
+            highConcentration = (double)(allReads / reads);
+
+            double differenceInConcentrations = highConcentration - lowConcentration;
+            double deltaBetweenThreshholds = differenceInConcentrations / controls.childrenPerNode;
+
+            //make ranges for this run
+            List<Threshhold> ranges = new List<Threshhold>(controls.childrenPerNode);
+
+            for(int i = 0; i < controls.childrenPerNode; i++)
+            {
+                if(i == 0)
+                {
+                    //make sure all reads work for it
+                    ranges[i] = new Threshhold(Double.MinValue, lowConcentration + ((i + 1) * deltaBetweenThreshholds));
+                }
+                else if (i == controls.childrenPerNode - 1)
+                {
+                    ranges[i] = new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), Double.MaxValue);
+                }
+                else
+                {
+                    ranges[i] = new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), lowConcentration + ((i + 1) * deltaBetweenThreshholds));
+                }
+            }
+
+            decimal accruedValues = 0;
+            long numInputs = 0;
+            bool foundNextPosition = false;
+            Node desiredNode = controls.root;
+
+            MessageBox.Show("Ready to control hand. Press OK when ready.", string.Empty, MessageBoxButtons.OK);
+
             while (continueControlling)
             {
-                
+                //get the inputs and average them for the desired output
+                timer.Start();
+                while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
+                {
+                    accruedValues += (decimal)reader.GetData()[Globals.inputNode];
+                    numInputs++;
+                }
+                double averageInput = (double)(accruedValues / numInputs);
+
+                //now get the next node to go to
+                for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
+                {
+                    if (ranges[i].Contains(averageInput))
+                    {
+                        foundNextPosition = true;
+                        desiredNode = controls.allNodes[currentNode.children[i]];
+                    }
+                }
+
+                currentNode = desiredNode;
+
+                loadPositions(currentNode);
+
+                timer.Reset();
+                numInputs = 0;
+                accruedValues = 0;
             }
         }
     }
