@@ -12,7 +12,9 @@ namespace Sender
         //Place to save tree data
         public static string TreeSaveLocation = @"c:\BCIDataDirectory\NeuralTree.txt";
         public static string DefaultHandPositionsLocation = @"c:\BCIDataDirectory\DefaultHandPositions.txt";
-        
+        public static string NeuralNetSaveLocation = @"c:\BCIDataDirectory\NeuralNet.ann";
+        public static string KFoldDataSaveLocation = @"c:\BCIDataDirectory\KFoldData.kfld";
+
 
         //frequency of transmission from BCI chip to this program
         public static float transmissionRate;

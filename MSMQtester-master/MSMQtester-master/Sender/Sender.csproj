@@ -88,6 +88,7 @@
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="KFoldData.cs" />
     <Compile Include="NeuralNet.cs" />
     <Compile Include="NeuralNetForm.cs">
       <SubType>Form</SubType>

@@ -31,6 +31,15 @@ namespace Sender
             }
         }
 
+        public void pushDataToFile(String fileLocation, KFoldData dataPoint)
+        {
+            string output = JsonConvert.SerializeObject(dataPoint);
+            using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
+            {
+                sw.WriteLine(output);
+            }
+        }
+
         public List<Node> GetDataFromFile(String fileLocation)
         {
             if (File.Exists(fileLocation))
@@ -59,6 +68,26 @@ namespace Sender
                 try
                 {
                     return JsonConvert.DeserializeObject<List<SetPoint>>(inputData);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public KFoldData GetKFoldDataFromFile(String fileLocation)
+        {
+            if (File.Exists(fileLocation))
+            {
+                string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                try
+                {
+                    return JsonConvert.DeserializeObject<KFoldData>(inputData);
                 }
                 catch (Exception e)
                 {

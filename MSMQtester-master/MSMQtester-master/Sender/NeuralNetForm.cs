@@ -27,8 +27,9 @@ namespace Sender
 
         private void NeuralNetForm_Load(object sender, EventArgs e)
         {
-            net = new NeuralNet(8, 10, 5);
-            serial = new SerialReader();
+            net = new NeuralNet(8, 10);
+            
+            //serial = new SerialReader();
 
             UnityCommunicationHub.InitializeUnityCommunication();
             UnityCommunicationHub.TwoWayTransmission();
@@ -78,7 +79,7 @@ namespace Sender
                 }
 
 
-                net.Train(networkTrainingInput, networkTrainingOutput, 1);
+                net.Train(networkTrainingInput, networkTrainingOutput);
             }
         }
 
@@ -91,7 +92,7 @@ namespace Sender
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            //TODO: SAVE FUNCTION
+            net.Save();
         }
 
         private void logButton_Click(object sender, EventArgs e)
