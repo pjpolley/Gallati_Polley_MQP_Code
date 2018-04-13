@@ -7,7 +7,7 @@ using Accord.Neuro;
 using Accord.Neuro.Learning;
 
 
-namespace AForgeTester
+namespace Sender
 {
     class NeuralNet
     {

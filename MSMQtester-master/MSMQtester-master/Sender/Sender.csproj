@@ -51,6 +51,9 @@
     <Reference Include="Accord.Neuro, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
       <HintPath>..\packages\Accord.Neuro.3.8.0\lib\net45\Accord.Neuro.dll</HintPath>
     </Reference>
+    <Reference Include="Accord.Statistics, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Statistics.3.8.0\lib\net45\Accord.Statistics.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -86,6 +89,12 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="NeuralNet.cs" />
+    <Compile Include="NeuralNetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NeuralNetForm.designer.cs">
+      <DependentUpon>NeuralNetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="NeuralTreeWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NeuralNetForm.resx">
+      <DependentUpon>NeuralNetForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NeuralTreeWindow.resx">
       <DependentUpon>NeuralTreeWindow.cs</DependentUpon>

@@ -58,5 +58,26 @@ namespace Sender
             this.T1Position = T1;
             this.T2Position = T2;
         }
+
+        public double[] ConvertToDoubles()
+        {
+            var returnArray = new double[14];
+            returnArray[0] = A1Position;
+            returnArray[1] = A2Position;
+            returnArray[2] = A3Position;
+            returnArray[3] = B1Position;
+            returnArray[4] = B2Position;
+            returnArray[5] = B3Position;
+            returnArray[6] = C1Position;
+            returnArray[7] = C2Position;
+            returnArray[8] = C3Position;
+            returnArray[9] = D1Position;
+            returnArray[10] = D2Position;
+            returnArray[11] = D3Position;
+            returnArray[12] = T1Position;
+            returnArray[13] = T2Position;
+
+            return returnArray;
+        }
     }
 }

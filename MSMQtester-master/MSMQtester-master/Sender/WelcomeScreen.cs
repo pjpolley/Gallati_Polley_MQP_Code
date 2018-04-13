@@ -39,5 +39,15 @@ namespace Sender
             Globals.treeScreen.Show();
             this.Hide();
         }
+
+        private void NeuralNetButton_Click(object sender, EventArgs e)
+        {
+            if (Globals.netScreen == null)
+            {
+                Globals.netScreen = new NeuralNetForm();
+            }
+            Globals.netScreen.Show();
+            this.Hide();
+        }
     }
 }

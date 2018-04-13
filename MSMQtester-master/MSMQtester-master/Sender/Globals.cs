@@ -18,6 +18,7 @@ namespace Sender
         //form constants for efficient loading
         public static Form welcomeScreen = null;
         public static Form treeScreen = null;
+        public static Form netScreen = null;
         public static Form form1 = null;
         public static Form form2 = null;
 
