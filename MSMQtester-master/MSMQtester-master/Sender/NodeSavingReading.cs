@@ -51,12 +51,12 @@ namespace Sender
                 }
                 catch (Exception e)
                 {
-                    return null;
+                    return new List<Node>();
                 }
             }
             else
             {
-                return null;
+                return new List<Node>();
             }
         }
 
@@ -71,12 +71,12 @@ namespace Sender
                 }
                 catch (Exception e)
                 {
-                    return null;
+                    return new List<SetPoint>();
                 }
             }
             else
             {
-                return null;
+                return new List<SetPoint>();
             }
         }
 
