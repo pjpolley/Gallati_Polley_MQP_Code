@@ -15,7 +15,7 @@ namespace Sender
     {
         private NeuralNet net;
         private SerialReader serial;
-        private SetPoint currentHandPosition;
+        private SetPoint currentHandPosition = new SetPoint();
         private List<double[]> inputTrainingData;
         private List<double[]> outputTrainingData;
         private object dataLock = new object();
@@ -32,6 +32,8 @@ namespace Sender
 
             UnityCommunicationHub.InitializeUnityCommunication();
             UnityCommunicationHub.TwoWayTransmission();
+
+            Console.WriteLine("TEST");
 
             currentHandPosition.A1Position = Globals.A1ActualPosition;
             currentHandPosition.A2Position = Globals.A2ActualPosition;
