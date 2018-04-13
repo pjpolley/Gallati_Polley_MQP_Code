@@ -14,6 +14,9 @@ public class RotateHandParts : MonoBehaviour
     string unityReadyToGo = @"c:\BCIDataDirectory\UnityReady.txt";
     string WFAReadyToGo = @"c:\BCIDataDirectory\WFAReady.txt";
 
+    bool rotateCW = false;
+    bool rotateCCW = false;
+
     // Use this for initialization
     void Start()
     {
@@ -32,6 +35,32 @@ public class RotateHandParts : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            rotateCW = true;
+        }
+        else
+        {
+            rotateCW = false;
+        }
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            rotateCCW = true;
+        }
+        else
+        {
+            rotateCCW = false;
+        }
+
+        if (rotateCW && !rotateCCW)
+        {
+            transform.Rotate(Vector3.right * Time.deltaTime);
+        }
+        else if(!rotateCW && rotateCCW)
+        {
+                transform.Rotate(Vector3.left * Time.deltaTime);
+        }
+
         if (File.Exists(mutexUnityTurn))
         {
             // Read and show each line from the file.

@@ -593,6 +593,7 @@ namespace Sender
                 {
                     accruedValues += (decimal)reader.GetData()[Globals.inputNode];
                     numInputs++;
+
                 }
                 double averageInput = (double)(accruedValues / numInputs);
 
