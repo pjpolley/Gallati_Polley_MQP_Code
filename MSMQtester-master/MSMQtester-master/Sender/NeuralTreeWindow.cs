@@ -23,7 +23,7 @@ namespace Sender
 
             updateFingerDisplay();
 
-            //UnityCommunicationHub.InitializeUnityCommunication();
+            UnityCommunicationHub.InitializeUnityCommunication();
 
             //initialize tree structure
             controls = new PatsControlScheme();
@@ -635,35 +635,48 @@ namespace Sender
             //int arraySize = (desiredMillisecondDelay / 1000) * rate;
             reader.Read();
 
-            double lowConcentration;
-            double highConcentration;
+            double lowConcentration = 0;
+            double highConcentration = 0;
+
+            Stopwatch timer = new Stopwatch();
 
             //first get threshholds
-            Stopwatch timer = new Stopwatch();
-            int reads = 0;
-            decimal allReads = 0;
-            MessageBox.Show("First try to let your mind wander until the next popup appears. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
-            timer.Start();
-            while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
+            bool done = false;
+            while (!done)
             {
-                allReads += (decimal)reader.GetData()[Globals.inputNode];
-                reads++;
-            }
-            timer.Reset();
-            lowConcentration = (double)(allReads / reads);
+                int reads = 0;
+                decimal allReads = 0;
+                MessageBox.Show("First try to let your mind wander until the next popup appears. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
+                timer.Start();
+                while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
+                {
+                    allReads += (decimal)reader.GetData()[Globals.inputNode];
+                    reads++;
+                }
+                timer.Reset();
+                lowConcentration = (double)(allReads / reads);
+                Console.WriteLine("Low concentration was: " + lowConcentration);
 
-            reads = 0;
-            allReads = 0;
+                reads = 0;
+                allReads = 0;
 
-            MessageBox.Show("Good. Next try to focus as hard as possible something. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
-            timer.Start();
-            while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
-            {
-                allReads += (decimal)reader.GetData()[Globals.inputNode];
-                reads++;
+                MessageBox.Show("Good. Next try to focus as hard as possible something. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
+                timer.Start();
+                while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
+                {
+                    allReads += (decimal)reader.GetData()[Globals.inputNode];
+                    reads++;
+                }
+                timer.Reset();
+                highConcentration = (double)(allReads / reads);
+
+                Console.WriteLine("High concentration was: " + highConcentration);
+
+                if (highConcentration > lowConcentration)
+                {
+                    done = true;
+                }
             }
-            timer.Reset();
-            highConcentration = (double)(allReads / reads);
 
             double differenceInConcentrations = highConcentration - lowConcentration;
             double deltaBetweenThreshholds = differenceInConcentrations / controls.childrenPerNode;
@@ -676,15 +689,15 @@ namespace Sender
                 if(i == 0)
                 {
                     //make sure all reads work for it
-                    ranges[i] = new Threshhold(Double.MinValue, lowConcentration + ((i + 1) * deltaBetweenThreshholds));
+                    ranges.Add(new Threshhold(Double.MinValue, lowConcentration + ((i + 1) * deltaBetweenThreshholds)));
                 }
                 else if (i == controls.childrenPerNode - 1)
                 {
-                    ranges[i] = new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), Double.MaxValue);
+                    ranges.Add(new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), Double.MaxValue));
                 }
                 else
                 {
-                    ranges[i] = new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), lowConcentration + ((i + 1) * deltaBetweenThreshholds));
+                    ranges.Add(new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), lowConcentration + ((i + 1) * deltaBetweenThreshholds)));
                 }
             }
 
@@ -699,9 +712,15 @@ namespace Sender
             while (continueControlling)
             {
                 //get the inputs and average them for the desired output
-                timer.Start();
                 double averageInput = 0;
 
+                if(currentNode.children.Count < 2)
+                {
+                    continueControlling = false;
+                    break;
+                }
+
+                timer.Start();
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
                     accruedValues += (decimal)reader.GetData()[Globals.inputNode];
@@ -735,15 +754,26 @@ namespace Sender
                     }
                 }
 
-                foundNextPosition = false;
-                currentNode = desiredNode;
-
-                loadPositions(currentNode);
-
                 timer.Reset();
                 numInputs = 0;
                 accruedValues = 0;
+                foundNextPosition = false;
+
+                if (desiredNode.id == Globals.CONTROLNODE)
+                {
+                    continueControlling = false;
+                }
+                else
+                {
+                    currentNode = desiredNode;
+                    loadPositions(currentNode);
+                }
             }
+        }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            continueControlling = false;
         }
     }
 }
