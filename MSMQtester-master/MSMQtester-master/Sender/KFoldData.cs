@@ -15,6 +15,7 @@ namespace Sender
         public double K { get; }
     
 
+
         public KFoldData(int breadth, int depth, double trainingSpeed, int iterations, double k)
         {
             this.Breadth = breadth;

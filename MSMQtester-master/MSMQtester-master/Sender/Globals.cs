@@ -74,6 +74,7 @@ namespace Sender
         //defines for the neural tree
         public static int ROOTNODE = 0;
         public static int NULLPARENT = -1;
+        public static int CONTROLNODE = -10;
 
         //defines for the neural tree
         public static int THUMB = 0;
@@ -104,19 +105,37 @@ namespace Sender
         public static SetPoint THUMBS_UP = new SetPoint(0,0,90,90,90,90,90,90,90,90,90,90,90,90);
         public static SetPoint FINGER_GUNS = new SetPoint(0,0,0,0,0,90,90,90,90,90,90,90,90,90);
 
-        public static Dictionary<string, SetPoint> GetBasicPositions()
+        public static Dictionary<string, double[]> GetBasicValues()
         {
-            var returnList = new Dictionary<string, SetPoint>
+            var returnList = new Dictionary<string, double[]>
             {
-                { "Hook Grip", HOOK_GRIP },
-                { "Open Hand", OPEN_HAND },
-                { "Peace Sign", PEACE_SIGN },
-                { "Pinch Grip", PINCH_GRIP },
-                { "Thumbs Up", THUMBS_UP },
-                { "Finger Guns", FINGER_GUNS }
+                { "Hook Grip", new double[6]{1,0,0,0,0,0} },
+                { "Open Hand", new double[6]{0,1,0,0,0,0} },
+                { "Peace Sign", new double[6]{0,0,1,0,0,0} },
+                { "Pinch Grip", new double[6]{0,0,0,1,0,0} },
+                { "Thumbs Up", new double[6]{0,0,0,0,1,0} },
+                { "Finger Guns", new double[6]{0,0,0,0,0,1} }
             };
             return returnList;
         }
+
+        public static Dictionary<double[], SetPoint> GetBasicPositions()
+        {
+            var returnList = new Dictionary<double[], SetPoint>
+            {
+                { new double[6]{1,0,0,0,0,0}, HOOK_GRIP },
+                { new double[6]{0,1,0,0,0,0}, OPEN_HAND },
+                { new double[6]{0,0,1,0,0,0}, PEACE_SIGN },
+                { new double[6]{0,0,0,1,0,0}, PINCH_GRIP },
+                { new double[6]{0,0,0,0,1,0}, THUMBS_UP },
+                { new double[6]{0,0,0,0,0,1}, FINGER_GUNS }
+            };
+            return returnList;
+        }
+
+        //constants for the command tree
+        public static int threshholdAquisitionTime = 5000;//5 seconds to get the limits
+        public static int inputNode = 2;
 
         //exits the application
         public static void CloseAllForms(object sender, FormClosingEventArgs e)

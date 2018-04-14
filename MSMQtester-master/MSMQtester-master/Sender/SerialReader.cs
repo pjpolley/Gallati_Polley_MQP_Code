@@ -21,7 +21,7 @@ namespace Sender
         public SerialReader()
         {
             bciDataLock = new Mutex();
-            serialPort1 = new SerialPort("COM3", 115200);
+            serialPort1 = new SerialPort("COM5", 115200);
             serialPort1.Open();
             serialPort1.Write("s");
             dataOut = new double[8];

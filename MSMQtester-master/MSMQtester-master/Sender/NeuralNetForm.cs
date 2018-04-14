@@ -16,43 +16,33 @@ namespace Sender
     {
         private NeuralNet net;
         private SerialReader serial;
-        private SetPoint currentHandPosition = new SetPoint();
+        private double[] currentHandPosition = new double[6];
         private List<double[]> inputTrainingData;
         private List<double[]> outputTrainingData;
         private object dataLock = new object();
-        private Dictionary<string, SetPoint> setPointList;
+        private Dictionary<string, double[]> indexList;
+        private Dictionary<double[], SetPoint> setPointList;
 
         public NeuralNetForm()
         {
             InitializeComponent();
 
-            net = new NeuralNet(8, 14);
+            net = new NeuralNet(8, 6);
             inputTrainingData = new List<double[]>();
             outputTrainingData = new List<double[]>();
+
+            
+
             serial = new SerialReader();
 
             UnityCommunicationHub.InitializeUnityCommunication();
             UnityCommunicationHub.TwoWayTransmission();
 
-            
 
-            currentHandPosition.A1Position = Globals.A1ActualPosition;
-            currentHandPosition.A2Position = Globals.A2ActualPosition;
-            currentHandPosition.A3Position = Globals.A3ActualPosition;
-            currentHandPosition.B1Position = Globals.B1ActualPosition;
-            currentHandPosition.B2Position = Globals.B2ActualPosition;
-            currentHandPosition.B3Position = Globals.B3ActualPosition;
-            currentHandPosition.C1Position = Globals.C1ActualPosition;
-            currentHandPosition.C2Position = Globals.C2ActualPosition;
-            currentHandPosition.C3Position = Globals.C3ActualPosition;
-            currentHandPosition.D1Position = Globals.D1ActualPosition;
-            currentHandPosition.D2Position = Globals.D2ActualPosition;
-            currentHandPosition.D3Position = Globals.D3ActualPosition;
-            currentHandPosition.T1Position = Globals.T1ActualPosition;
-            currentHandPosition.T2Position = Globals.T2ActualPosition;
-
+            indexList = Globals.GetBasicValues();
             setPointList = Globals.GetBasicPositions();
-            foreach (KeyValuePair<string, SetPoint> position in setPointList)
+
+            foreach (KeyValuePair<string, double[]> position in indexList)
             {
                 DefaultPositionsBox.Items.Add(position.Key);
             }
@@ -72,22 +62,24 @@ namespace Sender
             {
                 
                 var input = serial.GetData();
-                var percievedPosition = ScaleOutputData(net.Think(input));
+                var percievedPositionArray = net.Think(input);
+
+                var percievedPosition = setPointList[percievedPositionArray];
                 
-                Globals.T1DesiredPosition = percievedPosition[0];
-                Globals.T2DesiredPosition = percievedPosition[1];
-                Globals.A1DesiredPosition = percievedPosition[2];
-                Globals.A2DesiredPosition = percievedPosition[3];
-                Globals.A3DesiredPosition = percievedPosition[4];
-                Globals.B1DesiredPosition = percievedPosition[5];
-                Globals.B2DesiredPosition = percievedPosition[6];
-                Globals.B3DesiredPosition = percievedPosition[7];
-                Globals.C1DesiredPosition = percievedPosition[8];
-                Globals.C2DesiredPosition = percievedPosition[9];
-                Globals.C3DesiredPosition = percievedPosition[10];
-                Globals.D1DesiredPosition = percievedPosition[11];
-                Globals.D2DesiredPosition = percievedPosition[12];
-                Globals.D3DesiredPosition = percievedPosition[13];
+                Globals.T1DesiredPosition = percievedPosition.T1Position;
+                Globals.T2DesiredPosition = percievedPosition.T2Position;
+                Globals.A1DesiredPosition = percievedPosition.A1Position;
+                Globals.A2DesiredPosition = percievedPosition.A2Position;
+                Globals.A3DesiredPosition = percievedPosition.A3Position;
+                Globals.B1DesiredPosition = percievedPosition.B1Position;
+                Globals.B2DesiredPosition = percievedPosition.B2Position;
+                Globals.B3DesiredPosition = percievedPosition.B3Position;
+                Globals.C1DesiredPosition = percievedPosition.C1Position;
+                Globals.C2DesiredPosition = percievedPosition.C2Position;
+                Globals.C3DesiredPosition = percievedPosition.C3Position;
+                Globals.D1DesiredPosition = percievedPosition.D1Position;
+                Globals.D2DesiredPosition = percievedPosition.D2Position;
+                Globals.D3DesiredPosition = percievedPosition.D3Position;
 
                 UnityCommunicationHub.WriteData(true);
             }
@@ -102,7 +94,7 @@ namespace Sender
                 for (int i = 0; i < inputTrainingData.Count; i++)
                 {
                     networkTrainingInput[i] = inputTrainingData[i];
-                    networkTrainingOutput[i] = ScaleOutputStorageData(outputTrainingData[i]);
+                    networkTrainingOutput[i] = outputTrainingData[i];
                 }
 
 
@@ -112,8 +104,9 @@ namespace Sender
 
         private void DefaultPositionsBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
             var inputItemName = (System.Windows.Forms.ListBox) sender;
-            currentHandPosition = setPointList[(string)inputItemName.SelectedItem];
+            currentHandPosition = indexList[(string)inputItemName.SelectedItem];
         }
 
 
@@ -126,7 +119,7 @@ namespace Sender
         private void logButton_Click(object sender, EventArgs e)
         {
             inputTrainingData.Add(serial.GetData());
-            outputTrainingData.Add(ScaleOutputStorageData(currentHandPosition.ConvertToDoubles()));
+            outputTrainingData.Add(currentHandPosition);
         }
 
         private void TrainButton_Click(object sender, EventArgs e)
@@ -149,7 +142,7 @@ namespace Sender
             for (int i = 0; i < inputTrainingData.Count; i++)
             {
                 inDataArray[i] = inputTrainingData[i];
-                outDataArray[i] = ScaleOutputStorageData(outputTrainingData[i]);
+                outDataArray[i] = (outputTrainingData[i]);
             }
 
             net.dataset_in = inDataArray;
@@ -159,7 +152,7 @@ namespace Sender
 
             if (prompt.ShowDialog() == DialogResult.OK && prompt.Continue)
             {
-                net.Validate(8, 14);
+                net.Validate(8, 6);
             }
         }
 
