@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -22,7 +23,7 @@ namespace Sender
 
             updateFingerDisplay();
 
-            UnityCommunicationHub.InitializeUnityCommunication();
+            //UnityCommunicationHub.InitializeUnityCommunication();
 
             //initialize tree structure
             controls = new PatsControlScheme();
@@ -40,36 +41,81 @@ namespace Sender
             //sequentially add all the nodes to the tree
             foreach (Node n in newList)
             {
-                //figure out what the parent id is
-                int parentID = n.parent;
-                //if it's the root node, just add it to the tree
-                if(parentID == Globals.NULLPARENT)
+                if (n.id != Globals.CONTROLNODE)
                 {
-                    TreeNode newNode = new TreeNode(n.name);
-                    newNode.Tag = n.id;
-                    NeuronTreeView.Nodes.Add(newNode);
-                    activeNode = newNode;
+                    //figure out what the parent id is
+                    int parentID = n.parent;
+                    //if it's the root node, just add it to the tree
+                    if (parentID == Globals.NULLPARENT)
+                    {
+                        TreeNode newNode = new TreeNode(n.name);
+                        newNode.Tag = n.id;
+                        NeuronTreeView.Nodes.Add(newNode);
+                        activeNode = newNode;
+                    }
+                    //in the case that it's a child node, figure out what display node to add it to
+                    else
+                    {
+                        //iterate through until you find the parent
+                        TreeNode parentNode = findNodeInTree(parentID);
+                        //once we find the parent, add it to the parent's children
+                        TreeNode newNode = new TreeNode(n.name);
+                        newNode.Tag = n.id;
+                        parentNode.Nodes.Add(newNode);
+                    }
                 }
-                //in the case that it's a child node, figure out what display node to add it to
-                else
+                if(n.id != Globals.CONTROLNODE && n.children.Contains(Globals.CONTROLNODE))
                 {
-                    //iterate through until you find the parent
-                    TreeNode parentNode = findNodeInTree(parentID);
-                    //once we find the parent, add it to the parent's children
-                    TreeNode newNode = new TreeNode(n.name);
-                    newNode.Tag = n.id;
-                    parentNode.Nodes.Add(newNode);
+                    TreeNode parentNode = findNodeInTree(n.id);
+                    foreach(TreeNode tn in parentNode.Nodes)
+                    {
+                        if((int)tn.Tag == Globals.CONTROLNODE)
+                        {
+                            tn.Remove();
+                        }
+                    }
+                    TreeNode newControlNode = new TreeNode("Controls");
+                    newControlNode.Tag = Globals.CONTROLNODE;
+                    parentNode.Nodes.Add(newControlNode);
+                }
+            }
+
+            foreach (Node n in newList)
+            {
+                if (n.id != Globals.CONTROLNODE && n.children.Contains(Globals.CONTROLNODE))
+                {
+                    TreeNode tn = findNodeInTree(n.id);
+                    bool done = false;
+                    foreach (TreeNode tnn in tn.Nodes)
+                    {
+                        if (!done && (int)tnn.Tag == Globals.CONTROLNODE)
+                        {
+                            tnn.Remove();
+                            done = true;
+                        }
+                    }
+                    TreeNode newControlNode = new TreeNode("Controls");
+                    newControlNode.Tag = Globals.CONTROLNODE;
+                    tn.Nodes.Add(newControlNode);
                 }
             }
         }
 
         private void NeuronTreeView_NodeClicked(object sender, TreeNodeMouseClickEventArgs e)
         {
-            activeNode = e.Node;
             Console.WriteLine(e.Node.Text + " Clicked");
             Console.WriteLine("Tag is: " + e.Node.Tag);
-            Node thisNode = controls.allNodes[(int)e.Node.Tag];
-            loadPositions(thisNode);
+            if ((int)e.Node.Tag != Globals.CONTROLNODE)
+            {
+                activeNode = e.Node;
+                Node thisNode = controls.allNodes[(int)e.Node.Tag];
+                loadPositions(thisNode);
+                Console.WriteLine("Not a control node");
+            }
+            else
+            {
+                Console.WriteLine("A control node");
+            }
         }
 
         private void loadPositions(Node thisNode)
@@ -132,6 +178,10 @@ namespace Sender
                 newDisplayNode.Tag = controls.allNodes[newID].id;
                 activeNode.Nodes.Add(newDisplayNode);
             }
+            controls.allNodes[thisNode.id].children.Add(Globals.CONTROLNODE);
+            TreeNode newControlNode = new TreeNode("Controls");
+            newControlNode.Tag = Globals.CONTROLNODE;
+            activeNode.Nodes.Add(newControlNode);
         }
 
         private void removeLayerButton_Click(object sender, EventArgs e)
@@ -140,9 +190,13 @@ namespace Sender
             List<int> children = thisNode.children;
             foreach(int i in children)
             {
-                controls.allNodes.Remove(i);
+                if (i != Globals.CONTROLNODE)
+                {
+                    controls.allNodes.Remove(i);
+                }
             }
             activeNode.Nodes.Clear();
+            thisNode.children.Clear();
         }
 
         private void changeNameButton_Click(object sender, EventArgs e)
@@ -173,18 +227,35 @@ namespace Sender
             }
             else if (newChildrenPerNode > controls.childrenPerNode)
             {
-                foreach(TreeNode n in NeuronTreeView.Nodes)
+                List<Node> newList = controls.allNodes.Values.OrderBy(o => o.id).ToList();
+
+                foreach (Node n in newList)
                 {
-                    while (n.Nodes.Count < newChildrenPerNode)
+                    if ((int)n.id != Globals.CONTROLNODE && n.children.Count > 0)
                     {
-                        //calculate the id for the new node
-                        int newID = ((int)n.Tag * 10) + n.Nodes.Count + 1;
-                        //create a new node in the backend
-                        controls.createNewNode(newID, controls.childrenPerNode, (int)n.Tag);
-                        //and then add it to the frontend
-                        TreeNode newDisplayNode = new TreeNode(controls.allNodes[newID].name);
-                        newDisplayNode.Tag = controls.allNodes[newID].id;
-                        n.Nodes.Add(newDisplayNode);
+                        //remove the controls node first
+                        TreeNode frontEndNode = findNodeInTree(n.id);
+                        frontEndNode.Nodes.RemoveAt(frontEndNode.Nodes.Count - 1);
+                        n.children.RemoveAll(id => id == Globals.CONTROLNODE);
+
+                        //create new nodes to display
+                        while (n.children.Count < newChildrenPerNode)
+                        {
+                            //calculate the id for the new node
+                            int newID = (n.id * 10) + n.children.Count + 1;
+                            //create a new node in the backend
+                            controls.createNewNode(newID, controls.childrenPerNode, n.id);
+                            //and then add it to the frontend
+                            TreeNode newDisplayNode = new TreeNode(controls.allNodes[newID].name);
+                            newDisplayNode.Tag = controls.allNodes[newID].id;
+                            frontEndNode.Nodes.Add(newDisplayNode);
+                        }
+                        //and then read the controls node
+                        int controlsID = Globals.CONTROLNODE;
+                        TreeNode newControlsNode = new TreeNode("Controls");
+                        newControlsNode.Tag = Globals.CONTROLNODE;
+                        frontEndNode.Nodes.Add(newControlsNode);
+                        n.children.Add(Globals.CONTROLNODE);
                     }
                 }
                 controls.childrenPerNode = newChildrenPerNode;
@@ -197,28 +268,63 @@ namespace Sender
 
                 foreach (Node n in newList)
                 {
-                    //figure out what the id is
-                    int ID = n.id;
-
-                    //and delete nodes as its children until it fits
-                    while(n.children.Count > newChildrenPerNode)
+                    if (n.id != Globals.CONTROLNODE && n.children.Count > 0)
                     {
-                        int idOfChildToDestroy = n.children.Last<int>();
-                        TreeNode frontEndNode = findNodeInTree(idOfChildToDestroy);
-                        frontEndNode.Remove();
-                        int idOfParent = controls.allNodes[idOfChildToDestroy].parent;
-                        controls.allNodes[idOfParent].children.Remove(idOfChildToDestroy);
-                        controls.allNodes.Remove(idOfChildToDestroy);
+                        //figure out what the id is
+                        int ID = n.id;
+                        TreeNode parentToControl = findNodeInTree(ID);
+                        parentToControl.Nodes.RemoveAt(parentToControl.Nodes.Count - 1);
+                        n.children.RemoveAll(node => node == Globals.CONTROLNODE);
 
+                        //and delete nodes as its children until it fits.
+                        while (n.children.Count > newChildrenPerNode)
+                        {
+                            int idOfChildToDestroy = n.children.Last<int>();
+                            TreeNode frontEndNode = findNodeInTree(idOfChildToDestroy);
+                            purgeChildren(frontEndNode);
+                            n.children.Remove(idOfChildToDestroy);
+                        }
+
+                        int controlsID = Globals.CONTROLNODE;
+                        TreeNode newControlsNode = new TreeNode("Controls");
+                        newControlsNode.Tag = Globals.CONTROLNODE;
+                        parentToControl.Nodes.Add(newControlsNode);
+                        n.children.Add(Globals.CONTROLNODE);
                     }
                     
                 }
+                controls.cleanupReferences();
                 controls.childrenPerNode = newChildrenPerNode;
+            }
+        }
+
+        private void purgeChildren(TreeNode node)
+        {
+            if (node != null && (int)node.Tag != Globals.CONTROLNODE)
+            {
+                foreach (TreeNode n in node.Nodes)
+                {
+                    purgeChildren(n);
+                }
+                node.Remove();
+                controls.allNodes.Remove((int)node.Tag);
+            }
+            else
+            {
+                //the controls option
+                if (node != null)
+                {
+                    node.Remove();
+                }
             }
         }
 
         private TreeNode findNodeInTree(int id)
         {
+            if(id == Globals.CONTROLNODE)
+            {
+                return null;
+            }
             TreeNode root = NeuronTreeView.Nodes[0];
             if((int)root.Tag == id)
             {
@@ -240,6 +346,10 @@ namespace Sender
 
         private TreeNode recursiveFindNode(TreeNode n, int id)
         {
+            if (id == Globals.CONTROLNODE)
+            {
+                return null;
+            }
             if ((int)n.Tag == id)
             {
                 return n;
@@ -581,6 +691,7 @@ namespace Sender
             decimal accruedValues = 0;
             long numInputs = 0;
             bool foundNextPosition = false;
+            TreeNode lastNode = null;
             Node desiredNode = controls.root;
 
             MessageBox.Show("Ready to control hand. Press OK when ready.", string.Empty, MessageBoxButtons.OK);
@@ -589,13 +700,30 @@ namespace Sender
             {
                 //get the inputs and average them for the desired output
                 timer.Start();
+                double averageInput = 0;
+
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
                     accruedValues += (decimal)reader.GetData()[Globals.inputNode];
                     numInputs++;
-
+                    averageInput = (double)(accruedValues / numInputs);
+                    for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
+                    {
+                        if (ranges[i].Contains(averageInput))
+                        {
+                            foundNextPosition = true;
+                            desiredNode = controls.allNodes[currentNode.children[i]];
+                        }
+                    }
+                    foundNextPosition = false;
+                    TreeNode n = findNodeInTree(desiredNode.id);
+                    n.BackColor = Color.Yellow;
+                    if (lastNode != null && n != lastNode)
+                    {
+                        lastNode.BackColor = Color.White;
+                        lastNode = n;
+                    }
                 }
-                double averageInput = (double)(accruedValues / numInputs);
 
                 //now get the next node to go to
                 for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
@@ -607,6 +735,7 @@ namespace Sender
                     }
                 }
 
+                foundNextPosition = false;
                 currentNode = desiredNode;
 
                 loadPositions(currentNode);

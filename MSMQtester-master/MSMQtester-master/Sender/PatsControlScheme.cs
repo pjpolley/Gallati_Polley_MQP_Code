@@ -37,7 +37,7 @@ namespace Sender
             {
                 if (root.children.Count > 0)
                 {
-                    childrenPerNode = root.children.Count;
+                    childrenPerNode = root.children.Count - 1;
                 }
                 else
                 {
@@ -62,7 +62,7 @@ namespace Sender
                 }
                 for(int i = 0; i < retrievedNodes.Count; i++)
                 {
-                    if(retrievedNodes[i].name == null || retrievedNodes[i].id < 0 || retrievedNodes[i].getHandPosition() == null)
+                    if(retrievedNodes[i].name == null || ( (retrievedNodes[i].id < 0 || retrievedNodes[i].getHandPosition() == null) && retrievedNodes[i].id != Globals.CONTROLNODE))
                     {
                         //check each node to make sure they saved correctly
                         return false;
@@ -78,6 +78,18 @@ namespace Sender
                         {
                             root = n;
                             foundRoot = true;
+                        }
+                        if (n.id != Globals.CONTROLNODE && !n.children.Contains(Globals.CONTROLNODE) && n.children.Count > 0)
+                        {
+                            n.children.Add(Globals.CONTROLNODE);
+                        }
+                    }
+                    foreach(Node n in allNodes.Values)
+                    {
+                        if (n.id != Globals.CONTROLNODE && n.children.Contains(Globals.CONTROLNODE))
+                        {
+                            n.children.Remove(Globals.CONTROLNODE);
+                            n.children.Add(Globals.CONTROLNODE);
                         }
                     }
                     return true;
@@ -101,8 +113,11 @@ namespace Sender
         public Node createNewNode(int id, int positionsPerSplit, int parentID)
         {
             Node newNode = new Node("Extended Hand", new SetPoint(), id, new List<int>(positionsPerSplit), parentID);
-            this.allNodes.Add(newNode.id, newNode);
-            if(parentID != Globals.NULLPARENT)
+            if (id != Globals.CONTROLNODE)
+            {
+                this.allNodes.Add(newNode.id, newNode);
+            }
+            if(parentID != Globals.NULLPARENT && id != Globals.CONTROLNODE)
             {
                 allNodes[parentID].children.Add(id);
             }
@@ -116,6 +131,17 @@ namespace Sender
             using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
             {
                 sw.WriteLine(output);
+            }
+        }
+
+        public void cleanupReferences()
+        {
+            List<Node> everyNode = allNodes.Values.ToList().OrderBy(k => k.id).ToList();
+            foreach (Node n in allNodes.Values)
+            {
+                if(!everyNode.Exists(node => node.parent == n.parent)){
+                    allNodes.Remove(n.id);
+                }
             }
         }
     }

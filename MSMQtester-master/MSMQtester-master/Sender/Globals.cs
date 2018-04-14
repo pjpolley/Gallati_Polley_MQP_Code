@@ -72,6 +72,7 @@ namespace Sender
         //defines for the neural tree
         public static int ROOTNODE = 0;
         public static int NULLPARENT = -1;
+        public static int CONTROLNODE = -10;
 
         //defines for the neural tree
         public static int THUMB = 0;

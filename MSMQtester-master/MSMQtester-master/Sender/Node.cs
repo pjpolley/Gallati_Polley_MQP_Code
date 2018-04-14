@@ -11,7 +11,7 @@ namespace Sender
         public string name;
 
         public int id;
-        public List<int> children;
+        public List<int> children = new List<int>();
         public int parent = Globals.NULLPARENT;//indicates the root node
 
         public float T1Position = 0.0f;
