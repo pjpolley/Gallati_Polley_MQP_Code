@@ -96,6 +96,28 @@ namespace Sender
             {MIDDLEJOINT, "middle joint"},
         };
 
+        //Six Basic Hand Positions
+        public static SetPoint HOOK_GRIP = new SetPoint(90,90,90,90,90,90,90,90,90,90,90,90,90,90);
+        public static SetPoint OPEN_HAND = new SetPoint(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        public static SetPoint PEACE_SIGN = new SetPoint(90,90,0,0,0,0,0,0,90,90,90,90,90,90);
+        public static SetPoint PINCH_GRIP = new SetPoint(20,90, 20, 90, 45, 0,0,0,0,0,0,0,0,0);
+        public static SetPoint THUMBS_UP = new SetPoint(0,0,90,90,90,90,90,90,90,90,90,90,90,90);
+        public static SetPoint FINGER_GUNS = new SetPoint(0,0,0,0,0,90,90,90,90,90,90,90,90,90);
+
+        public static Dictionary<string, SetPoint> GetBasicPositions()
+        {
+            var returnList = new Dictionary<string, SetPoint>
+            {
+                { "Hook Grip", HOOK_GRIP },
+                { "Open Hand", OPEN_HAND },
+                { "Peace Sign", PEACE_SIGN },
+                { "Pinch Grip", PINCH_GRIP },
+                { "Thumbs Up", THUMBS_UP },
+                { "Finger Guns", FINGER_GUNS }
+            };
+            return returnList;
+        }
+
         //exits the application
         public static void CloseAllForms(object sender, FormClosingEventArgs e)
         {

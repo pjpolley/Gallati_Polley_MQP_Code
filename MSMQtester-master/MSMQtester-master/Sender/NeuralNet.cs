@@ -13,8 +13,8 @@ namespace Sender
 {
     class NeuralNet
     {
-        double[][] dataset_in = new double[3][]{new double[8], new double[8], new double[8] };
-        double[][] dataset_out = new double[3][] {new double[10], new double[10], new double[10]};
+        public double[][] dataset_in;
+        public double[][] dataset_out;
     
 
         private ActivationNetwork network;
@@ -122,7 +122,7 @@ namespace Sender
             }
 
             topResults = returnedKFoldData;
-            network = (new ActivationNetwork(new SigmoidFunction(), inputSize, returnArray));
+            network = new ActivationNetwork(new SigmoidFunction(), inputSize, returnArray);
             network.Randomize();
             Save();
             Console.WriteLine("Done!");
