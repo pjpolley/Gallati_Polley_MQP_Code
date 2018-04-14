@@ -115,6 +115,7 @@
     <Compile Include="SerialReader.cs" />
     <Compile Include="SetPoint.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Threshhold.cs" />
     <Compile Include="UnityCommunicationHub.cs" />
     <Compile Include="WelcomeScreen.cs">
       <SubType>Form</SubType>
