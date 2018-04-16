@@ -85,7 +85,7 @@ namespace Sender
                             dataOut[i] = (double)(outVal * scale);
                             
                         }
-                        //Console.WriteLine(dataOut[3]);
+                        Console.WriteLine(dataOut[3]);
                     }
                 }
                 bciDataLock.ReleaseMutex();

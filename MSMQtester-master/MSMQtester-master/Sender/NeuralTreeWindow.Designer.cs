@@ -55,12 +55,13 @@
             this.DecreaseAngleButton = new System.Windows.Forms.Button();
             this.IncreaseAngleButton = new System.Windows.Forms.Button();
             this.beginControllingHandButton = new System.Windows.Forms.Button();
+            this.iterateButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NeuronTreeView
             // 
             this.NeuronTreeView.Location = new System.Drawing.Point(6, 6);
-            this.NeuronTreeView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.NeuronTreeView.Margin = new System.Windows.Forms.Padding(2);
             this.NeuronTreeView.Name = "NeuronTreeView";
             this.NeuronTreeView.Size = new System.Drawing.Size(384, 577);
             this.NeuronTreeView.TabIndex = 0;
@@ -69,7 +70,7 @@
             // setHandPositionButton
             // 
             this.setHandPositionButton.Location = new System.Drawing.Point(390, 23);
-            this.setHandPositionButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.setHandPositionButton.Margin = new System.Windows.Forms.Padding(2);
             this.setHandPositionButton.Name = "setHandPositionButton";
             this.setHandPositionButton.Size = new System.Drawing.Size(191, 69);
             this.setHandPositionButton.TabIndex = 1;
@@ -80,7 +81,7 @@
             // AddAnotherLayerButton
             // 
             this.AddAnotherLayerButton.Location = new System.Drawing.Point(390, 95);
-            this.AddAnotherLayerButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.AddAnotherLayerButton.Margin = new System.Windows.Forms.Padding(2);
             this.AddAnotherLayerButton.Name = "AddAnotherLayerButton";
             this.AddAnotherLayerButton.Size = new System.Drawing.Size(191, 64);
             this.AddAnotherLayerButton.TabIndex = 2;
@@ -91,7 +92,7 @@
             // changeNameButton
             // 
             this.changeNameButton.Location = new System.Drawing.Point(390, 251);
-            this.changeNameButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.changeNameButton.Margin = new System.Windows.Forms.Padding(2);
             this.changeNameButton.Name = "changeNameButton";
             this.changeNameButton.Size = new System.Drawing.Size(191, 54);
             this.changeNameButton.TabIndex = 3;
@@ -102,7 +103,7 @@
             // desiredNameBox
             // 
             this.desiredNameBox.Location = new System.Drawing.Point(390, 231);
-            this.desiredNameBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.desiredNameBox.Margin = new System.Windows.Forms.Padding(2);
             this.desiredNameBox.Name = "desiredNameBox";
             this.desiredNameBox.Size = new System.Drawing.Size(192, 20);
             this.desiredNameBox.TabIndex = 4;
@@ -111,7 +112,7 @@
             // setNumberOfPositionsPerLayerButton
             // 
             this.setNumberOfPositionsPerLayerButton.Location = new System.Drawing.Point(390, 327);
-            this.setNumberOfPositionsPerLayerButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.setNumberOfPositionsPerLayerButton.Margin = new System.Windows.Forms.Padding(2);
             this.setNumberOfPositionsPerLayerButton.Name = "setNumberOfPositionsPerLayerButton";
             this.setNumberOfPositionsPerLayerButton.Size = new System.Drawing.Size(191, 47);
             this.setNumberOfPositionsPerLayerButton.TabIndex = 5;
@@ -122,7 +123,7 @@
             // handDelayButton
             // 
             this.handDelayButton.Location = new System.Drawing.Point(390, 396);
-            this.handDelayButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.handDelayButton.Margin = new System.Windows.Forms.Padding(2);
             this.handDelayButton.Name = "handDelayButton";
             this.handDelayButton.Size = new System.Drawing.Size(191, 44);
             this.handDelayButton.TabIndex = 6;
@@ -133,7 +134,7 @@
             // positionsPerLayerBox
             // 
             this.positionsPerLayerBox.Location = new System.Drawing.Point(390, 307);
-            this.positionsPerLayerBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.positionsPerLayerBox.Margin = new System.Windows.Forms.Padding(2);
             this.positionsPerLayerBox.Name = "positionsPerLayerBox";
             this.positionsPerLayerBox.Size = new System.Drawing.Size(192, 20);
             this.positionsPerLayerBox.TabIndex = 7;
@@ -142,7 +143,7 @@
             // handDelayBox
             // 
             this.handDelayBox.Location = new System.Drawing.Point(390, 377);
-            this.handDelayBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.handDelayBox.Margin = new System.Windows.Forms.Padding(2);
             this.handDelayBox.Name = "handDelayBox";
             this.handDelayBox.Size = new System.Drawing.Size(192, 20);
             this.handDelayBox.TabIndex = 8;
@@ -151,7 +152,7 @@
             // removeLayerButton
             // 
             this.removeLayerButton.Location = new System.Drawing.Point(390, 163);
-            this.removeLayerButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.removeLayerButton.Margin = new System.Windows.Forms.Padding(2);
             this.removeLayerButton.Name = "removeLayerButton";
             this.removeLayerButton.Size = new System.Drawing.Size(190, 64);
             this.removeLayerButton.TabIndex = 9;
@@ -162,7 +163,7 @@
             // hardResetButton
             // 
             this.hardResetButton.Location = new System.Drawing.Point(584, 516);
-            this.hardResetButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.hardResetButton.Margin = new System.Windows.Forms.Padding(2);
             this.hardResetButton.Name = "hardResetButton";
             this.hardResetButton.Size = new System.Drawing.Size(178, 64);
             this.hardResetButton.TabIndex = 10;
@@ -173,7 +174,7 @@
             // saveCommandStructure
             // 
             this.saveCommandStructure.Location = new System.Drawing.Point(390, 516);
-            this.saveCommandStructure.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.saveCommandStructure.Margin = new System.Windows.Forms.Padding(2);
             this.saveCommandStructure.Name = "saveCommandStructure";
             this.saveCommandStructure.Size = new System.Drawing.Size(178, 64);
             this.saveCommandStructure.TabIndex = 11;
@@ -204,7 +205,7 @@
             // ThumbSelectButton
             // 
             this.ThumbSelectButton.Location = new System.Drawing.Point(631, 23);
-            this.ThumbSelectButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ThumbSelectButton.Margin = new System.Windows.Forms.Padding(2);
             this.ThumbSelectButton.Name = "ThumbSelectButton";
             this.ThumbSelectButton.Size = new System.Drawing.Size(132, 29);
             this.ThumbSelectButton.TabIndex = 14;
@@ -215,7 +216,7 @@
             // IndexSelectButton
             // 
             this.IndexSelectButton.Location = new System.Drawing.Point(631, 55);
-            this.IndexSelectButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.IndexSelectButton.Margin = new System.Windows.Forms.Padding(2);
             this.IndexSelectButton.Name = "IndexSelectButton";
             this.IndexSelectButton.Size = new System.Drawing.Size(132, 29);
             this.IndexSelectButton.TabIndex = 15;
@@ -226,7 +227,7 @@
             // MiddleSelectButton
             // 
             this.MiddleSelectButton.Location = new System.Drawing.Point(631, 86);
-            this.MiddleSelectButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MiddleSelectButton.Margin = new System.Windows.Forms.Padding(2);
             this.MiddleSelectButton.Name = "MiddleSelectButton";
             this.MiddleSelectButton.Size = new System.Drawing.Size(132, 29);
             this.MiddleSelectButton.TabIndex = 16;
@@ -237,7 +238,7 @@
             // RingSelectButton
             // 
             this.RingSelectButton.Location = new System.Drawing.Point(631, 118);
-            this.RingSelectButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.RingSelectButton.Margin = new System.Windows.Forms.Padding(2);
             this.RingSelectButton.Name = "RingSelectButton";
             this.RingSelectButton.Size = new System.Drawing.Size(132, 29);
             this.RingSelectButton.TabIndex = 17;
@@ -248,7 +249,7 @@
             // PinkySelectButton
             // 
             this.PinkySelectButton.Location = new System.Drawing.Point(631, 150);
-            this.PinkySelectButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.PinkySelectButton.Margin = new System.Windows.Forms.Padding(2);
             this.PinkySelectButton.Name = "PinkySelectButton";
             this.PinkySelectButton.Size = new System.Drawing.Size(132, 29);
             this.PinkySelectButton.TabIndex = 18;
@@ -259,7 +260,7 @@
             // InnerJointButton
             // 
             this.InnerJointButton.Location = new System.Drawing.Point(631, 289);
-            this.InnerJointButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.InnerJointButton.Margin = new System.Windows.Forms.Padding(2);
             this.InnerJointButton.Name = "InnerJointButton";
             this.InnerJointButton.Size = new System.Drawing.Size(132, 29);
             this.InnerJointButton.TabIndex = 21;
@@ -270,7 +271,7 @@
             // MiddleJointButton
             // 
             this.MiddleJointButton.Location = new System.Drawing.Point(631, 257);
-            this.MiddleJointButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MiddleJointButton.Margin = new System.Windows.Forms.Padding(2);
             this.MiddleJointButton.Name = "MiddleJointButton";
             this.MiddleJointButton.Size = new System.Drawing.Size(132, 29);
             this.MiddleJointButton.TabIndex = 20;
@@ -281,7 +282,7 @@
             // OuterJointButton
             // 
             this.OuterJointButton.Location = new System.Drawing.Point(631, 225);
-            this.OuterJointButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OuterJointButton.Margin = new System.Windows.Forms.Padding(2);
             this.OuterJointButton.Name = "OuterJointButton";
             this.OuterJointButton.Size = new System.Drawing.Size(132, 29);
             this.OuterJointButton.TabIndex = 19;
@@ -292,7 +293,7 @@
             // DesiredAngleInput
             // 
             this.DesiredAngleInput.Location = new System.Drawing.Point(675, 364);
-            this.DesiredAngleInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DesiredAngleInput.Margin = new System.Windows.Forms.Padding(2);
             this.DesiredAngleInput.Name = "DesiredAngleInput";
             this.DesiredAngleInput.Size = new System.Drawing.Size(43, 20);
             this.DesiredAngleInput.TabIndex = 22;
@@ -312,7 +313,7 @@
             // 
             this.DecreaseAngleButton.Font = new System.Drawing.Font("Webdings", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.DecreaseAngleButton.Location = new System.Drawing.Point(648, 362);
-            this.DecreaseAngleButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DecreaseAngleButton.Margin = new System.Windows.Forms.Padding(2);
             this.DecreaseAngleButton.Name = "DecreaseAngleButton";
             this.DecreaseAngleButton.Size = new System.Drawing.Size(24, 31);
             this.DecreaseAngleButton.TabIndex = 24;
@@ -324,7 +325,7 @@
             // 
             this.IncreaseAngleButton.Font = new System.Drawing.Font("Webdings", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.IncreaseAngleButton.Location = new System.Drawing.Point(719, 362);
-            this.IncreaseAngleButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.IncreaseAngleButton.Margin = new System.Windows.Forms.Padding(2);
             this.IncreaseAngleButton.Name = "IncreaseAngleButton";
             this.IncreaseAngleButton.Size = new System.Drawing.Size(26, 31);
             this.IncreaseAngleButton.TabIndex = 25;
@@ -334,20 +335,32 @@
             // 
             // beginControllingHandButton
             // 
-            this.beginControllingHandButton.Location = new System.Drawing.Point(631, 396);
-            this.beginControllingHandButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.beginControllingHandButton.Location = new System.Drawing.Point(586, 412);
+            this.beginControllingHandButton.Margin = new System.Windows.Forms.Padding(2);
             this.beginControllingHandButton.Name = "beginControllingHandButton";
             this.beginControllingHandButton.Size = new System.Drawing.Size(132, 79);
             this.beginControllingHandButton.TabIndex = 26;
-            this.beginControllingHandButton.Text = "Control Hand";
+            this.beginControllingHandButton.Text = "Begin";
             this.beginControllingHandButton.UseVisualStyleBackColor = true;
             this.beginControllingHandButton.Click += new System.EventHandler(this.beginControllingHandButton_Click);
+            // 
+            // iterateButton
+            // 
+            this.iterateButton.Location = new System.Drawing.Point(722, 412);
+            this.iterateButton.Margin = new System.Windows.Forms.Padding(2);
+            this.iterateButton.Name = "iterateButton";
+            this.iterateButton.Size = new System.Drawing.Size(64, 79);
+            this.iterateButton.TabIndex = 27;
+            this.iterateButton.Text = "Control Hand Position";
+            this.iterateButton.UseVisualStyleBackColor = true;
+            this.iterateButton.Click += new System.EventHandler(this.iterateButton_Click);
             // 
             // NeuralTreeWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(842, 536);
+            this.Controls.Add(this.iterateButton);
             this.Controls.Add(this.beginControllingHandButton);
             this.Controls.Add(this.IncreaseAngleButton);
             this.Controls.Add(this.DecreaseAngleButton);
@@ -375,7 +388,7 @@
             this.Controls.Add(this.AddAnotherLayerButton);
             this.Controls.Add(this.setHandPositionButton);
             this.Controls.Add(this.NeuronTreeView);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "NeuralTreeWindow";
             this.Text = "NeuralTreeWindow";
             this.ResumeLayout(false);
@@ -412,5 +425,6 @@
         private System.Windows.Forms.Button DecreaseAngleButton;
         private System.Windows.Forms.Button IncreaseAngleButton;
         private System.Windows.Forms.Button beginControllingHandButton;
+        private System.Windows.Forms.Button iterateButton;
     }
 }

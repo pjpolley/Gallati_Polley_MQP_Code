@@ -625,11 +625,26 @@ namespace Sender
 
         volatile bool continueControlling = true;
 
+        decimal accruedValues = 0;
+        long numInputs = 0;
+        bool foundNextPosition = false;
+        TreeNode lastNode = null;
+        private Node desiredNode;
+        Stopwatch timer = new Stopwatch();
+        Node currentNode;
+        SerialReader reader = new SerialReader();
+
+        private double differenceInConcentrations;
+        private double deltaBetweenThreshholds;
+
+        //make ranges for this run
+        private List<Threshhold> ranges;
+
         private void beginControllingHandButton_Click(object sender, EventArgs e)
         {
-            SerialReader reader = new SerialReader();
+            
             continueControlling = true;
-            Node currentNode = controls.root;
+            currentNode = controls.root;
             int rate = reader.getRate();
             int desiredMillisecondDelay = controls.timeNeededForChange;
             //int arraySize = (desiredMillisecondDelay / 1000) * rate;
@@ -638,7 +653,9 @@ namespace Sender
             double lowConcentration = 0;
             double highConcentration = 0;
 
-            Stopwatch timer = new Stopwatch();
+            desiredNode = controls.root;
+
+            timer = new Stopwatch();
 
             //first get threshholds
             bool done = false;
@@ -701,11 +718,7 @@ namespace Sender
                 }
             }
 
-            decimal accruedValues = 0;
-            long numInputs = 0;
-            bool foundNextPosition = false;
-            TreeNode lastNode = null;
-            Node desiredNode = controls.root;
+
 
             MessageBox.Show("Ready to control hand. Press OK when ready.", string.Empty, MessageBoxButtons.OK);
 
@@ -737,11 +750,12 @@ namespace Sender
                     foundNextPosition = false;
                     TreeNode n = findNodeInTree(desiredNode.id);
                     n.BackColor = Color.Yellow;
+                    
                     if (lastNode != null && n != lastNode)
                     {
                         lastNode.BackColor = Color.White;
-                        lastNode = n;
                     }
+                    lastNode = n;
                 }
 
                 //now get the next node to go to
@@ -774,6 +788,73 @@ namespace Sender
         private void stopButton_Click(object sender, EventArgs e)
         {
             continueControlling = false;
+        }
+
+        private void iterateButton_Click(object sender, EventArgs e)
+        {
+            int desiredMillisecondDelay = controls.timeNeededForChange;
+            timer = new Stopwatch();
+            while (continueControlling)
+            {
+                //get the inputs and average them for the desired output
+                double averageInput = 0;
+
+                if (currentNode.children.Count < 2)
+                {
+                    continueControlling = false;
+                    break;
+                }
+
+                timer.Start();
+                while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
+                {
+                    accruedValues += (decimal)reader.GetData()[Globals.inputNode];
+                    numInputs++;
+                    averageInput = (double)(accruedValues / numInputs);
+                    for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
+                    {
+                        if (ranges[i].Contains(averageInput))
+                        {
+                            foundNextPosition = true;
+                            desiredNode = controls.allNodes[currentNode.children[i]];
+                        }
+                    }
+                    foundNextPosition = false;
+                    TreeNode n = findNodeInTree(desiredNode.id);
+                    n.BackColor = Color.Yellow;
+
+                    if (lastNode != null && n != lastNode)
+                    {
+                        lastNode.BackColor = Color.White;
+                    }
+                    lastNode = n;
+                }
+
+                //now get the next node to go to
+                for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
+                {
+                    if (ranges[i].Contains(averageInput))
+                    {
+                        foundNextPosition = true;
+                        desiredNode = controls.allNodes[currentNode.children[i]];
+                    }
+                }
+
+                timer.Reset();
+                numInputs = 0;
+                accruedValues = 0;
+                foundNextPosition = false;
+
+                if (desiredNode.id == Globals.CONTROLNODE)
+                {
+                    continueControlling = false;
+                }
+                else
+                {
+                    currentNode = desiredNode;
+                    loadPositions(currentNode);
+                }
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Sender
         {
             List<SetPoint> listofSetPoints = pointsToSave.ToList<SetPoint>();
             string output = JsonConvert.SerializeObject(listofSetPoints);
-            using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
+            using (StreamWriter sw = new StreamWriter(fileLocation))
             {
                 sw.WriteLine(output);
             }
@@ -34,7 +34,7 @@ namespace Sender
         public void pushDataToFile(String fileLocation, KFoldData dataPoint)
         {
             string output = JsonConvert.SerializeObject(dataPoint);
-            using (StreamWriter sw = new StreamWriter(Globals.TreeSaveLocation))
+            using (StreamWriter sw = new StreamWriter(fileLocation))
             {
                 sw.WriteLine(output);
             }
@@ -44,7 +44,7 @@ namespace Sender
         {
             if (File.Exists(fileLocation))
             {
-                string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                string inputData = File.ReadAllText(fileLocation);
                 try
                 {
                     return JsonConvert.DeserializeObject<List<Node>>(inputData);
@@ -64,7 +64,7 @@ namespace Sender
         {
             if (File.Exists(fileLocation))
             {
-                string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                string inputData = File.ReadAllText(fileLocation);
                 try
                 {
                     return JsonConvert.DeserializeObject<List<SetPoint>>(inputData);
@@ -84,7 +84,7 @@ namespace Sender
         {
             if (File.Exists(fileLocation))
             {
-                string inputData = File.ReadAllText(Globals.TreeSaveLocation);
+                string inputData = File.ReadAllText(fileLocation);
                 try
                 {
                     return JsonConvert.DeserializeObject<KFoldData>(inputData);

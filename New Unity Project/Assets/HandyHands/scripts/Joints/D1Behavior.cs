@@ -16,6 +16,7 @@ public class D1Behavior : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        /*
         //get current position and desired position
         float desiredPosition = Globals.D1DesiredPosition;
         float currentPosition = transform.localEulerAngles.z;
@@ -48,5 +49,6 @@ public class D1Behavior : MonoBehaviour {
         //update variables for next loop
         lastError = error;
         Globals.D1ActualPosition = transform.localEulerAngles.z;
+        */
     }
 }

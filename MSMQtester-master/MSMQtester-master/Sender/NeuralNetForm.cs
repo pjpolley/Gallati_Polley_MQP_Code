@@ -34,6 +34,7 @@ namespace Sender
             
 
             serial = new SerialReader();
+            serial.Read();
 
             UnityCommunicationHub.InitializeUnityCommunication();
             UnityCommunicationHub.TwoWayTransmission();
@@ -47,7 +48,7 @@ namespace Sender
                 DefaultPositionsBox.Items.Add(position.Key);
             }
 
-            serial.Read();
+            
 
         }
 

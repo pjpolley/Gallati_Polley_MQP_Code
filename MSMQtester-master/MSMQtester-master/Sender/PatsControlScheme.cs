@@ -60,6 +60,11 @@ namespace Sender
                 {
                     return false;
                 }
+
+                if (retrievedNodes == null)
+                {
+                    return false;
+                }
                 for(int i = 0; i < retrievedNodes.Count; i++)
                 {
                     if(retrievedNodes[i].name == null || ( (retrievedNodes[i].id < 0 || retrievedNodes[i].getHandPosition() == null) && retrievedNodes[i].id != Globals.CONTROLNODE))
