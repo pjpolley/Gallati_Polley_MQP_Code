@@ -105,30 +105,30 @@ namespace Sender
         public static SetPoint THUMBS_UP = new SetPoint(0,0,90,90,90,90,90,90,90,90,90,90,90,90);
         public static SetPoint FINGER_GUNS = new SetPoint(0,0,0,0,0,90,90,90,90,90,90,90,90,90);
 
-        public static Dictionary<string, double[]> GetBasicValues()
+        public static Dictionary<string, int> GetBasicValues()
         {
-            var returnList = new Dictionary<string, double[]>
+            var returnList = new Dictionary<string, int>
             {
-                { "Hook Grip", new double[6]{1,0,0,0,0,0} },
-                { "Open Hand", new double[6]{0,1,0,0,0,0} },
-                { "Peace Sign", new double[6]{0,0,1,0,0,0} },
-                { "Pinch Grip", new double[6]{0,0,0,1,0,0} },
-                { "Thumbs Up", new double[6]{0,0,0,0,1,0} },
-                { "Finger Guns", new double[6]{0,0,0,0,0,1} }
+                { "Hook Grip", 0 },
+                { "Open Hand", 1 },
+                { "Peace Sign",2 },
+                { "Pinch Grip", 3 },
+                { "Thumbs Up", 4 },
+                { "Finger Guns", 5 }
             };
             return returnList;
         }
 
-        public static Dictionary<double[], SetPoint> GetBasicPositions()
+        public static Dictionary<int, SetPoint> GetBasicPositions()
         {
-            var returnList = new Dictionary<double[], SetPoint>
+            var returnList = new Dictionary<int, SetPoint>
             {
-                { new double[6]{1,0,0,0,0,0}, HOOK_GRIP },
-                { new double[6]{0,1,0,0,0,0}, OPEN_HAND },
-                { new double[6]{0,0,1,0,0,0}, PEACE_SIGN },
-                { new double[6]{0,0,0,1,0,0}, PINCH_GRIP },
-                { new double[6]{0,0,0,0,1,0}, THUMBS_UP },
-                { new double[6]{0,0,0,0,0,1}, FINGER_GUNS }
+                { 0, HOOK_GRIP },
+                { 1, OPEN_HAND },
+                {2, PEACE_SIGN },
+                { 3, PINCH_GRIP },
+                { 4, THUMBS_UP },
+                { 5, FINGER_GUNS }
             };
             return returnList;
         }

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Accord;
 
 namespace Sender
 {
     class SerialReader
     {
         private volatile double[] dataOut;
+        private volatile double[] lastDataOut;
         private Mutex bciDataLock;
         private SerialPort serialPort1;
         private int rate;
@@ -25,6 +28,7 @@ namespace Sender
             serialPort1.Open();
             serialPort1.Write("s");
             dataOut = new double[8];
+            lastDataOut = new double[8];
 
             setRate(250);
         }
@@ -47,9 +51,9 @@ namespace Sender
         public void Read()
         {
             Start();
-            Thread dataReader = new Thread(new ThreadStart(getData));
-            dataReader.Name = "OpenBCI Serial Reader";
-            dataReader.Start();
+                Thread dataReader = new Thread(new ThreadStart(getData));
+                dataReader.Name = "OpenBCI Serial Reader";
+                dataReader.Start();
         }
 
         public double[] GetData()
@@ -61,7 +65,7 @@ namespace Sender
             return returnData;
         }
 
-        private void getData()
+        private void getData() 
         {
             var inData = new Byte[32];
             while (true)
@@ -83,9 +87,16 @@ namespace Sender
                         {
                             int outVal = interpret24bitAsInt32(inData[i * 3 + 1], inData[i * 3 + 2], inData[i * 3 + 3]);
                             dataOut[i] = (double)(outVal * scale);
-                            
+                            if (dataOut[i] == lastDataOut[i])
+                            {
+                                Console.WriteLine("Node " +(i+1)+ " is not connected");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Node "+(i+1)+" is reading correctly");
+                            }
+                                lastDataOut[i] = dataOut[i];
                         }
-                        Console.WriteLine(dataOut[3]);
                     }
                 }
                 bciDataLock.ReleaseMutex();

@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Media.Converters;
+using Accord.Neuro.Learning;
 
 namespace Sender
 {
@@ -16,12 +18,12 @@ namespace Sender
     {
         private NeuralNet net;
         private SerialReader serial;
-        private double[] currentHandPosition = new double[6];
+        private int currentHandPosition;
         private List<double[]> inputTrainingData;
         private List<double[]> outputTrainingData;
         private object dataLock = new object();
-        private Dictionary<string, double[]> indexList;
-        private Dictionary<double[], SetPoint> setPointList;
+        private Dictionary<string, int> indexList;
+        private Dictionary<int, SetPoint> setPointList;
 
         public NeuralNetForm()
         {
@@ -43,7 +45,7 @@ namespace Sender
             indexList = Globals.GetBasicValues();
             setPointList = Globals.GetBasicPositions();
 
-            foreach (KeyValuePair<string, double[]> position in indexList)
+            foreach (KeyValuePair<string, int> position in indexList)
             {
                 DefaultPositionsBox.Items.Add(position.Key);
             }
@@ -61,11 +63,25 @@ namespace Sender
         {
             lock (dataLock)
             {
-                
+
                 var input = serial.GetData();
                 var percievedPositionArray = net.Think(input);
 
-                var percievedPosition = setPointList[percievedPositionArray];
+                double bestVal = 0;
+                SetPoint bestSetPoint = new SetPoint();
+                
+
+                for (int i = 0; i < percievedPositionArray.Length; i++)
+                {
+                    if (percievedPositionArray[i] > bestVal)
+                    {
+                        bestVal = percievedPositionArray[i];   
+                        bestSetPoint = setPointList[i];
+                    }
+                }
+
+
+            var percievedPosition = bestSetPoint;
                 
                 Globals.T1DesiredPosition = percievedPosition.T1Position;
                 Globals.T2DesiredPosition = percievedPosition.T2Position;
@@ -120,7 +136,9 @@ namespace Sender
         private void logButton_Click(object sender, EventArgs e)
         {
             inputTrainingData.Add(serial.GetData());
-            outputTrainingData.Add(currentHandPosition);
+            double[] outputData = new double[6];
+            outputData[currentHandPosition] = 1;
+            outputTrainingData.Add(outputData);
         }
 
         private void TrainButton_Click(object sender, EventArgs e)
