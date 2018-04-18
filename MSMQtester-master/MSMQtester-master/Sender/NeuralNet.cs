@@ -20,15 +20,18 @@ namespace Sender
         private ActivationNetwork network;
         private KFoldData topResults;
 
-        private string ANNfilename = Globals.NeuralNetSaveLocation;
-        private string KFoldFilename = Globals.KFoldDataSaveLocation;
+        private string ANNfilename;
+        private string KFoldFilename;
 
 
         //private CrossValidation<ActivationNetwork, double, double> validator;
 
-        public NeuralNet(int inputs, int outputs)
+        public NeuralNet(int inputs, int outputs, string ANNfilename, string KFoldFilename)
         {
             NodeSavingReading reader = new NodeSavingReading();
+            this.ANNfilename = ANNfilename;
+            this.KFoldFilename = KFoldFilename;
+
             try
             {
                 network = (ActivationNetwork)Network.Load(ANNfilename);
@@ -36,8 +39,8 @@ namespace Sender
             }
             catch (FileNotFoundException e)
             {
-                Console.WriteLine("Could not find file, generating new one");
-                Validate(inputs, outputs);
+                Console.WriteLine("Could not find file, generate new one");
+                network = new ActivationNetwork(new SigmoidFunction(), inputs, new int[3] {10, 10, outputs});
             }
 
             //new ActivationNetwork(new SigmoidFunction(), inputs, returnArray);//
@@ -54,6 +57,20 @@ namespace Sender
 
             double error = 0;
             for (int iteration = 0; iteration < topResults.Iterations; iteration++)
+            {
+                error = teacher.RunEpoch(input, outputs);
+            }
+
+            return error;
+        }
+
+        public double Train(double[][] input, double[][] outputs, int iterations, float rate)
+        {
+            var teacher = new ResilientBackpropagationLearning(network);
+            teacher.LearningRate = rate;
+
+            double error = 0;
+            for (int iteration = 0; iteration < iterations; iteration++)
             {
                 error = teacher.RunEpoch(input, outputs);
             }

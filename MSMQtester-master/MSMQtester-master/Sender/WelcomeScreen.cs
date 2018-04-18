@@ -22,11 +22,17 @@ namespace Sender
 
         private void BasicFunctionalityButton_Click(object sender, EventArgs e)
         {
-            if(Globals.form1 == null)
+            //if(Globals.form1 == null)
+            //{
+            //    Globals.form1 = new Form1();
+            //}
+            //Globals.form1.Show();
+            //this.Hide();
+            if (Globals.ContinuousNeuralNetForm == null)
             {
-                Globals.form1 = new Form1();
+                Globals.ContinuousNeuralNetForm = new ContinuousNeuralNetForm();
             }
-            Globals.form1.Show();
+            Globals.ContinuousNeuralNetForm.Show();
             this.Hide();
         }
 

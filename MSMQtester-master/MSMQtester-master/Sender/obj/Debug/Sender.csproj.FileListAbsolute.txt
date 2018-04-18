@@ -84,3 +84,4 @@ C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Send
 C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Sender\bin\Debug\Accord.Statistics.xml
 C:\Users\PatronalComputer\Documents\MQP\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.NeuralNetForm.resources
 C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.CertaintyPrompt.resources
+C:\Users\Gage\Documents\GitHub\Gallati_Polley_MQP_Code\MSMQtester-master\MSMQtester-master\Sender\obj\Debug\Sender.ContinuousNeuralNetForm.resources

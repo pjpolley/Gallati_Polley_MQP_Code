@@ -60,8 +60,20 @@ namespace Sender
         {
             bciDataLock.WaitOne();
             double[] returnData = dataOut;
-            bciDataLock.ReleaseMutex();
-            
+            if (Array.Exists(returnData, input => double.IsNaN(input)))
+            {
+                bciDataLock.ReleaseMutex();
+                while (Array.Exists(returnData, input => double.IsNaN(input)))
+                {
+                    bciDataLock.WaitOne();
+                    returnData = GetData();
+                    bciDataLock.ReleaseMutex();
+                }
+            }
+            else
+            {
+                bciDataLock.ReleaseMutex();
+            }
             return returnData;
         }
 

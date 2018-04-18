@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Accord;
 
 namespace Sender
 {
@@ -23,6 +24,7 @@ namespace Sender
         public static Form welcomeScreen = null;
         public static Form treeScreen = null;
         public static Form netScreen = null;
+        public static Form ContinuousNeuralNetForm = null;
         public static Form form1 = null;
         public static Form form2 = null;
 
@@ -130,6 +132,26 @@ namespace Sender
                 { 4, THUMBS_UP },
                 { 5, FINGER_GUNS }
             };
+            return returnList;
+        }
+
+        public static double[] GetDoubles()
+        {
+            var returnList = new double[14];
+            returnList[0] = A1ActualPosition / 90;
+            returnList[1] = A2ActualPosition  / 90;
+            returnList[2] = A3ActualPosition  / 90;
+            returnList[3] = B1ActualPosition  / 90;
+            returnList[4] = B2ActualPosition  / 90;
+            returnList[5] = B3ActualPosition  / 90;
+            returnList[6] = C1ActualPosition / 90;
+            returnList[7] = C2ActualPosition  / 90;
+            returnList[8] = C3ActualPosition  / 90;
+            returnList[9] = D1ActualPosition  / 90;
+            returnList[10] = D2ActualPosition  / 90;
+            returnList[11] = D3ActualPosition  / 90;
+            returnList[12] = T1ActualPosition  / 90;
+            returnList[13] = T2ActualPosition  / 90;
             return returnList;
         }
 

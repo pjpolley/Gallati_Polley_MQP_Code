@@ -25,11 +25,14 @@ namespace Sender
         private Dictionary<string, int> indexList;
         private Dictionary<int, SetPoint> setPointList;
 
+        private string ANNfilename = Globals.NeuralNetSaveLocation;
+        private string KFoldFilename = Globals.KFoldDataSaveLocation;
+
         public NeuralNetForm()
         {
             InitializeComponent();
 
-            net = new NeuralNet(8, 6);
+            net = new NeuralNet(8, 6, ANNfilename, KFoldFilename);
             inputTrainingData = new List<double[]>();
             outputTrainingData = new List<double[]>();
 
