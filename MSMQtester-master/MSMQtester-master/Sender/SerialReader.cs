@@ -13,7 +13,7 @@ namespace Sender
     class SerialReader
     {
         private volatile double[] dataOut;
-        private volatile double[] lastDataOut;
+        private volatile List<double[]> lastDataOut;
         private Mutex bciDataLock;
         private SerialPort serialPort1;
         private int rate;
@@ -28,7 +28,7 @@ namespace Sender
             serialPort1.Open();
             serialPort1.Write("s");
             dataOut = new double[8];
-            lastDataOut = new double[8];
+            lastDataOut = new List<double[]>();
 
             setRate(250);
         }
@@ -51,9 +51,9 @@ namespace Sender
         public void Read()
         {
             Start();
-                Thread dataReader = new Thread(new ThreadStart(getData));
-                dataReader.Name = "OpenBCI Serial Reader";
-                dataReader.Start();
+
+            Task dataReader = new Task(getData);
+            dataReader.Start();
         }
 
         public double[] GetData()
@@ -68,40 +68,56 @@ namespace Sender
         private void getData() 
         {
             var inData = new Byte[32];
-            while (true)
-            {
-                try
+                while (true)
                 {
-                    bciDataLock.WaitOne();
-                }
-                catch (AbandonedMutexException e)
-                {
-                    bciDataLock.ReleaseMutex();
-                }
-                if (serialPort1.ReadByte() == 0xA0)
-                {
-                    serialPort1.Read(inData, 0, 32);
-                    if (inData[31] > 0xBF && inData[31] < 0xD0 && inData[0] <= rate)
+                    try
                     {
-                        for (int i = 0; i < 8; i++)
+                        bciDataLock.WaitOne();
+                    }
+                    catch (AbandonedMutexException e)
+                    {
+                        bciDataLock.ReleaseMutex();
+                    }
+
+
+                    if (serialPort1.ReadByte() == 0xA0)
+                    {
+                        serialPort1.Read(inData, 0, 32);
+                        if (inData[31] > 0xBF && inData[31] < 0xD0 && inData[0] <= rate)
                         {
-                            int outVal = interpret24bitAsInt32(inData[i * 3 + 1], inData[i * 3 + 2], inData[i * 3 + 3]);
-                            dataOut[i] = (double)(outVal * scale);
-                            if (dataOut[i] == lastDataOut[i])
+                            var loggingData = new double[8];
+                            for (int i = 0; i < 8; i++)
                             {
-                                Console.WriteLine("Node " +(i+1)+ " is not connected");
+                                int outVal = interpret24bitAsInt32(inData[i * 3 + 1], inData[i * 3 + 2],
+                                    inData[i * 3 + 3]);
+                                dataOut[i] = (double) (outVal * scale);
+                                loggingData[i] = dataOut[i];
+                                if (lastDataOut.Count > 5 && dataOut[i] == lastDataOut.First()[i])
+                                {
+                                    dataOut[i] = double.NaN;
+                                    Console.WriteLine("Node " + (i+1) +" is not connected");
+                                }
+                                else if (i == 7 && lastDataOut.Count > 5)
+                                {
+                                    Console.WriteLine("Node " + (i + 1) + " is connected");
+                                    lastDataOut.RemoveAt(0);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Node "+ (i+1) +" is connected");
+                                }
+
                             }
-                            else
-                            {
-                                Console.WriteLine("Node "+(i+1)+" is reading correctly");
-                            }
-                                lastDataOut[i] = dataOut[i];
+
+                            lastDataOut.Add(loggingData);
                         }
                     }
+
+
+
+                    bciDataLock.ReleaseMutex();
                 }
-                bciDataLock.ReleaseMutex();
             }
-        }
 
         //Provided by OpenBCI
         public int interpret24bitAsInt32(byte byte1, byte byte2, byte byte3)
