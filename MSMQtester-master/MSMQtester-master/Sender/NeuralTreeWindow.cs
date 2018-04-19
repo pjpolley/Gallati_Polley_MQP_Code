@@ -64,12 +64,12 @@ namespace Sender
                         parentNode.Nodes.Add(newNode);
                     }
                 }
-                if(n.id != Globals.CONTROLNODE && n.children.Contains(Globals.CONTROLNODE))
+                if (n.id != Globals.CONTROLNODE && n.children.Contains(Globals.CONTROLNODE))
                 {
                     TreeNode parentNode = findNodeInTree(n.id);
-                    foreach(TreeNode tn in parentNode.Nodes)
+                    foreach (TreeNode tn in parentNode.Nodes)
                     {
-                        if((int)tn.Tag == Globals.CONTROLNODE)
+                        if ((int)tn.Tag == Globals.CONTROLNODE)
                         {
                             tn.Remove();
                         }
@@ -163,11 +163,11 @@ namespace Sender
         private void AddAnotherLayerButton_Click(object sender, EventArgs e)
         {
             Node thisNode = controls.allNodes[(int)activeNode.Tag];
-            if(thisNode.children.Count != 0)
+            if (thisNode.children.Count != 0)
             {
                 return;//node already has children. do nothing
             }
-            for(int i = 0; i < controls.childrenPerNode; i++)
+            for (int i = 0; i < controls.childrenPerNode; i++)
             {
                 //calculate the id for the new node
                 int newID = (thisNode.id * 10) + i + 1;
@@ -188,7 +188,7 @@ namespace Sender
         {
             Node thisNode = controls.allNodes[(int)activeNode.Tag];
             List<int> children = thisNode.children;
-            foreach(int i in children)
+            foreach (int i in children)
             {
                 if (i != Globals.CONTROLNODE)
                 {
@@ -208,18 +208,18 @@ namespace Sender
         private void setNumberOfPositionsPerLayerButton_Click(object sender, EventArgs e)
         {
             int newChildrenPerNode = System.Convert.ToInt32(positionsPerLayerBox.Text);
-            if(newChildrenPerNode == controls.childrenPerNode)
+            if (newChildrenPerNode == controls.childrenPerNode)
             {
                 //nothing required
                 return;
             }
-            else if(newChildrenPerNode <= 1)
+            else if (newChildrenPerNode <= 1)
             {
                 //shouldn't be able to have only one child per node. if so, the control system doesn't do anything
                 Console.WriteLine("ERROR. INPUT CANNOT BE LESS THAN 2");
                 return;
             }
-            else if(!(newChildrenPerNode <= 9))
+            else if (!(newChildrenPerNode <= 9))
             {
                 //shouldn't be able to have only one child per node. if so, the control system doesn't do anything
                 Console.WriteLine("ERROR. INPUT CANNOT BE GREATER THAN 9");
@@ -291,7 +291,7 @@ namespace Sender
                         parentToControl.Nodes.Add(newControlsNode);
                         n.children.Add(Globals.CONTROLNODE);
                     }
-                    
+
                 }
                 controls.cleanupReferences();
                 controls.childrenPerNode = newChildrenPerNode;
@@ -321,21 +321,21 @@ namespace Sender
 
         private TreeNode findNodeInTree(int id)
         {
-            if(id == Globals.CONTROLNODE)
+            if (id == Globals.CONTROLNODE)
             {
                 return null;
             }
             TreeNode root = NeuronTreeView.Nodes[0];
-            if((int)root.Tag == id)
+            if ((int)root.Tag == id)
             {
                 return root;
             }
             else
             {
-                foreach(TreeNode n in root.Nodes)
+                foreach (TreeNode n in root.Nodes)
                 {
                     TreeNode checkedNode = recursiveFindNode(n, id);
-                    if(checkedNode != null)
+                    if (checkedNode != null)
                     {
                         return checkedNode;
                     }
@@ -357,9 +357,10 @@ namespace Sender
             else
             {
                 TreeNode foundNode;
-                foreach (TreeNode child in n.Nodes) {
+                foreach (TreeNode child in n.Nodes)
+                {
                     foundNode = recursiveFindNode(child, id);
-                    if(foundNode != null)
+                    if (foundNode != null)
                     {
                         return child;
                     }
@@ -383,9 +384,8 @@ namespace Sender
             //purge all nodes
             NeuronTreeView.Nodes.Clear();
 
-            //
+            //and reset the tree
             controls.instantiateNewTree(System.Convert.ToInt32(positionsPerLayerBox.Text));
-            Console.WriteLine("Test");
             TreeNode newNode = new TreeNode(controls.root.name);
             newNode.Tag = controls.root.id;
             NeuronTreeView.Nodes.Add(newNode);
@@ -395,7 +395,7 @@ namespace Sender
         {
             fingerSelected = Globals.THUMB;
             InnerJointButton.Hide();
-            if(jointSelected == Globals.INNERJOINT)
+            if (jointSelected == Globals.INNERJOINT)
             {
                 jointSelected = Globals.MIDDLEJOINT;
             }
@@ -615,7 +615,7 @@ namespace Sender
 
         private void DesiredAngleInput_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 setDesiredAngle();
                 UnityCommunicationHub.TwoWayTransmission();
@@ -624,8 +624,6 @@ namespace Sender
         }
 
         volatile bool continueControlling = true;
-
-        decimal accruedValues = 0;
         long numInputs = 0;
         bool foundNextPosition = false;
         TreeNode lastNode = null;
@@ -633,34 +631,26 @@ namespace Sender
         Stopwatch timer = new Stopwatch();
         Node currentNode;
         SerialReader reader = new SerialReader();
-
-        private double differenceInConcentrations;
-        private double deltaBetweenThreshholds;
+        int rate;
 
         //make ranges for this run
         private List<Threshhold> ranges;
 
         private void beginControllingHandButton_Click(object sender, EventArgs e)
         {
-            
-            continueControlling = true;
-            currentNode = controls.root;
-            int rate = reader.getRate();
             int desiredMillisecondDelay = controls.timeNeededForChange;
-            //int arraySize = (desiredMillisecondDelay / 1000) * rate;
+            int arraySize = (desiredMillisecondDelay / 1000) * rate;
             reader.Read();
+            rate = reader.getRate();
 
             double lowConcentration = 0;
             double highConcentration = 0;
-
-            desiredNode = controls.root;
-
-            timer = new Stopwatch();
 
             //first get threshholds
             bool done = false;
             while (!done)
             {
+
                 int reads = 0;
                 decimal allReads = 0;
                 MessageBox.Show("First try to let your mind wander until the next popup appears. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
@@ -670,6 +660,7 @@ namespace Sender
                     allReads += (decimal)reader.GetData()[Globals.inputNode];
                     reads++;
                 }
+
                 timer.Reset();
                 lowConcentration = (double)(allReads / reads);
                 Console.WriteLine("Low concentration was: " + lowConcentration);
@@ -677,7 +668,8 @@ namespace Sender
                 reads = 0;
                 allReads = 0;
 
-                MessageBox.Show("Good. Next try to focus as hard as possible something. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
+                MessageBox.Show("Next try to focus as hard as possible something. Hit OK when ready.", string.Empty, MessageBoxButtons.OK);
+
                 timer.Start();
                 while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
                 {
@@ -685,6 +677,7 @@ namespace Sender
                     reads++;
                 }
                 timer.Reset();
+
                 highConcentration = (double)(allReads / reads);
 
                 Console.WriteLine("High concentration was: " + highConcentration);
@@ -696,19 +689,19 @@ namespace Sender
             }
 
             double differenceInConcentrations = highConcentration - lowConcentration;
-            double deltaBetweenThreshholds = differenceInConcentrations / controls.childrenPerNode;
+            double deltaBetweenThreshholds = differenceInConcentrations / (controls.childrenPerNode + 1);
 
             //make ranges for this run
-            List<Threshhold> ranges = new List<Threshhold>(controls.childrenPerNode);
+            ranges = new List<Threshhold>(controls.childrenPerNode + 1);
 
-            for(int i = 0; i < controls.childrenPerNode; i++)
+            for (int i = 0; i < controls.childrenPerNode + 1; i++)
             {
-                if(i == 0)
+                if (i == 0)
                 {
                     //make sure all reads work for it
                     ranges.Add(new Threshhold(Double.MinValue, lowConcentration + ((i + 1) * deltaBetweenThreshholds)));
                 }
-                else if (i == controls.childrenPerNode - 1)
+                else if (i == controls.childrenPerNode)//not a +1 because of indexing. This will allocate the max value to controls.
                 {
                     ranges.Add(new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), Double.MaxValue));
                 }
@@ -717,72 +710,7 @@ namespace Sender
                     ranges.Add(new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), lowConcentration + ((i + 1) * deltaBetweenThreshholds)));
                 }
             }
-
-
-
             MessageBox.Show("Ready to control hand. Press OK when ready.", string.Empty, MessageBoxButtons.OK);
-
-            while (continueControlling)
-            {
-                //get the inputs and average them for the desired output
-                double averageInput = 0;
-
-                if(currentNode.children.Count < 2)
-                {
-                    continueControlling = false;
-                    break;
-                }
-
-                timer.Start();
-                while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
-                {
-                    accruedValues += (decimal)reader.GetData()[Globals.inputNode];
-                    numInputs++;
-                    averageInput = (double)(accruedValues / numInputs);
-                    for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
-                    {
-                        if (ranges[i].Contains(averageInput))
-                        {
-                            foundNextPosition = true;
-                            desiredNode = controls.allNodes[currentNode.children[i]];
-                        }
-                    }
-                    foundNextPosition = false;
-                    TreeNode n = findNodeInTree(desiredNode.id);
-                    n.BackColor = Color.Yellow;
-                    
-                    if (lastNode != null && n != lastNode)
-                    {
-                        lastNode.BackColor = Color.White;
-                    }
-                    lastNode = n;
-                }
-
-                //now get the next node to go to
-                for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
-                {
-                    if (ranges[i].Contains(averageInput))
-                    {
-                        foundNextPosition = true;
-                        desiredNode = controls.allNodes[currentNode.children[i]];
-                    }
-                }
-
-                timer.Reset();
-                numInputs = 0;
-                accruedValues = 0;
-                foundNextPosition = false;
-
-                if (desiredNode.id == Globals.CONTROLNODE)
-                {
-                    continueControlling = false;
-                }
-                else
-                {
-                    currentNode = desiredNode;
-                    loadPositions(currentNode);
-                }
-            }
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -792,6 +720,14 @@ namespace Sender
 
         private void iterateButton_Click(object sender, EventArgs e)
         {
+            runTree();
+        }
+
+        private void runTree()
+        {
+            continueControlling = true;
+            currentNode = controls.root;
+            desiredNode = controls.root;
             int desiredMillisecondDelay = controls.timeNeededForChange;
             timer = new Stopwatch();
             while (continueControlling)
@@ -802,57 +738,71 @@ namespace Sender
                 if (currentNode.children.Count < 2)
                 {
                     continueControlling = false;
+                    loadPositions(currentNode);
                     break;
                 }
-
+                Random rand = new Random();
+                decimal accruedValues = 0;
                 timer.Start();
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
                     accruedValues += (decimal)reader.GetData()[Globals.inputNode];
                     numInputs++;
-                    averageInput = (double)(accruedValues / numInputs);
-                    for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
-                    {
-                        if (ranges[i].Contains(averageInput))
-                        {
-                            foundNextPosition = true;
-                            desiredNode = controls.allNodes[currentNode.children[i]];
-                        }
-                    }
-                    foundNextPosition = false;
-                    TreeNode n = findNodeInTree(desiredNode.id);
-                    n.BackColor = Color.Yellow;
-
-                    if (lastNode != null && n != lastNode)
-                    {
-                        lastNode.BackColor = Color.White;
-                    }
-                    lastNode = n;
                 }
 
-                //now get the next node to go to
-                for (int i = 0; i < controls.childrenPerNode && !foundNextPosition; i++)
+                averageInput = (double)(accruedValues / numInputs);
+
+                for (int i = 0; i < (controls.childrenPerNode + 1) && !foundNextPosition; i++)
                 {
-                    if (ranges[i].Contains(averageInput))
+                    if (currentNode.children.Count < 2 || currentNode.id == Globals.CONTROLNODE)
+                    {
+                        foundNextPosition = true;
+                        continueControlling = false;
+                    }
+                    else if (i == controls.childrenPerNode)
+                    {
+                        foundNextPosition = true;
+                        continueControlling = false;
+                    }
+                    else if (ranges[i].Contains(averageInput))
                     {
                         foundNextPosition = true;
                         desiredNode = controls.allNodes[currentNode.children[i]];
                     }
+
                 }
+                foundNextPosition = false;
+                TreeNode n = findNodeInTree(desiredNode.id);
+                currentNode = desiredNode;
+                n.BackColor = Color.Yellow;
+
+                if (lastNode != null && n != lastNode)
+                {
+                    lastNode.BackColor = Color.White;
+                }
+                lastNode = n;
+
+                Console.WriteLine(averageInput);
 
                 timer.Reset();
                 numInputs = 0;
                 accruedValues = 0;
                 foundNextPosition = false;
 
+                Console.WriteLine("Desired was " + desiredNode.name);
+
                 if (desiredNode.id == Globals.CONTROLNODE)
                 {
                     continueControlling = false;
+                    loadPositions(desiredNode);
                 }
                 else
                 {
                     currentNode = desiredNode;
-                    loadPositions(currentNode);
+                    if (!continueControlling)
+                    {
+                        loadPositions(desiredNode);
+                    }
                 }
             }
         }
