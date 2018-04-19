@@ -52,6 +52,22 @@ namespace Sender
 
         public double Train(double[][] input, double[][] outputs)
         {
+            //List<double[]> nanIndexes = new List<double[]>();
+            //foreach (double[] individualArray in input)
+            //{
+            //    foreach (double nodeValue in individualArray)
+            //    {
+            //        if (double.IsNaN(nodeValue))
+            //        {
+            //            nanIndexes.Add(individualArray);
+            //        }
+            //    }
+            //}
+            //foreach (double[] itemToRemove in nanIndexes)
+            //{
+            //    outputs.RemoveAt(input.IndexOf(itemToRemove));
+            //    input.RemoveAll(itemToRemove);
+            //}
             var teacher = new ResilientBackpropagationLearning(network);
             teacher.LearningRate = topResults.TrainingSpeed;
 
@@ -68,11 +84,13 @@ namespace Sender
         {
             var teacher = new ResilientBackpropagationLearning(network);
             teacher.LearningRate = rate;
+            var inVal = input;
+            var outVal = outputs;
 
             double error = 0;
             for (int iteration = 0; iteration < iterations; iteration++)
             {
-                error = teacher.RunEpoch(input, outputs);
+                error = teacher.RunEpoch(inVal, outVal);
             }
 
             return error;

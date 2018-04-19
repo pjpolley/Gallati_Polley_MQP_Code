@@ -118,7 +118,7 @@ namespace Sender
                 }
 
 
-                net.Train(networkTrainingInput, networkTrainingOutput);
+                net.Train(networkTrainingInput, networkTrainingOutput, 10000, 0.97f);
             }
         }
 

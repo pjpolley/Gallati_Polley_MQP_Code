@@ -6,7 +6,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Accord;
+using Newtonsoft.Json.Linq;
 
 namespace Sender
 {
@@ -21,12 +23,19 @@ namespace Sender
         //Scale for OpenBCI data to mV (highest setting)
         private static float scale = 0.02235f;
 
+        //Previous data for filter
+        static double[,] prev_x_notch = new double[8, 5];
+        static double[,] prev_y_notch = new double[8, 5];
+        static double[,] prev_x_standard = new double[8, 5];
+        static double[,] prev_y_standard = new double[8, 5];
+
         public SerialReader()
         {
             bciDataLock = new Mutex();
             serialPort1 = new SerialPort("COM5", 115200);
             serialPort1.Open();
             serialPort1.Write("s");
+            serialPort1.Write("~5");
             dataOut = new double[8];
             lastDataOut = new List<double[]>();
 
@@ -60,21 +69,38 @@ namespace Sender
         {
             bciDataLock.WaitOne();
             double[] returnData = dataOut;
-            if (Array.Exists(returnData, input => double.IsNaN(input)))
+            var notGood = true;
+            while (notGood)
             {
-                bciDataLock.ReleaseMutex();
-                while (Array.Exists(returnData, input => double.IsNaN(input)))
+                notGood = false;
+                foreach (var nodeReading in returnData)
                 {
-                    bciDataLock.WaitOne();
-                    returnData = GetData();
-                    bciDataLock.ReleaseMutex();
+                    if (double.IsNaN(nodeReading))
+                    {
+                        notGood = true;
+                        bciDataLock.ReleaseMutex();
+                        bciDataLock.WaitOne();
+                        returnData = dataOut;
+                        bciDataLock.ReleaseMutex();
+                    }
                 }
+
             }
-            else
-            {
-                bciDataLock.ReleaseMutex();
-            }
+            bciDataLock.ReleaseMutex();
             return returnData;
+            //if (Array.Exists(returnData, input => double.IsNaN(input)))
+            //{
+            //    bciDataLock.ReleaseMutex();
+            //    while (Array.Exists(returnData, input => double.IsNaN(input)))
+            //    {
+                    
+            //    }
+            //}
+            //else
+            //{
+                
+            //}
+            //return returnData;
         }
 
         private void getData() 
@@ -103,6 +129,7 @@ namespace Sender
                                 int outVal = interpret24bitAsInt32(inData[i * 3 + 1], inData[i * 3 + 2],
                                     inData[i * 3 + 3]);
                                 dataOut[i] = (double) (outVal * scale);
+                                dataOut[i] = Filter(dataOut[i], i);
                                 loggingData[i] = dataOut[i];
                                 if (lastDataOut.Count > 5 && dataOut[i] == lastDataOut.First()[i])
                                 {
@@ -111,13 +138,13 @@ namespace Sender
                                 }
                                 else if (i == 7 && lastDataOut.Count > 5)
                                 {
-                                    Console.WriteLine("Node " + (i + 1) + " is connected");
+                                    Console.WriteLine("Node " + (i + 1) + " is connected with value "+dataOut[i]);
                                     lastDataOut.RemoveAt(0);
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Node "+ (i+1) +" is connected");
-                                }
+                                    Console.WriteLine("Node " + (i + 1) + " is connected with value " + dataOut[i]);
+                            }
 
                             }
 
@@ -148,6 +175,55 @@ namespace Sender
                 newInt = (int)((uint)newInt & (uint)0x00FFFFFF);
             }
             return (newInt);
+        }
+
+        //Filtering function for OpenBCI Nodes
+        //Adapted from nekrodezynfekator's OpenBCI_GUI repository
+        private double Filter(double inputVal, int i)
+        {
+            double returnVal = 0;
+            var b = new double[5] { 0.1173510367246093, 0, -0.2347020734492186, 0, 0.1173510367246093 };
+            var a = new double[5] { 1, -2.137430180172061, 2.038578008108517, -1.070144399200925, 0.2946365275879138 };
+            var b2 = new double[5] { 0.9650809863447347, -0.2424683201757643, 1.945391494128786, -0.2424683201757643, 0.9650809863447347 };
+            var a2 = new double[5] { 1, -0.2467782611297853, 1.944171784691352, -0.2381583792217435, 0.9313816821269039 };
+
+            for (int j = 4; j > 0; j--)
+                {
+                    prev_x_notch[i, j] = prev_x_notch[i, j - 1];
+                    prev_y_notch[i, j] = prev_y_notch[i, j - 1];
+                    prev_x_standard[i, j] = prev_x_standard[i, j - 1];
+                    prev_y_standard[i, j] = prev_y_standard[i, j - 1];
+                }
+
+                prev_x_notch[i, 0] = inputVal;
+
+                double score = 0;
+
+                for (int j = 0; j < 5; j++)
+                {
+                    score += b2[j]*prev_x_notch[i, j];
+                    if (j > 0)
+                    {
+                        score -= a2[j]*prev_y_notch[i, j];
+                    }
+                }
+
+                prev_y_notch[i, 0] = score;
+                prev_x_standard[i, 0] = score;
+                score = 0;
+                for (int j = 0; j < 5; j++)
+                {
+                    score += b[j]*prev_x_standard[i, j];
+                    if (j > 0)
+                    {
+                        score -= a[j]*prev_y_standard[i, j];
+                    }
+                }
+
+                prev_y_standard[i, 0] = score;
+                returnVal = score;
+
+            return returnVal;
         }
 
     }
