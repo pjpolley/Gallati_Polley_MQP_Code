@@ -207,6 +207,11 @@ namespace Sender
 
         private void setNumberOfPositionsPerLayerButton_Click(object sender, EventArgs e)
         {
+            setNumPositions();
+        }
+
+        private void setNumPositions()
+        {
             int newChildrenPerNode = System.Convert.ToInt32(positionsPerLayerBox.Text);
             if (newChildrenPerNode == controls.childrenPerNode)
             {
@@ -744,10 +749,14 @@ namespace Sender
                 Random rand = new Random();
                 decimal accruedValues = 0;
                 timer.Start();
+                decimal currentIn;
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
-                    accruedValues += (decimal)reader.GetData()[Globals.inputNode];
+                    currentIn = (decimal)reader.GetData()[Globals.inputNode];
+                    accruedValues += currentIn;
                     numInputs++;
+                    currentGoalBox.Text = (accruedValues / numInputs).ToString();
+                    currentInputBox.Text = currentIn.ToString();
                 }
 
                 averageInput = (double)(accruedValues / numInputs);
@@ -804,6 +813,34 @@ namespace Sender
                         loadPositions(desiredNode);
                     }
                 }
+            }
+        }
+
+        private void handDelayBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                controls.timeNeededForChange = System.Convert.ToInt32(handDelayBox);
+                e.Handled = e.SuppressKeyPress = true;
+            }
+        }
+
+        private void positionsPerLayerBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                setNumPositions();
+                e.Handled = e.SuppressKeyPress = true;
+            }
+        }
+
+        private void desiredNameBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                activeNode.Text = desiredNameBox.Text;
+                controls.allNodes[(int)activeNode.Tag].name = desiredNameBox.Text;
+                e.Handled = e.SuppressKeyPress = true;
             }
         }
     }
