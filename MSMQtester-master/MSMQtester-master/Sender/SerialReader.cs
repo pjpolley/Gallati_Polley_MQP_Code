@@ -32,10 +32,10 @@ namespace Sender
         public SerialReader()
         {
             bciDataLock = new Mutex();
-            serialPort1 = new SerialPort("COM5", 115200);
+            serialPort1 = new SerialPort("COM3", 115200);
             serialPort1.Open();
             serialPort1.Write("s");
-            serialPort1.Write("~5");
+            //serialPort1.Write("~5");
             dataOut = new double[8];
             lastDataOut = new List<double[]>();
 
@@ -138,12 +138,18 @@ namespace Sender
                                 }
                                 else if (i == 7 && lastDataOut.Count > 5)
                                 {
-                                    Console.WriteLine("Node " + (i + 1) + " is connected with value "+dataOut[i]);
+                                if (i == 1)
+                                {
+                                    Console.WriteLine("Node " + (i + 1) + " is connected with value " + dataOut[i]);
+                                }
                                     lastDataOut.RemoveAt(0);
                                 }
                                 else
                                 {
+                                if (i == 1)
+                                {
                                     Console.WriteLine("Node " + (i + 1) + " is connected with value " + dataOut[i]);
+                                }
                             }
 
                             }

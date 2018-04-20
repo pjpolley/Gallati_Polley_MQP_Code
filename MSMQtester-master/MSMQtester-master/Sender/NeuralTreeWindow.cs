@@ -16,8 +16,22 @@ namespace Sender
         private int fingerSelected = Globals.THUMB;
         private int jointSelected = Globals.OUTERJOINT;
 
+        volatile bool continueControlling = true;
+        long numInputs = 0;
+        bool foundNextPosition = false;
+        TreeNode lastNode = null;
+        private Node desiredNode;
+        Stopwatch timer = new Stopwatch();
+        Node currentNode;
+        SerialReader reader = new SerialReader();
+        int rate;
+
+        //make ranges for this run
+        private List<Threshhold> ranges;
+
         public NeuralTreeWindow()
         {
+            this.Size = new System.Drawing.Size(1710, 1301);
             this.FormClosing += Globals.CloseAllForms;
             InitializeComponent();
 
@@ -628,19 +642,6 @@ namespace Sender
             }
         }
 
-        volatile bool continueControlling = true;
-        long numInputs = 0;
-        bool foundNextPosition = false;
-        TreeNode lastNode = null;
-        private Node desiredNode;
-        Stopwatch timer = new Stopwatch();
-        Node currentNode;
-        SerialReader reader = new SerialReader();
-        int rate;
-
-        //make ranges for this run
-        private List<Threshhold> ranges;
-
         private void beginControllingHandButton_Click(object sender, EventArgs e)
         {
             int desiredMillisecondDelay = controls.timeNeededForChange;
@@ -662,12 +663,16 @@ namespace Sender
                 timer.Start();
                 while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
                 {
-                    allReads += (decimal)reader.GetData()[Globals.inputNode];
+                    decimal currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
+                    allReads += currentIn;
                     reads++;
+                    currentGoalBox.Text = (allReads / reads).ToString();
+                    currentInputBox.Text = currentIn.ToString();
                 }
 
                 timer.Reset();
                 lowConcentration = (double)(allReads / reads);
+                minValueTextBox.Text = lowConcentration.ToString();
                 Console.WriteLine("Low concentration was: " + lowConcentration);
 
                 reads = 0;
@@ -678,12 +683,16 @@ namespace Sender
                 timer.Start();
                 while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
                 {
-                    allReads += (decimal)reader.GetData()[Globals.inputNode];
+                    decimal currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
+                    allReads += currentIn;
                     reads++;
+                    currentGoalBox.Text = (allReads / reads).ToString();
+                    currentInputBox.Text = currentIn.ToString();
                 }
                 timer.Reset();
 
                 highConcentration = (double)(allReads / reads);
+                maxValueTextBox.Text = highConcentration.ToString();
 
                 Console.WriteLine("High concentration was: " + highConcentration);
 
