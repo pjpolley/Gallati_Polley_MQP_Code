@@ -113,11 +113,11 @@ namespace Sender
         public async void Validate(int inputSize, int outputSize)
         {
             List<KFoldData> inputsList = new List<KFoldData>();
-            for (double trainingweights = 0.01; trainingweights <= 1; trainingweights += 0.01)
+            for (double trainingweights = 0.01; trainingweights <= 2.1; trainingweights += 0.1)
             {
-                for (int breadth = 1; breadth <= 5; breadth++)
+                for (int breadth = 1; breadth <= 15; breadth++)
                 {
-                    for (int depth = 1; depth < 5; depth++)
+                    for (int depth = 1; depth < 15; depth++)
                     {
                         inputsList.Add(new KFoldData(breadth, depth, trainingweights, 0, 0));
                     }

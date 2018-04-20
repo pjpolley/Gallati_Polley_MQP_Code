@@ -21,6 +21,8 @@ namespace Sender
         private List<double[]> outputTrainingData;
         private object dataLock = new object();
 
+        private Dictionary<int, SetPoint> setPointList;
+
         private int expirationTimer = 10;
 
 
@@ -32,7 +34,7 @@ namespace Sender
         {
             InitializeComponent();
 
-            net = new NeuralNet(8, 14, ANNfilename, KFoldFilename);
+            net = new NeuralNet(8, 6, ANNfilename, KFoldFilename);
             inputTrainingData = new List<double[]>();
             outputTrainingData = new List<double[]>();
 
@@ -50,21 +52,39 @@ namespace Sender
 
             Random rand = new Random(23);
 
+            setPointList = Globals.GetBasicPositions();
 
-            Globals.T1DesiredPosition = (float)rand.Next(0, 90);
-            Globals.T2DesiredPosition = (float)rand.Next(0, 90);
-            Globals.A1DesiredPosition = (float)rand.Next(0, 90);
-            Globals.A2DesiredPosition = (float)rand.Next(0, 90);
-            Globals.A3DesiredPosition = (float)rand.Next(0, 90);
-            Globals.B1DesiredPosition = (float)rand.Next(0, 90);
-            Globals.B2DesiredPosition = (float)rand.Next(0, 90);
-            Globals.B3DesiredPosition = (float)rand.Next(0, 90);
-            Globals.C1DesiredPosition = (float)rand.Next(0, 90);
-            Globals.C2DesiredPosition = (float)rand.Next(0, 90);
-            Globals.C3DesiredPosition = (float)rand.Next(0, 90);
-            Globals.D1DesiredPosition = (float)rand.Next(0, 90);
-            Globals.D2DesiredPosition = (float)rand.Next(0, 90);
-            Globals.D3DesiredPosition = (float)rand.Next(0, 90);
+            var firstPoint = setPointList[rand.Next(0, 5)];
+            Globals.A1DesiredPosition = firstPoint.A1Position;
+            Globals.A2DesiredPosition = firstPoint.A2Position;
+            Globals.A3DesiredPosition = firstPoint.A3Position;
+            Globals.B1DesiredPosition = firstPoint.B1Position;
+            Globals.B2DesiredPosition = firstPoint.B2Position;
+            Globals.B3DesiredPosition = firstPoint.B3Position;
+            Globals.C1DesiredPosition = firstPoint.C1Position;
+            Globals.C2DesiredPosition = firstPoint.C2Position;
+            Globals.C3DesiredPosition = firstPoint.C3Position;
+            Globals.D1DesiredPosition = firstPoint.D1Position;
+            Globals.D2DesiredPosition = firstPoint.D2Position;
+            Globals.D3DesiredPosition = firstPoint.D3Position;
+            Globals.T1DesiredPosition = firstPoint.T1Position;
+            Globals.T2DesiredPosition = firstPoint.T2Position;
+            //Globals.T1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.T2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.A1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.A2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.A3DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.B1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.B2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.B3DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.C1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.C2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.C3DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.D1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.D2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.D3DesiredPosition = (float)rand.Next(0, 90);
+
+            
 
             UnityCommunicationHub.WriteData(true);
         }
@@ -74,40 +94,80 @@ namespace Sender
             lock (dataLock)
             {
 
+                //var input = serial.GetData();
+                //UnityCommunicationHub.ReadData();
+                //var percievedPositionArray = net.Think(input);
+
+                
+
+                //inputTrainingData.Add(input);
+                //outputTrainingData.Add(Globals.GetDoubles());
+
+                //for (int i = 0; i < percievedPositionArray.Length; i++)
+                //{
+                //    percievedPositionArray[i] = percievedPositionArray[i] * 90;
+                //}
+
+
+
+                //Globals.T1DesiredPosition = (float)percievedPositionArray[0];
+                //Globals.T2DesiredPosition = (float)percievedPositionArray[1];
+                //Globals.A1DesiredPosition = (float)percievedPositionArray[2];
+                //Globals.A2DesiredPosition = (float)percievedPositionArray[3];
+                //Globals.A3DesiredPosition = (float)percievedPositionArray[4];
+                //Globals.B1DesiredPosition = (float)percievedPositionArray[5];
+                //Globals.B2DesiredPosition = (float)percievedPositionArray[6];
+                //Globals.B3DesiredPosition = (float)percievedPositionArray[7];
+                //Globals.C1DesiredPosition = (float)percievedPositionArray[8];
+                //Globals.C2DesiredPosition = (float)percievedPositionArray[9];
+                //Globals.C3DesiredPosition = (float)percievedPositionArray[10];
+                //Globals.D1DesiredPosition = (float)percievedPositionArray[11];
+                //Globals.D2DesiredPosition = (float)percievedPositionArray[12];
+                //Globals.D3DesiredPosition = (float)percievedPositionArray[13];
+
+                //UnityCommunicationHub.WriteData(true);
+
                 var input = serial.GetData();
                 UnityCommunicationHub.ReadData();
                 var percievedPositionArray = net.Think(input);
 
-                
-
                 inputTrainingData.Add(input);
                 outputTrainingData.Add(Globals.GetDoubles());
 
+
+                double bestVal = 0;
+                SetPoint bestSetPoint = new SetPoint();
+
+
                 for (int i = 0; i < percievedPositionArray.Length; i++)
                 {
-                    percievedPositionArray[i] = percievedPositionArray[i] * 90;
+                    if (percievedPositionArray[i] > bestVal)
+                    {
+                        bestVal = percievedPositionArray[i];
+                        bestSetPoint = setPointList[i];
+                    }
                 }
 
 
+                var percievedPosition = bestSetPoint;
 
-                Globals.T1DesiredPosition = (float)percievedPositionArray[0];
-                Globals.T2DesiredPosition = (float)percievedPositionArray[1];
-                Globals.A1DesiredPosition = (float)percievedPositionArray[2];
-                Globals.A2DesiredPosition = (float)percievedPositionArray[3];
-                Globals.A3DesiredPosition = (float)percievedPositionArray[4];
-                Globals.B1DesiredPosition = (float)percievedPositionArray[5];
-                Globals.B2DesiredPosition = (float)percievedPositionArray[6];
-                Globals.B3DesiredPosition = (float)percievedPositionArray[7];
-                Globals.C1DesiredPosition = (float)percievedPositionArray[8];
-                Globals.C2DesiredPosition = (float)percievedPositionArray[9];
-                Globals.C3DesiredPosition = (float)percievedPositionArray[10];
-                Globals.D1DesiredPosition = (float)percievedPositionArray[11];
-                Globals.D2DesiredPosition = (float)percievedPositionArray[12];
-                Globals.D3DesiredPosition = (float)percievedPositionArray[13];
+                Globals.T1DesiredPosition = percievedPosition.T1Position;
+                Globals.T2DesiredPosition = percievedPosition.T2Position;
+                Globals.A1DesiredPosition = percievedPosition.A1Position;
+                Globals.A2DesiredPosition = percievedPosition.A2Position;
+                Globals.A3DesiredPosition = percievedPosition.A3Position;
+                Globals.B1DesiredPosition = percievedPosition.B1Position;
+                Globals.B2DesiredPosition = percievedPosition.B2Position;
+                Globals.B3DesiredPosition = percievedPosition.B3Position;
+                Globals.C1DesiredPosition = percievedPosition.C1Position;
+                Globals.C2DesiredPosition = percievedPosition.C2Position;
+                Globals.C3DesiredPosition = percievedPosition.C3Position;
+                Globals.D1DesiredPosition = percievedPosition.D1Position;
+                Globals.D2DesiredPosition = percievedPosition.D2Position;
+                Globals.D3DesiredPosition = percievedPosition.D3Position;
 
                 UnityCommunicationHub.WriteData(true);
 
-                
             }
         }
 
@@ -135,10 +195,51 @@ namespace Sender
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Thread testThread = new Thread(Test);
-            testThread.Start();
-            Thread trainingThread = new Thread(Train);
-            trainingThread.Start();
+            Random rand = new Random(23);
+
+            setPointList = Globals.GetBasicPositions();
+
+            var firstPoint = setPointList[rand.Next(0, 5)];
+            Globals.A1DesiredPosition = firstPoint.A1Position;
+            Globals.A2DesiredPosition = firstPoint.A2Position;
+            Globals.A3DesiredPosition = firstPoint.A3Position;
+            Globals.B1DesiredPosition = firstPoint.B1Position;
+            Globals.B2DesiredPosition = firstPoint.B2Position;
+            Globals.B3DesiredPosition = firstPoint.B3Position;
+            Globals.C1DesiredPosition = firstPoint.C1Position;
+            Globals.C2DesiredPosition = firstPoint.C2Position;
+            Globals.C3DesiredPosition = firstPoint.C3Position;
+            Globals.D1DesiredPosition = firstPoint.D1Position;
+            Globals.D2DesiredPosition = firstPoint.D2Position;
+            Globals.D3DesiredPosition = firstPoint.D3Position;
+            Globals.T1DesiredPosition = firstPoint.T1Position;
+            Globals.T2DesiredPosition = firstPoint.T2Position;
+            //Globals.T1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.T2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.A1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.A2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.A3DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.B1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.B2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.B3DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.C1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.C2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.C3DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.D1DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.D2DesiredPosition = (float)rand.Next(0, 90);
+            //Globals.D3DesiredPosition = (float)rand.Next(0, 90);
+
+
+
+            UnityCommunicationHub.WriteData(true);
+            for (int i = 0; i < 20; i++)
+            {
+                Thread testThread = new Thread(Test);
+                testThread.Start();
+                Thread trainingThread = new Thread(Train);
+                trainingThread.Start();
+                Thread.Sleep(500);
+            }
         }
 
         private void ReconfigureButton_Click(object sender, EventArgs e)
@@ -190,42 +291,76 @@ namespace Sender
             lock (dataLock)
             {
 
+                //var input = serial.GetData();
+                //var percievedPositionArray = net.Think(input);
+
+                //if (input.Contains(double.NaN))
+                //{
+                //    while (input.Contains(double.NaN))
+                //    {
+                //        input = serial.GetData();
+                //    }
+                //}
+
+                //for (int i = 0; i < percievedPositionArray.Length; i++)
+                //{
+                //    percievedPositionArray[i] = percievedPositionArray[i] * 90;
+                //}
+
+
+
+                //Globals.T1DesiredPosition = (float)percievedPositionArray[0];
+                //Globals.T2DesiredPosition = (float)percievedPositionArray[1];
+                //Globals.A1DesiredPosition = (float)percievedPositionArray[2];
+                //Globals.A2DesiredPosition = (float)percievedPositionArray[3];
+                //Globals.A3DesiredPosition = (float)percievedPositionArray[4];
+                //Globals.B1DesiredPosition = (float)percievedPositionArray[5];
+                //Globals.B2DesiredPosition = (float)percievedPositionArray[6];
+                //Globals.B3DesiredPosition = (float)percievedPositionArray[7];
+                //Globals.C1DesiredPosition = (float)percievedPositionArray[8];
+                //Globals.C2DesiredPosition = (float)percievedPositionArray[9];
+                //Globals.C3DesiredPosition = (float)percievedPositionArray[10];
+                //Globals.D1DesiredPosition = (float)percievedPositionArray[11];
+                //Globals.D2DesiredPosition = (float)percievedPositionArray[12];
+                //Globals.D3DesiredPosition = (float)percievedPositionArray[13];
+
+                //UnityCommunicationHub.WriteData(true);
+
                 var input = serial.GetData();
                 var percievedPositionArray = net.Think(input);
 
-                if (input.Contains(double.NaN))
-                {
-                    while (input.Contains(double.NaN))
-                    {
-                        input = serial.GetData();
-                    }
-                }
+                double bestVal = 0;
+                SetPoint bestSetPoint = new SetPoint();
+
 
                 for (int i = 0; i < percievedPositionArray.Length; i++)
                 {
-                    percievedPositionArray[i] = percievedPositionArray[i] * 90;
+                    if (percievedPositionArray[i] > bestVal)
+                    {
+                        bestVal = percievedPositionArray[i];
+                        bestSetPoint = setPointList[i];
+                    }
                 }
 
 
+                var percievedPosition = bestSetPoint;
 
-                Globals.T1DesiredPosition = (float)percievedPositionArray[0];
-                Globals.T2DesiredPosition = (float)percievedPositionArray[1];
-                Globals.A1DesiredPosition = (float)percievedPositionArray[2];
-                Globals.A2DesiredPosition = (float)percievedPositionArray[3];
-                Globals.A3DesiredPosition = (float)percievedPositionArray[4];
-                Globals.B1DesiredPosition = (float)percievedPositionArray[5];
-                Globals.B2DesiredPosition = (float)percievedPositionArray[6];
-                Globals.B3DesiredPosition = (float)percievedPositionArray[7];
-                Globals.C1DesiredPosition = (float)percievedPositionArray[8];
-                Globals.C2DesiredPosition = (float)percievedPositionArray[9];
-                Globals.C3DesiredPosition = (float)percievedPositionArray[10];
-                Globals.D1DesiredPosition = (float)percievedPositionArray[11];
-                Globals.D2DesiredPosition = (float)percievedPositionArray[12];
-                Globals.D3DesiredPosition = (float)percievedPositionArray[13];
+                Globals.T1DesiredPosition = percievedPosition.T1Position;
+                Globals.T2DesiredPosition = percievedPosition.T2Position;
+                Globals.A1DesiredPosition = percievedPosition.A1Position;
+                Globals.A2DesiredPosition = percievedPosition.A2Position;
+                Globals.A3DesiredPosition = percievedPosition.A3Position;
+                Globals.B1DesiredPosition = percievedPosition.B1Position;
+                Globals.B2DesiredPosition = percievedPosition.B2Position;
+                Globals.B3DesiredPosition = percievedPosition.B3Position;
+                Globals.C1DesiredPosition = percievedPosition.C1Position;
+                Globals.C2DesiredPosition = percievedPosition.C2Position;
+                Globals.C3DesiredPosition = percievedPosition.C3Position;
+                Globals.D1DesiredPosition = percievedPosition.D1Position;
+                Globals.D2DesiredPosition = percievedPosition.D2Position;
+                Globals.D3DesiredPosition = percievedPosition.D3Position;
 
                 UnityCommunicationHub.WriteData(true);
-
-
             }
         }
 

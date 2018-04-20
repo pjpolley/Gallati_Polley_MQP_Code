@@ -32,11 +32,14 @@ namespace Sender
         {
             InitializeComponent();
 
-            net = new NeuralNet(8, 6, ANNfilename, KFoldFilename);
-            inputTrainingData = new List<double[]>();
-            outputTrainingData = new List<double[]>();
+            NodeSavingReading reader = new NodeSavingReading();
 
-            
+            net = new NeuralNet(8, 6, ANNfilename, KFoldFilename);
+            inputTrainingData = reader.GetStoredDataFromFile(Globals.inputDataStorage);
+            outputTrainingData = reader.GetStoredDataFromFile(Globals.outputDataStorage);
+
+
+
 
             serial = new SerialReader();
             serial.Read();
@@ -64,44 +67,48 @@ namespace Sender
 
         private void Run()
         {
-            lock (dataLock)
+            //while (true)
             {
-
-                var input = serial.GetData();
-                var percievedPositionArray = net.Think(input);
-
-                double bestVal = 0;
-                SetPoint bestSetPoint = new SetPoint();
-                
-
-                for (int i = 0; i < percievedPositionArray.Length; i++)
+                lock (dataLock)
                 {
-                    if (percievedPositionArray[i] > bestVal)
+
+                    var input = serial.GetData();
+                    var percievedPositionArray = net.Think(input);
+
+                    double bestVal = 0;
+                    SetPoint bestSetPoint = new SetPoint();
+
+
+                    for (int i = 0; i < percievedPositionArray.Length; i++)
                     {
-                        bestVal = percievedPositionArray[i];   
-                        bestSetPoint = setPointList[i];
+                        if (percievedPositionArray[i] > bestVal)
+                        {
+                            bestVal = percievedPositionArray[i];
+                            bestSetPoint = setPointList[i];
+                        }
                     }
+
+
+                    var percievedPosition = bestSetPoint;
+
+                    Globals.T1DesiredPosition = percievedPosition.T1Position;
+                    Globals.T2DesiredPosition = percievedPosition.T2Position;
+                    Globals.A1DesiredPosition = percievedPosition.A1Position;
+                    Globals.A2DesiredPosition = percievedPosition.A2Position;
+                    Globals.A3DesiredPosition = percievedPosition.A3Position;
+                    Globals.B1DesiredPosition = percievedPosition.B1Position;
+                    Globals.B2DesiredPosition = percievedPosition.B2Position;
+                    Globals.B3DesiredPosition = percievedPosition.B3Position;
+                    Globals.C1DesiredPosition = percievedPosition.C1Position;
+                    Globals.C2DesiredPosition = percievedPosition.C2Position;
+                    Globals.C3DesiredPosition = percievedPosition.C3Position;
+                    Globals.D1DesiredPosition = percievedPosition.D1Position;
+                    Globals.D2DesiredPosition = percievedPosition.D2Position;
+                    Globals.D3DesiredPosition = percievedPosition.D3Position;
+
+                    UnityCommunicationHub.WriteData(true);
                 }
-
-
-            var percievedPosition = bestSetPoint;
-                
-                Globals.T1DesiredPosition = percievedPosition.T1Position;
-                Globals.T2DesiredPosition = percievedPosition.T2Position;
-                Globals.A1DesiredPosition = percievedPosition.A1Position;
-                Globals.A2DesiredPosition = percievedPosition.A2Position;
-                Globals.A3DesiredPosition = percievedPosition.A3Position;
-                Globals.B1DesiredPosition = percievedPosition.B1Position;
-                Globals.B2DesiredPosition = percievedPosition.B2Position;
-                Globals.B3DesiredPosition = percievedPosition.B3Position;
-                Globals.C1DesiredPosition = percievedPosition.C1Position;
-                Globals.C2DesiredPosition = percievedPosition.C2Position;
-                Globals.C3DesiredPosition = percievedPosition.C3Position;
-                Globals.D1DesiredPosition = percievedPosition.D1Position;
-                Globals.D2DesiredPosition = percievedPosition.D2Position;
-                Globals.D3DesiredPosition = percievedPosition.D3Position;
-
-                UnityCommunicationHub.WriteData(true);
+                Thread.Sleep(1000);
             }
         }
 
@@ -118,7 +125,7 @@ namespace Sender
                 }
 
 
-                net.Train(networkTrainingInput, networkTrainingOutput, 10000, 0.97f);
+                net.Train(networkTrainingInput, networkTrainingOutput, 1000, 1.0f);
             }
         }
 
@@ -133,15 +140,22 @@ namespace Sender
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            NodeSavingReading reader = new NodeSavingReading();
             net.Save();
+            reader.pushDataToFile(Globals.inputDataStorage, inputTrainingData);
+            reader.pushDataToFile(Globals.outputDataStorage, outputTrainingData);
         }
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            inputTrainingData.Add(serial.GetData());
-            double[] outputData = new double[6];
-            outputData[currentHandPosition] = 1;
-            outputTrainingData.Add(outputData);
+            for (int i = 0; i < 100; i++)
+            {
+                inputTrainingData.Add(serial.GetData());
+                double[] outputData = new double[6];
+                outputData[currentHandPosition] = 1;
+                outputTrainingData.Add(outputData);
+                Thread.Sleep(1);
+            }
         }
 
         private void TrainButton_Click(object sender, EventArgs e)

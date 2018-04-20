@@ -15,6 +15,8 @@ namespace Sender
         public static string DefaultHandPositionsLocation = @"c:\BCIDataDirectory\DefaultHandPositions.txt";
         public static string NeuralNetSaveLocation = @"c:\BCIDataDirectory\NeuralNet.ann";
         public static string KFoldDataSaveLocation = @"c:\BCIDataDirectory\KFoldData.kfld";
+        public static string inputDataStorage = @"c:\BCIDataDirectory\inputData.dta";
+        public static string outputDataStorage = @"c:\BCIDataDirectory\outputData.dta";
 
 
         //frequency of transmission from BCI chip to this program

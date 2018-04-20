@@ -31,6 +31,16 @@ namespace Sender
             }
         }
 
+        public void pushDataToFile(String fileLocation, List<double[]> pointsToSave)
+        {
+            List<double[]> listofSetPoints = pointsToSave.ToList<double[]>();
+            string output = JsonConvert.SerializeObject(listofSetPoints);
+            using (StreamWriter sw = new StreamWriter(fileLocation))
+            {
+                sw.WriteLine(output);
+            }
+        }
+
         public void pushDataToFile(String fileLocation, KFoldData dataPoint)
         {
             string output = JsonConvert.SerializeObject(dataPoint);
@@ -57,6 +67,26 @@ namespace Sender
             else
             {
                 return new List<Node>();
+            }
+        }
+
+        public List<double[]> GetStoredDataFromFile(String fileLocation)
+        {
+            if (File.Exists(fileLocation))
+            {
+                string inputData = File.ReadAllText(fileLocation);
+                try
+                {
+                    return JsonConvert.DeserializeObject<List<double[]>>(inputData);
+                }
+                catch (Exception e)
+                {
+                    return new List<double[]>();
+                }
+            }
+            else
+            {
+                return new List<double[]>();
             }
         }
 
