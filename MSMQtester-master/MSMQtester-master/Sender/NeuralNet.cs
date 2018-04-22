@@ -124,6 +124,12 @@ namespace Sender
                 }
             }
 
+            for (int i = 0; i < 5; i++)
+            {
+                
+
+            }
+
             var kFoldList = await Task.WhenAll(inputsList.Select(i => kfold(inputSize, outputSize, i.Breadth, i.Depth, i.TrainingSpeed)));
 
             KFoldData returnedKFoldData = new KFoldData(0, 0, 0, 0, double.MaxValue);
@@ -188,18 +194,29 @@ namespace Sender
 
 
                 double kSumAvg = 0;
-                for (int i = 0; i < dataset_in.GetLength(0); i++)
+                for (int i = 0; i < 5; i++)
                 {
                     var testNet = new ActivationNetwork(new SigmoidFunction(), inputSize, nodeArray);
                     var testLearner = new ResilientBackpropagationLearning(testNet);
                     testLearner.LearningRate = trainingweights;
 
-                    var tempDataIn = dataset_in;
-                    var tempDataOut = dataset_out;
-                    double[][] trainingArrayIn = tempDataIn.RemoveAt(i);
-                    double[] testingArrayIn = dataset_in[i];
-                    double[][] trainingArrayOut = tempDataOut.RemoveAt(i);
-                    double[] testingArrayOut = dataset_out[i];
+                    int length = dataset_in.GetLength(0) / 5;
+
+                    var trainingArrayIn = new double[dataset_in.GetLength(0) * 4 / 5][];
+                    var trainingArrayOut = new double[dataset_out.GetLength(0) * 4 / 5][];
+                    var testingArrayIn = new double[dataset_in.GetLength(0) / 5][];
+                    var testingArrayOut = new double[dataset_out.GetLength(0) / 5][];
+
+                    dataset_in.Take(i * length).ToArray().CopyTo(trainingArrayIn, 0);
+                    dataset_in.Skip((i * length) + length).Take((length * 5) - (i * length + length)).ToArray().CopyTo(trainingArrayIn, i * length);
+
+                    testingArrayIn = dataset_in.Skip(i * length).Take(length).ToArray();
+
+                    dataset_out.Take(i * length).ToArray().CopyTo(trainingArrayOut, 0);
+                    dataset_out.Skip((i * length) + length).Take((length * 5) - (i * length + length)).ToArray().CopyTo(trainingArrayOut, i * length);
+
+                    testingArrayOut = dataset_out.Skip(i * length).Take(length).ToArray();
+
 
                     for (int iteration = 0; iteration < iterations; iteration++)
                     {
@@ -209,13 +226,16 @@ namespace Sender
 
 
                     double kSum = 0;
-                    var testResults = testNet.Compute(testingArrayIn);
-                    for (int j = 0; j < testResults.Length; j++)
+                    for (int k = 0; k < testingArrayIn.GetLength(0); k++)
                     {
-                        kSum += Math.Abs(testResults[j] - testingArrayOut[j]);
-                    }
+                        var testResults = testNet.Compute(testingArrayIn[k]);
+                        for (int j = 0; j < testResults.Length; j++)
+                        {
+                            kSum += Math.Abs(testResults[j] - testingArrayOut[k][j]);
+                        }
 
-                    kSumAvg += kSum;
+                        kSumAvg += kSum;
+                    }
                 }
 
                 kSumAvg = kSumAvg / dataset_in.GetLength(0);

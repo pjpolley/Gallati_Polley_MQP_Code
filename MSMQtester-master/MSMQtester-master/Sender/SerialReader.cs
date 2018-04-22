@@ -15,6 +15,7 @@ namespace Sender
     class SerialReader
     {
         private volatile double[] dataOut;
+        private volatile double[] betaDataOut;
         private volatile List<double[]> lastDataOut;
         private Mutex bciDataLock;
         private SerialPort serialPort1;
@@ -29,14 +30,19 @@ namespace Sender
         static double[,] prev_x_standard = new double[8, 5];
         static double[,] prev_y_standard = new double[8, 5];
 
+        static double[,] prev_x_notchBeta = new double[8, 5];
+        static double[,] prev_y_notchBeta = new double[8, 5];
+        static double[,] prev_x_standardBeta = new double[8, 5];
+        static double[,] prev_y_standardBeta = new double[8, 5];
+
         public SerialReader()
         {
             bciDataLock = new Mutex();
-            serialPort1 = new SerialPort("COM3", 115200);
+            serialPort1 = new SerialPort("COM5", 115200);
             serialPort1.Open();
             serialPort1.Write("s");
-            //serialPort1.Write("~5");
-            dataOut = new double[8];
+            serialPort1.Write("~5");
+            dataOut = new double[16];
             lastDataOut = new List<double[]>();
 
             setRate(250);
@@ -69,23 +75,23 @@ namespace Sender
         {
             bciDataLock.WaitOne();
             double[] returnData = dataOut;
-            var notGood = true;
-            while (notGood)
-            {
-                notGood = false;
-                foreach (var nodeReading in returnData)
-                {
-                    if (double.IsNaN(nodeReading))
-                    {
-                        notGood = true;
-                        bciDataLock.ReleaseMutex();
-                        bciDataLock.WaitOne();
-                        returnData = dataOut;
-                        bciDataLock.ReleaseMutex();
-                    }
-                }
+            //var notGood = true;
+            //while (notGood)
+            //{
+            //    notGood = false;
+            //    foreach (var nodeReading in returnData)
+            //    {
+            //        if (double.IsNaN(nodeReading))
+            //        {
+            //            notGood = true;
+            //            bciDataLock.ReleaseMutex();
+            //            bciDataLock.WaitOne();
+            //            returnData = dataOut;
+            //            bciDataLock.ReleaseMutex();
+            //        }
+            //    }
 
-            }
+            //}
             bciDataLock.ReleaseMutex();
             return returnData;
             //if (Array.Exists(returnData, input => double.IsNaN(input)))
@@ -106,6 +112,7 @@ namespace Sender
         private void getData() 
         {
             var inData = new Byte[32];
+            bool frequencyToggle = true;
                 while (true)
                 {
                     try
@@ -129,6 +136,10 @@ namespace Sender
                                 int outVal = interpret24bitAsInt32(inData[i * 3 + 1], inData[i * 3 + 2],
                                     inData[i * 3 + 3]);
                                 dataOut[i] = (double) (outVal * scale);
+                                if (frequencyToggle)
+                                {
+                                    dataOut[(i+8)] = FilterBeta(dataOut[i], i);
+                                }
                                 dataOut[i] = Filter(dataOut[i], i);
                                 loggingData[i] = dataOut[i];
                                 if (lastDataOut.Count > 5 && dataOut[i] == lastDataOut.First()[i])
@@ -136,26 +147,22 @@ namespace Sender
                                     dataOut[i] = double.NaN;
                                     Console.WriteLine("Node " + (i+1) +" is not connected");
                                 }
-                                else if (i == 7 && lastDataOut.Count > 5)
-                                {
-                                if (i == 1)
-                                {
+                                else if (i == 7 && lastDataOut.Count > 5) { 
+
                                     Console.WriteLine("Node " + (i + 1) + " is connected with value " + dataOut[i]);
-                                }
                                     lastDataOut.RemoveAt(0);
                                 }
                                 else
                                 {
-                                if (i == 1)
-                                {
                                     Console.WriteLine("Node " + (i + 1) + " is connected with value " + dataOut[i]);
                                 }
-                            }
 
                             }
 
                             lastDataOut.Add(loggingData);
                         }
+
+                        frequencyToggle = !frequencyToggle;
                     }
 
 
@@ -232,5 +239,52 @@ namespace Sender
             return returnVal;
         }
 
+        //Filter modified for Beta waves while recording at higher frequencies
+        private double FilterBeta(double inputVal, int i)
+        {
+            double returnVal = 0;
+            var b = new double[5] { 0.1173510367246093, 0, -0.2347020734492186, 0, 0.1173510367246093 };
+            var a = new double[5] { 1, -2.137430180172061, 2.038578008108517, -1.070144399200925, 0.2946365275879138 };
+            var b2 = new double[5] { 0.96508099, -1.19328255, 2.29902305, -1.19328255, 0.96508099 };
+            var a2 = new double[5] { 1, -1.21449347931898, 2.29780334191380, -1.17207162934772, 0.931381682126902 };
+
+            for (int j = 4; j > 0; j--)
+            {
+                prev_x_notchBeta[i, j] = prev_x_notchBeta[i, j - 1];
+                prev_y_notchBeta[i, j] = prev_y_notchBeta[i, j - 1];
+                prev_x_standardBeta[i, j] = prev_x_standardBeta[i, j - 1];
+                prev_y_standardBeta[i, j] = prev_y_standardBeta[i, j - 1];
+            }
+
+            prev_x_notchBeta[i, 0] = inputVal;
+
+            double score = 0;
+
+            for (int j = 0; j < 5; j++)
+            {
+                score += b2[j] * prev_x_notchBeta[i, j];
+                if (j > 0)
+                {
+                    score -= a2[j] * prev_y_notchBeta[i, j];
+                }
+            }
+
+            prev_y_notchBeta[i, 0] = score;
+            prev_x_standardBeta[i, 0] = score;
+            score = 0;
+            for (int j = 0; j < 5; j++)
+            {
+                score += b[j] * prev_x_standardBeta[i, j];
+                if (j > 0)
+                {
+                    score -= a[j] * prev_y_standardBeta[i, j];
+                }
+            }
+
+            prev_y_standardBeta[i, 0] = score;
+            returnVal = score;
+
+            return returnVal;
+        }
     }
 }

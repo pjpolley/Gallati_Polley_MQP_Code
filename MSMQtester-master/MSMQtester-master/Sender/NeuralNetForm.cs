@@ -34,7 +34,7 @@ namespace Sender
 
             NodeSavingReading reader = new NodeSavingReading();
 
-            net = new NeuralNet(8, 6, ANNfilename, KFoldFilename);
+            net = new NeuralNet(16, 7, ANNfilename, KFoldFilename);
             inputTrainingData = reader.GetStoredDataFromFile(Globals.inputDataStorage);
             outputTrainingData = reader.GetStoredDataFromFile(Globals.outputDataStorage);
 
@@ -148,10 +148,10 @@ namespace Sender
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 25; i++)
             {
                 inputTrainingData.Add(serial.GetData());
-                double[] outputData = new double[6];
+                double[] outputData = new double[7];
                 outputData[currentHandPosition] = 1;
                 outputTrainingData.Add(outputData);
                 Thread.Sleep(1);
@@ -188,7 +188,7 @@ namespace Sender
 
             if (prompt.ShowDialog() == DialogResult.OK && prompt.Continue)
             {
-                net.Validate(8, 6);
+                net.Validate(16, 7);
             }
         }
 

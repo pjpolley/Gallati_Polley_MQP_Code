@@ -34,7 +34,7 @@ namespace Sender
         {
             InitializeComponent();
 
-            net = new NeuralNet(8, 6, ANNfilename, KFoldFilename);
+            net = new NeuralNet(16, 7, ANNfilename, KFoldFilename);
             inputTrainingData = new List<double[]>();
             outputTrainingData = new List<double[]>();
 

@@ -105,9 +105,10 @@ namespace Sender
         public static SetPoint HOOK_GRIP = new SetPoint(90,90,90,90,90,90,90,90,90,90,90,90,90,90);
         public static SetPoint OPEN_HAND = new SetPoint(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
         public static SetPoint PEACE_SIGN = new SetPoint(90,90,0,0,0,0,0,0,90,90,90,90,90,90);
-        public static SetPoint PINCH_GRIP = new SetPoint(20,90, 20, 90, 45, 0,0,0,0,0,0,0,0,0);
+        public static SetPoint INDEX_GRIP = new SetPoint(20,90, 20, 90, 45, 0,0,0,0,0,0,0,0,0);
         public static SetPoint THUMBS_UP = new SetPoint(0,0,90,90,90,90,90,90,90,90,90,90,90,90);
         public static SetPoint FINGER_GUNS = new SetPoint(0,0,0,0,0,90,90,90,90,90,90,90,90,90);
+        public static SetPoint PINCH_GRIP = new SetPoint(45, 0, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90);
 
         public static Dictionary<string, int> GetBasicValues()
         {
@@ -118,7 +119,8 @@ namespace Sender
                 { "Peace Sign",2 },
                 { "Pinch Grip", 3 },
                 { "Thumbs Up", 4 },
-                { "Finger Guns", 5 }
+                { "Finger Guns", 5 },
+                {"Index Grip", 6 }
             };
             return returnList;
         }
@@ -132,7 +134,8 @@ namespace Sender
                 {2, PEACE_SIGN },
                 { 3, PINCH_GRIP },
                 { 4, THUMBS_UP },
-                { 5, FINGER_GUNS }
+                { 5, FINGER_GUNS },
+                { 6, INDEX_GRIP }
             };
             return returnList;
         }
