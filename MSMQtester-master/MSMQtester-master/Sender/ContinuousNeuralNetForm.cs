@@ -22,7 +22,7 @@ namespace Sender
         private object dataLock = new object();
 
         private Dictionary<int, SetPoint> setPointList;
-
+        private SetPoint lastSetPoint;
         private int expirationTimer = 10;
 
 
@@ -54,7 +54,7 @@ namespace Sender
 
             setPointList = Globals.GetBasicPositions();
 
-            var firstPoint = setPointList[rand.Next(0, 5)];
+            var firstPoint = setPointList[rand.Next(0, 7)];
             Globals.A1DesiredPosition = firstPoint.A1Position;
             Globals.A2DesiredPosition = firstPoint.A2Position;
             Globals.A3DesiredPosition = firstPoint.A3Position;
@@ -84,8 +84,8 @@ namespace Sender
             //Globals.D2DesiredPosition = (float)rand.Next(0, 90);
             //Globals.D3DesiredPosition = (float)rand.Next(0, 90);
 
-            
 
+            lastSetPoint = firstPoint;
             UnityCommunicationHub.WriteData(true);
         }
 
@@ -98,7 +98,7 @@ namespace Sender
                 //UnityCommunicationHub.ReadData();
                 //var percievedPositionArray = net.Think(input);
 
-                
+
 
                 //inputTrainingData.Add(input);
                 //outputTrainingData.Add(Globals.GetDoubles());
@@ -124,32 +124,40 @@ namespace Sender
                 //Globals.D1DesiredPosition = (float)percievedPositionArray[11];
                 //Globals.D2DesiredPosition = (float)percievedPositionArray[12];
                 //Globals.D3DesiredPosition = (float)percievedPositionArray[13];
-
+                var percievedPosition = new SetPoint(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+                var rand = new Random();
                 //UnityCommunicationHub.WriteData(true);
-
-                var input = serial.GetData();
-                UnityCommunicationHub.ReadData();
-                var percievedPositionArray = net.Think(input);
-
-                inputTrainingData.Add(input);
-                outputTrainingData.Add(Globals.GetDoubles());
-
-
-                double bestVal = 0;
-                SetPoint bestSetPoint = new SetPoint();
-
-
-                for (int i = 0; i < percievedPositionArray.Length; i++)
+                if (inputTrainingData.Count != 0)
                 {
-                    if (percievedPositionArray[i] > bestVal)
+                    var percievedPositionArray = net.Think(inputTrainingData[inputTrainingData.Count - 1]);
+
+                    double bestVal = 0;
+                    SetPoint bestSetPoint = new SetPoint();
+
+
+                    for (int i = 0; i < percievedPositionArray.Length; i++)
                     {
-                        bestVal = percievedPositionArray[i];
-                        bestSetPoint = setPointList[i];
+                        if (percievedPositionArray[i] > bestVal)
+                        {
+                            bestVal = percievedPositionArray[i];
+                            bestSetPoint = setPointList[i];
+                        }
+                    }
+
+                    if (lastSetPoint.Equals(bestSetPoint))
+                    {
+                        percievedPosition = setPointList[rand.Next(0, 7)];
+                    }
+                    else
+                    {
+                        percievedPosition = bestSetPoint;
                     }
                 }
-
-
-                var percievedPosition = bestSetPoint;
+                else
+                {
+                    
+                    percievedPosition = setPointList[rand.Next(0, 7)];
+                }
 
                 Globals.T1DesiredPosition = percievedPosition.T1Position;
                 Globals.T2DesiredPosition = percievedPosition.T2Position;
@@ -167,7 +175,18 @@ namespace Sender
                 Globals.D3DesiredPosition = percievedPosition.D3Position;
 
                 UnityCommunicationHub.WriteData(true);
+                lastSetPoint = percievedPosition;
+                Thread.Sleep(500);
+                for (int i = 0; i < 250; i++)
+                {
+                    var input = serial.GetData();
+                    UnityCommunicationHub.ReadData();
 
+
+                    inputTrainingData.Add(input);
+                    outputTrainingData.Add(Globals.GetDoubles());
+                    Thread.Sleep(1);
+                }
             }
         }
 
@@ -184,7 +203,7 @@ namespace Sender
                 }
 
 
-                net.Train(networkTrainingInput, networkTrainingOutput, 10000, .97f);
+                net.Train(networkTrainingInput, networkTrainingOutput, 100, .97f);
             }
         }
 
@@ -232,13 +251,14 @@ namespace Sender
 
 
             UnityCommunicationHub.WriteData(true);
+            
             for (int i = 0; i < 20; i++)
             {
                 Thread testThread = new Thread(Test);
                 testThread.Start();
                 Thread trainingThread = new Thread(Train);
                 trainingThread.Start();
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
         }
 

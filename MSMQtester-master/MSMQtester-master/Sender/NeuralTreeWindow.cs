@@ -390,7 +390,7 @@ namespace Sender
 
         private void handDelayButton_Click(object sender, EventArgs e)
         {
-            controls.timeNeededForChange = System.Convert.ToInt32(handDelayBox);
+            controls.timeNeededForChange = System.Convert.ToInt32(handDelayBox.Text);
         }
 
         private void saveCommandStructure_Click(object sender, EventArgs e)
@@ -756,17 +756,20 @@ namespace Sender
                     break;
                 }
                 Random rand = new Random();
+                numInputs = 0;
                 decimal accruedValues = 0;
                 timer.Start();
                 decimal currentIn;
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
-                    currentIn = (decimal)reader.GetData()[Globals.inputNode];
+                    currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
                     accruedValues += currentIn;
                     numInputs++;
                     currentGoalBox.Text = (accruedValues / numInputs).ToString();
                     currentInputBox.Text = currentIn.ToString();
                 }
+
+
 
                 averageInput = (double)(accruedValues / numInputs);
 

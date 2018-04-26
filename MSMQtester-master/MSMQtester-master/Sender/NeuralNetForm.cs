@@ -38,6 +38,8 @@ namespace Sender
             inputTrainingData = reader.GetStoredDataFromFile(Globals.inputDataStorage);
             outputTrainingData = reader.GetStoredDataFromFile(Globals.outputDataStorage);
 
+            //inputTrainingData = new List<double[]>();
+            //outputTrainingData = new List<double[]>();
 
 
 
@@ -166,6 +168,7 @@ namespace Sender
 
         private void TestButton_Click(object sender, EventArgs e)
         {
+            Thread.Sleep(100);
             Thread testThread = new Thread(Run);
             testThread.Start();
         }
