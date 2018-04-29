@@ -25,7 +25,7 @@ namespace Sender
         private SetPoint lastSetPoint;
         private int expirationTimer = 10;
 
-
+        private List<int> positionsToVisit = new List<int>();
         private string ANNfilename = Globals.NeuralNetSaveLocation;
         private string KFoldFilename = Globals.KFoldDataSaveLocation;
 
@@ -54,7 +54,7 @@ namespace Sender
 
             setPointList = Globals.GetBasicPositions();
 
-            var firstPoint = setPointList[rand.Next(0, 7)];
+            var firstPoint = setPointList[3];
             Globals.A1DesiredPosition = firstPoint.A1Position;
             Globals.A2DesiredPosition = firstPoint.A2Position;
             Globals.A3DesiredPosition = firstPoint.A3Position;
@@ -127,6 +127,8 @@ namespace Sender
                 var percievedPosition = new SetPoint(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
                 var rand = new Random();
                 //UnityCommunicationHub.WriteData(true);
+                
+
                 if (inputTrainingData.Count != 0)
                 {
                     var percievedPositionArray = net.Think(inputTrainingData[inputTrainingData.Count - 1]);
@@ -159,6 +161,12 @@ namespace Sender
                     percievedPosition = setPointList[rand.Next(0, 7)];
                 }
 
+                if (positionsToVisit.Count > 0)
+                {
+                    percievedPosition = setPointList[positionsToVisit.First()];
+                    positionsToVisit.RemoveAt(0);
+                }
+
                 Globals.T1DesiredPosition = percievedPosition.T1Position;
                 Globals.T2DesiredPosition = percievedPosition.T2Position;
                 Globals.A1DesiredPosition = percievedPosition.A1Position;
@@ -176,7 +184,7 @@ namespace Sender
 
                 UnityCommunicationHub.WriteData(true);
                 lastSetPoint = percievedPosition;
-                Thread.Sleep(500);
+                Thread.Sleep(200);
                 for (int i = 0; i < 250; i++)
                 {
                     var input = serial.GetData();
@@ -214,25 +222,25 @@ namespace Sender
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Random rand = new Random(23);
+            //Random rand = new Random(23);
 
-            setPointList = Globals.GetBasicPositions();
+            //setPointList = Globals.GetBasicPositions();
 
-            var firstPoint = setPointList[rand.Next(0, 5)];
-            Globals.A1DesiredPosition = firstPoint.A1Position;
-            Globals.A2DesiredPosition = firstPoint.A2Position;
-            Globals.A3DesiredPosition = firstPoint.A3Position;
-            Globals.B1DesiredPosition = firstPoint.B1Position;
-            Globals.B2DesiredPosition = firstPoint.B2Position;
-            Globals.B3DesiredPosition = firstPoint.B3Position;
-            Globals.C1DesiredPosition = firstPoint.C1Position;
-            Globals.C2DesiredPosition = firstPoint.C2Position;
-            Globals.C3DesiredPosition = firstPoint.C3Position;
-            Globals.D1DesiredPosition = firstPoint.D1Position;
-            Globals.D2DesiredPosition = firstPoint.D2Position;
-            Globals.D3DesiredPosition = firstPoint.D3Position;
-            Globals.T1DesiredPosition = firstPoint.T1Position;
-            Globals.T2DesiredPosition = firstPoint.T2Position;
+            //var firstPoint = setPointList[rand.Next(0, 5)];
+            //Globals.A1DesiredPosition = firstPoint.A1Position;
+            //Globals.A2DesiredPosition = firstPoint.A2Position;
+            //Globals.A3DesiredPosition = firstPoint.A3Position;
+            //Globals.B1DesiredPosition = firstPoint.B1Position;
+            //Globals.B2DesiredPosition = firstPoint.B2Position;
+            //Globals.B3DesiredPosition = firstPoint.B3Position;
+            //Globals.C1DesiredPosition = firstPoint.C1Position;
+            //Globals.C2DesiredPosition = firstPoint.C2Position;
+            //Globals.C3DesiredPosition = firstPoint.C3Position;
+            //Globals.D1DesiredPosition = firstPoint.D1Position;
+            //Globals.D2DesiredPosition = firstPoint.D2Position;
+            //Globals.D3DesiredPosition = firstPoint.D3Position;
+            //Globals.T1DesiredPosition = firstPoint.T1Position;
+            //Globals.T2DesiredPosition = firstPoint.T2Position;
             //Globals.T1DesiredPosition = (float)rand.Next(0, 90);
             //Globals.T2DesiredPosition = (float)rand.Next(0, 90);
             //Globals.A1DesiredPosition = (float)rand.Next(0, 90);
@@ -251,8 +259,11 @@ namespace Sender
 
 
             UnityCommunicationHub.WriteData(true);
-            
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 7; i++)
+            {
+                positionsToVisit.Add(i);
+            }
+            for (int i = 0; i < 22; i++)
             {
                 Thread testThread = new Thread(Test);
                 testThread.Start();
@@ -347,7 +358,12 @@ namespace Sender
                 //UnityCommunicationHub.WriteData(true);
 
                 var input = serial.GetData();
-                var percievedPositionArray = net.Think(input);
+                double[] inputData = new double[7];
+                for (int j = 0; j < 8; j++)
+                {
+                    inputData[j] = input[j];
+                }
+                var percievedPositionArray = net.Think(inputData);
 
                 double bestVal = 0;
                 SetPoint bestSetPoint = new SetPoint();
@@ -386,6 +402,7 @@ namespace Sender
 
         private void Reader_Click(object sender, EventArgs e)
         {
+            Thread.Sleep(200);
             Thread testThread = new Thread(Run);
             testThread.Start();
         }

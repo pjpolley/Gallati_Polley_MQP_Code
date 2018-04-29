@@ -34,7 +34,7 @@ namespace Sender
 
             NodeSavingReading reader = new NodeSavingReading();
 
-            net = new NeuralNet(16, 7, ANNfilename, KFoldFilename);
+            net = new NeuralNet(8, 7, ANNfilename, KFoldFilename);
             inputTrainingData = reader.GetStoredDataFromFile(Globals.inputDataStorage);
             outputTrainingData = reader.GetStoredDataFromFile(Globals.outputDataStorage);
 
@@ -75,7 +75,12 @@ namespace Sender
                 {
 
                     var input = serial.GetData();
-                    var percievedPositionArray = net.Think(input);
+                    double[] inputData = new double[8];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        inputData[j] = input[j];
+                    }
+                    var percievedPositionArray = net.Think(inputData);
 
                     double bestVal = 0;
                     SetPoint bestSetPoint = new SetPoint();
@@ -110,7 +115,6 @@ namespace Sender
 
                     UnityCommunicationHub.WriteData(true);
                 }
-                Thread.Sleep(1000);
             }
         }
 
@@ -127,7 +131,7 @@ namespace Sender
                 }
 
 
-                net.Train(networkTrainingInput, networkTrainingOutput, 1000, 1.0f);
+                net.Train(networkTrainingInput, networkTrainingOutput, 100, 0.1f);
             }
         }
 
@@ -150,9 +154,16 @@ namespace Sender
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 25; i++)
+            Thread.Sleep(200);
+            for (int i = 0; i < 50; i++)
             {
-                inputTrainingData.Add(serial.GetData());
+                double[] inData = serial.GetData();
+                double[] inputData = new double[8];
+                for (int j = 0; j < 8; j++)
+                {
+                    inputData[j] = inData[j];
+                }
+                inputTrainingData.Add(inputData);
                 double[] outputData = new double[7];
                 outputData[currentHandPosition] = 1;
                 outputTrainingData.Add(outputData);
@@ -168,7 +179,7 @@ namespace Sender
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             Thread testThread = new Thread(Run);
             testThread.Start();
         }
@@ -191,7 +202,7 @@ namespace Sender
 
             if (prompt.ShowDialog() == DialogResult.OK && prompt.Continue)
             {
-                net.Validate(16, 7);
+                net.Validate(8, 7);
             }
         }
 

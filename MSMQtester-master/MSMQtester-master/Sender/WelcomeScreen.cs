@@ -55,5 +55,15 @@ namespace Sender
             Globals.netScreen.Show();
             this.Hide();
         }
+
+        private void UnsureNetworkButton_Click(object sender, EventArgs e)
+        {
+            if (Globals.UnsureNetworkForm == null)
+            {
+                Globals.UnsureNetworkForm = new UnsureNetworkForm();
+            }
+            Globals.UnsureNetworkForm.Show();
+            this.Hide();
+        }
     }
 }

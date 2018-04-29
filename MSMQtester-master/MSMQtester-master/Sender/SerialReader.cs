@@ -75,38 +75,9 @@ namespace Sender
         {
             bciDataLock.WaitOne();
             double[] returnData = dataOut;
-            //var notGood = true;
-            //while (notGood)
-            //{
-            //    notGood = false;
-            //    foreach (var nodeReading in returnData)
-            //    {
-            //        if (double.IsNaN(nodeReading))
-            //        {
-            //            notGood = true;
-            //            bciDataLock.ReleaseMutex();
-            //            bciDataLock.WaitOne();
-            //            returnData = dataOut;
-            //            bciDataLock.ReleaseMutex();
-            //        }
-            //    }
-
-            //}
             bciDataLock.ReleaseMutex();
             return returnData;
-            //if (Array.Exists(returnData, input => double.IsNaN(input)))
-            //{
-            //    bciDataLock.ReleaseMutex();
-            //    while (Array.Exists(returnData, input => double.IsNaN(input)))
-            //    {
-                    
-            //    }
-            //}
-            //else
-            //{
-                
-            //}
-            //return returnData;
+
         }
 
         private void getData() 

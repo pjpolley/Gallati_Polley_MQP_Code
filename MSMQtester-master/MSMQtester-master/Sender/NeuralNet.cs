@@ -40,11 +40,8 @@ namespace Sender
             catch (FileNotFoundException e)
             {
                 Console.WriteLine("Could not find file, generating new one");
-                network = new ActivationNetwork(new SigmoidFunction(), inputs, new int[4] {10, 10, 10, outputs});
+                network = new ActivationNetwork(new SigmoidFunction(), inputs, new int[4] {10, 10, 10,  outputs});
             }
-
-            //new ActivationNetwork(new SigmoidFunction(), inputs, returnArray);//
-            //
 
 
 
@@ -52,22 +49,6 @@ namespace Sender
 
         public double Train(double[][] input, double[][] outputs)
         {
-            //List<double[]> nanIndexes = new List<double[]>();
-            //foreach (double[] individualArray in input)
-            //{
-            //    foreach (double nodeValue in individualArray)
-            //    {
-            //        if (double.IsNaN(nodeValue))
-            //        {
-            //            nanIndexes.Add(individualArray);
-            //        }
-            //    }
-            //}
-            //foreach (double[] itemToRemove in nanIndexes)
-            //{
-            //    outputs.RemoveAt(input.IndexOf(itemToRemove));
-            //    input.RemoveAll(itemToRemove);
-            //}
             var teacher = new ResilientBackpropagationLearning(network);
             teacher.LearningRate = topResults.TrainingSpeed;
 
@@ -113,21 +94,15 @@ namespace Sender
         public async void Validate(int inputSize, int outputSize)
         {
             List<KFoldData> inputsList = new List<KFoldData>();
-            for (double trainingweights = 0.01; trainingweights <= 2.1; trainingweights += 0.1)
+            for (double trainingweights = 0.01; trainingweights <= 1.6; trainingweights += 0.1)
             {
-                for (int breadth = 1; breadth <= 15; breadth++)
+                for (int breadth = 10; breadth <= 1000; breadth += 50)
                 {
-                    for (int depth = 1; depth < 15; depth++)
+                    for (int depth = 1; depth < 5; depth++)
                     {
                         inputsList.Add(new KFoldData(breadth, depth, trainingweights, 0, 0));
                     }
                 }
-            }
-
-            for (int i = 0; i < 5; i++)
-            {
-                
-
             }
 
             var kFoldList = await Task.WhenAll(inputsList.Select(i => kfold(inputSize, outputSize, i.Breadth, i.Depth, i.TrainingSpeed)));
@@ -245,6 +220,7 @@ namespace Sender
                     bestVal = new KFoldData(breadth, depth, trainingweights, iterations, bestKVal);
                     Console.WriteLine("Thread Complete " + breadth+ " " + depth + " " + trainingweights + " " + iterations + " " + bestKVal);
                     return bestVal;
+                    
 
                 }
 

@@ -27,6 +27,7 @@ namespace Sender
         public static Form treeScreen = null;
         public static Form netScreen = null;
         public static Form ContinuousNeuralNetForm = null;
+        public static Form UnsureNetworkForm = null;
         public static Form form1 = null;
         public static Form form2 = null;
 
@@ -121,6 +122,21 @@ namespace Sender
                 { "Thumbs Up", 4 },
                 { "Finger Guns", 5 },
                 {"Index Grip", 6 }
+            };
+            return returnList;
+        }
+
+        public static Dictionary<int, string> GetBasicValuesReversed()
+        {
+            var returnList = new Dictionary<int, string>
+            {
+                { 0,"Hook Grip" },
+                { 1, "Open Hand" },
+                { 2, "Peace Sign" },
+                { 3, "Pinch Grip" },
+                { 4, "Thumbs Up" },
+                { 5, "Finger Guns" },
+                {6, "Index Grip" }
             };
             return returnList;
         }
