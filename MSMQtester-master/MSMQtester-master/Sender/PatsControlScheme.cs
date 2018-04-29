@@ -10,11 +10,11 @@ namespace Sender
 {
     class PatsControlScheme : ControlSystemInterface
     {
-        public int timeNeededForChange = 200;//in milliseconds
+        public int timeNeededForChange = 10000;//in milliseconds
         public Node root = null;
         public Dictionary<int, Node> allNodes = new Dictionary<int, Node>();
         //max value is 9 due to indexing implementation
-        public int childrenPerNode = 4;//default value
+        public int childrenPerNode = 1;//default value
 
         public void DetermineSetpointsFromInputs()
         {
@@ -30,8 +30,8 @@ namespace Sender
         {
             if (!GetDataFromFile())
             {
-                instantiateNewTree(4);
-                childrenPerNode = 4;
+                instantiateNewTree(1, 10000);
+                childrenPerNode = 1;
             }
             else
             {
@@ -41,7 +41,7 @@ namespace Sender
                 }
                 else
                 {
-                    childrenPerNode = 4;
+                    childrenPerNode = 1;
                 }
             }
         }
@@ -107,12 +107,13 @@ namespace Sender
             }
         }
 
-        public void instantiateNewTree(int positionsPerSplit)
+        public void instantiateNewTree(int positionsPerSplit, int delay)
         {
             this.allNodes.Clear();
             this.root = createNewNode(Globals.ROOTNODE, positionsPerSplit, Globals.NULLPARENT);
+            this.childrenPerNode = positionsPerSplit;
             
-            this.timeNeededForChange = 200;
+            this.timeNeededForChange = delay;
         }
 
         public Node createNewNode(int id, int positionsPerSplit, int parentID)
