@@ -18,16 +18,12 @@ namespace Sender
 
         volatile bool continueControlling = true;
         long numInputs = 0;
-        bool foundNextPosition = false;
         TreeNode lastNode = null;
         private Node desiredNode;
         Stopwatch timer = new Stopwatch();
         Node currentNode;
         SerialReader reader = new SerialReader();
         int rate;
-
-        //make ranges for this run
-        private List<Threshhold> ranges;
 
         public NeuralTreeWindow()
         {
@@ -171,8 +167,7 @@ namespace Sender
                 T1Position = Globals.T1DesiredPosition,
                 T2Position = Globals.T2DesiredPosition
             };
-            controls.allNodes[(int)activeNode.Tag].setHandPosition(newPoint);
-        }
+            controls.allNodes[(int)activeNode.Tag].setHandPosition(newPoint);       }
 
         private void AddAnotherLayerButton_Click(object sender, EventArgs e)
         {
@@ -217,104 +212,6 @@ namespace Sender
         {
             activeNode.Text = desiredNameBox.Text;
             controls.allNodes[(int)activeNode.Tag].name = desiredNameBox.Text;
-        }
-
-        private void setNumberOfPositionsPerLayerButton_Click(object sender, EventArgs e)
-        {
-            setNumPositions();
-        }
-
-        private void setNumPositions()
-        {
-            int newChildrenPerNode = System.Convert.ToInt32(positionsPerLayerBox.Text);
-            if (newChildrenPerNode == controls.childrenPerNode)
-            {
-                //nothing required
-                return;
-            }
-            else if (newChildrenPerNode <= 1)
-            {
-                //shouldn't be able to have only one child per node. if so, the control system doesn't do anything
-                Console.WriteLine("ERROR. INPUT CANNOT BE LESS THAN 2");
-                return;
-            }
-            else if (!(newChildrenPerNode <= 9))
-            {
-                //shouldn't be able to have only one child per node. if so, the control system doesn't do anything
-                Console.WriteLine("ERROR. INPUT CANNOT BE GREATER THAN 9");
-                return;
-            }
-            else if (newChildrenPerNode > controls.childrenPerNode)
-            {
-                List<Node> newList = controls.allNodes.Values.OrderBy(o => o.id).ToList();
-
-                foreach (Node n in newList)
-                {
-                    if ((int)n.id != Globals.CONTROLNODE && n.children.Count > 0)
-                    {
-                        //remove the controls node first
-                        TreeNode frontEndNode = findNodeInTree(n.id);
-                        frontEndNode.Nodes.RemoveAt(frontEndNode.Nodes.Count - 1);
-                        n.children.RemoveAll(id => id == Globals.CONTROLNODE);
-
-                        //create new nodes to display
-                        while (n.children.Count < newChildrenPerNode)
-                        {
-                            //calculate the id for the new node
-                            int newID = (n.id * 10) + n.children.Count + 1;
-                            //create a new node in the backend
-                            controls.createNewNode(newID, controls.childrenPerNode, n.id);
-                            //and then add it to the frontend
-                            TreeNode newDisplayNode = new TreeNode(controls.allNodes[newID].name);
-                            newDisplayNode.Tag = controls.allNodes[newID].id;
-                            frontEndNode.Nodes.Add(newDisplayNode);
-                        }
-                        //and then read the controls node
-                        int controlsID = Globals.CONTROLNODE;
-                        TreeNode newControlsNode = new TreeNode("Controls");
-                        newControlsNode.Tag = Globals.CONTROLNODE;
-                        frontEndNode.Nodes.Add(newControlsNode);
-                        n.children.Add(Globals.CONTROLNODE);
-                    }
-                }
-                controls.childrenPerNode = newChildrenPerNode;
-            }
-            else
-            {
-                //set up the list to populate with all display nodes
-                //order by index from highest to lowest. indexes are calculated so that lower nodes are higher in the tree
-                List<Node> newList = controls.allNodes.Values.OrderByDescending(o => o.id).ToList();
-
-                foreach (Node n in newList)
-                {
-                    if (n.id != Globals.CONTROLNODE && n.children.Count > 0)
-                    {
-                        //figure out what the id is
-                        int ID = n.id;
-                        TreeNode parentToControl = findNodeInTree(ID);
-                        parentToControl.Nodes.RemoveAt(parentToControl.Nodes.Count - 1);
-                        n.children.RemoveAll(node => node == Globals.CONTROLNODE);
-
-                        //and delete nodes as its children until it fits.
-                        while (n.children.Count > newChildrenPerNode)
-                        {
-                            int idOfChildToDestroy = n.children.Last<int>();
-                            TreeNode frontEndNode = findNodeInTree(idOfChildToDestroy);
-                            purgeChildren(frontEndNode);
-                            n.children.Remove(idOfChildToDestroy);
-                        }
-
-                        int controlsID = Globals.CONTROLNODE;
-                        TreeNode newControlsNode = new TreeNode("Controls");
-                        newControlsNode.Tag = Globals.CONTROLNODE;
-                        parentToControl.Nodes.Add(newControlsNode);
-                        n.children.Add(Globals.CONTROLNODE);
-                    }
-
-                }
-                controls.cleanupReferences();
-                controls.childrenPerNode = newChildrenPerNode;
-            }
         }
 
         private void purgeChildren(TreeNode node)
@@ -404,10 +301,11 @@ namespace Sender
             NeuronTreeView.Nodes.Clear();
 
             //and reset the tree
-            controls.instantiateNewTree(System.Convert.ToInt32(positionsPerLayerBox.Text));
+            controls.instantiateNewTree(1, System.Convert.ToInt32(handDelayBox.Text));
             TreeNode newNode = new TreeNode(controls.root.name);
             newNode.Tag = controls.root.id;
             NeuronTreeView.Nodes.Add(newNode);
+            NeuronTreeView.ExpandAll();
         }
 
         private void ThumbSelectButton_Click(object sender, EventArgs e)
@@ -616,6 +514,8 @@ namespace Sender
             }
         }
 
+        private double configuredMidPoint;
+
         private void IncreaseAngleButton_Click(object sender, EventArgs e)
         {
             float desiredAngle = (float)System.Convert.ToDouble(DesiredAngleInput.Text) + 1.0f;
@@ -663,16 +563,16 @@ namespace Sender
                 timer.Start();
                 while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
                 {
-                    decimal currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
+                    decimal currentIn = 0;(decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
                     allReads += currentIn;
                     reads++;
-                    currentGoalBox.Text = (allReads / reads).ToString();
+                    currentAverageBox.Text = (allReads / reads).ToString();
                     currentInputBox.Text = currentIn.ToString();
                 }
 
                 timer.Reset();
                 lowConcentration = (double)(allReads / reads);
-                minValueTextBox.Text = lowConcentration.ToString();
+                midpointTextBox.Text = lowConcentration.ToString();
                 Console.WriteLine("Low concentration was: " + lowConcentration);
 
                 reads = 0;
@@ -686,13 +586,14 @@ namespace Sender
                     decimal currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
                     allReads += currentIn;
                     reads++;
-                    currentGoalBox.Text = (allReads / reads).ToString();
+                    currentAverageBox.Text = (allReads / reads).ToString();
                     currentInputBox.Text = currentIn.ToString();
                 }
                 timer.Reset();
 
                 highConcentration = (double)(allReads / reads);
-                maxValueTextBox.Text = highConcentration.ToString();
+                configuredMidPoint = ((highConcentration + lowConcentration) / 2);
+                midpointTextBox.Text = configuredMidPoint.ToString();
 
                 Console.WriteLine("High concentration was: " + highConcentration);
 
@@ -702,28 +603,6 @@ namespace Sender
                 }
             }
 
-            double differenceInConcentrations = highConcentration - lowConcentration;
-            double deltaBetweenThreshholds = differenceInConcentrations / (controls.childrenPerNode + 1);
-
-            //make ranges for this run
-            ranges = new List<Threshhold>(controls.childrenPerNode + 1);
-
-            for (int i = 0; i < controls.childrenPerNode + 1; i++)
-            {
-                if (i == 0)
-                {
-                    //make sure all reads work for it
-                    ranges.Add(new Threshhold(Double.MinValue, lowConcentration + ((i + 1) * deltaBetweenThreshholds)));
-                }
-                else if (i == controls.childrenPerNode)//not a +1 because of indexing. This will allocate the max value to controls.
-                {
-                    ranges.Add(new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), Double.MaxValue));
-                }
-                else
-                {
-                    ranges.Add(new Threshhold(lowConcentration + (i * deltaBetweenThreshholds), lowConcentration + ((i + 1) * deltaBetweenThreshholds)));
-                }
-            }
             MessageBox.Show("Ready to control hand. Press OK when ready.", string.Empty, MessageBoxButtons.OK);
         }
 
@@ -757,41 +636,32 @@ namespace Sender
                 }
                 Random rand = new Random();
                 decimal accruedValues = 0;
+                timer.Reset();
                 timer.Start();
                 decimal currentIn;
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
-                    currentIn = (decimal)reader.GetData()[Globals.inputNode];
+                    currentIn = 0(decimal)reader.GetData()[Globals.inputNode];
                     accruedValues += currentIn;
                     numInputs++;
-                    currentGoalBox.Text = (accruedValues / numInputs).ToString();
+                    currentAverageBox.Text = (accruedValues / numInputs).ToString();
                     currentInputBox.Text = currentIn.ToString();
                 }
 
                 averageInput = (double)(accruedValues / numInputs);
 
-                for (int i = 0; i < (controls.childrenPerNode + 1) && !foundNextPosition; i++)
+                if(averageInput >= configuredMidPoint)
                 {
-                    if (currentNode.children.Count < 2 || currentNode.id == Globals.CONTROLNODE)
-                    {
-                        foundNextPosition = true;
-                        continueControlling = false;
-                    }
-                    else if (i == controls.childrenPerNode)
-                    {
-                        foundNextPosition = true;
-                        continueControlling = false;
-                    }
-                    else if (ranges[i].Contains(averageInput))
-                    {
-                        foundNextPosition = true;
-                        desiredNode = controls.allNodes[currentNode.children[i]];
-                    }
-
+                    //set current hand position as the one to move to
+                    continueControlling = false;
                 }
-                foundNextPosition = false;
-                TreeNode n = findNodeInTree(desiredNode.id);
-                currentNode = desiredNode;
+                else
+                {
+                    continueControlling = true;
+                    currentNode = controls.allNodes[currentNode.children.First()];
+                }
+
+                TreeNode n = findNodeInTree(currentNode.id);
                 n.BackColor = Color.Yellow;
 
                 if (lastNode != null && n != lastNode)
@@ -802,10 +672,8 @@ namespace Sender
 
                 Console.WriteLine(averageInput);
 
-                timer.Reset();
                 numInputs = 0;
                 accruedValues = 0;
-                foundNextPosition = false;
 
                 Console.WriteLine("Desired was " + desiredNode.name);
 
@@ -830,15 +698,6 @@ namespace Sender
             if (e.KeyCode == Keys.Enter)
             {
                 controls.timeNeededForChange = System.Convert.ToInt32(handDelayBox);
-                e.Handled = e.SuppressKeyPress = true;
-            }
-        }
-
-        private void positionsPerLayerBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                setNumPositions();
                 e.Handled = e.SuppressKeyPress = true;
             }
         }

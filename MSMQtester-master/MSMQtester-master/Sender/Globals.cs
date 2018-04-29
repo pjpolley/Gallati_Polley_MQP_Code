@@ -162,7 +162,7 @@ namespace Sender
 
         //constants for the command tree
         public static int threshholdAquisitionTime = 5000;//5 seconds to get the limits
-        public static int inputNode = 1;
+        public static int inputNode = 9;
 
         //exits the application
         public static void CloseAllForms(object sender, FormClosingEventArgs e)

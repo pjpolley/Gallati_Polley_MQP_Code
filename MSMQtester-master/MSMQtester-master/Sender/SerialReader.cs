@@ -38,10 +38,10 @@ namespace Sender
         public SerialReader()
         {
             bciDataLock = new Mutex();
-            serialPort1 = new SerialPort("COM5", 115200);
-            serialPort1.Open();
-            serialPort1.Write("s");
-            serialPort1.Write("~5");
+            //serialPort1 = new SerialPort("COM3", 115200);
+            //serialPort1.Open();
+            //serialPort1.Write("s");
+            //serialPort1.Write("~5");
             dataOut = new double[16];
             lastDataOut = new List<double[]>();
 
@@ -57,10 +57,10 @@ namespace Sender
         public void setRate(double desiredRate) { rate = (int)(desiredRate * 255 / 250); }
 
         //Starts board output
-        public void Start() { serialPort1.Write("b"); }
+        public void Start() { /*serialPort1.Write("b");*/ }
 
         //Stops board output
-        public void Stop() { serialPort1.Write("s"); }
+        public void Stop() { /*serialPort1.Write("s");*/ }
 
         //Reads board output
         public void Read()
@@ -124,7 +124,7 @@ namespace Sender
                         bciDataLock.ReleaseMutex();
                     }
 
-
+                /*
                     if (serialPort1.ReadByte() == 0xA0)
                     {
                         serialPort1.Read(inData, 0, 32);
@@ -164,6 +164,7 @@ namespace Sender
 
                         frequencyToggle = !frequencyToggle;
                     }
+                    */
 
 
 

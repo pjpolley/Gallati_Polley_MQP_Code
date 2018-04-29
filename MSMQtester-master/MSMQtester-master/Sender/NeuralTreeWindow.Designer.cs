@@ -33,9 +33,7 @@
             this.AddAnotherLayerButton = new System.Windows.Forms.Button();
             this.changeNameButton = new System.Windows.Forms.Button();
             this.desiredNameBox = new System.Windows.Forms.TextBox();
-            this.setNumberOfPositionsPerLayerButton = new System.Windows.Forms.Button();
             this.handDelayButton = new System.Windows.Forms.Button();
-            this.positionsPerLayerBox = new System.Windows.Forms.TextBox();
             this.handDelayBox = new System.Windows.Forms.TextBox();
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.hardResetButton = new System.Windows.Forms.Button();
@@ -57,14 +55,12 @@
             this.beginControllingHandButton = new System.Windows.Forms.Button();
             this.iterateButton = new System.Windows.Forms.Button();
             this.setCurrentPosition = new System.Windows.Forms.Button();
-            this.currentGoalBox = new System.Windows.Forms.TextBox();
-            this.currentGoalLabel = new System.Windows.Forms.Label();
+            this.currentAverageBox = new System.Windows.Forms.TextBox();
+            this.currentAverageLabel = new System.Windows.Forms.Label();
             this.currentInputLabel = new System.Windows.Forms.Label();
             this.currentInputBox = new System.Windows.Forms.TextBox();
-            this.maxValueLabel = new System.Windows.Forms.Label();
-            this.maxValueTextBox = new System.Windows.Forms.TextBox();
-            this.minValueLabel = new System.Windows.Forms.Label();
-            this.minValueTextBox = new System.Windows.Forms.TextBox();
+            this.midpointValueLabel = new System.Windows.Forms.Label();
+            this.midpointTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // NeuronTreeView
@@ -119,20 +115,9 @@
             this.desiredNameBox.Text = "Name Here";
             this.desiredNameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.desiredNameBox_KeyDown);
             // 
-            // setNumberOfPositionsPerLayerButton
-            // 
-            this.setNumberOfPositionsPerLayerButton.Location = new System.Drawing.Point(776, 494);
-            this.setNumberOfPositionsPerLayerButton.Margin = new System.Windows.Forms.Padding(4);
-            this.setNumberOfPositionsPerLayerButton.Name = "setNumberOfPositionsPerLayerButton";
-            this.setNumberOfPositionsPerLayerButton.Size = new System.Drawing.Size(382, 90);
-            this.setNumberOfPositionsPerLayerButton.TabIndex = 5;
-            this.setNumberOfPositionsPerLayerButton.Text = "Set number of positions per layer";
-            this.setNumberOfPositionsPerLayerButton.UseVisualStyleBackColor = true;
-            this.setNumberOfPositionsPerLayerButton.Click += new System.EventHandler(this.setNumberOfPositionsPerLayerButton_Click);
-            // 
             // handDelayButton
             // 
-            this.handDelayButton.Location = new System.Drawing.Point(776, 631);
+            this.handDelayButton.Location = new System.Drawing.Point(776, 496);
             this.handDelayButton.Margin = new System.Windows.Forms.Padding(4);
             this.handDelayButton.Name = "handDelayButton";
             this.handDelayButton.Size = new System.Drawing.Size(382, 85);
@@ -141,24 +126,14 @@
             this.handDelayButton.UseVisualStyleBackColor = true;
             this.handDelayButton.Click += new System.EventHandler(this.handDelayButton_Click);
             // 
-            // positionsPerLayerBox
-            // 
-            this.positionsPerLayerBox.Location = new System.Drawing.Point(778, 455);
-            this.positionsPerLayerBox.Margin = new System.Windows.Forms.Padding(4);
-            this.positionsPerLayerBox.Name = "positionsPerLayerBox";
-            this.positionsPerLayerBox.Size = new System.Drawing.Size(380, 31);
-            this.positionsPerLayerBox.TabIndex = 7;
-            this.positionsPerLayerBox.Text = "4";
-            this.positionsPerLayerBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.positionsPerLayerBox_KeyDown);
-            // 
             // handDelayBox
             // 
-            this.handDelayBox.Location = new System.Drawing.Point(776, 592);
+            this.handDelayBox.Location = new System.Drawing.Point(778, 457);
             this.handDelayBox.Margin = new System.Windows.Forms.Padding(4);
             this.handDelayBox.Name = "handDelayBox";
             this.handDelayBox.Size = new System.Drawing.Size(380, 31);
             this.handDelayBox.TabIndex = 8;
-            this.handDelayBox.Text = "200";
+            this.handDelayBox.Text = "10000";
             this.handDelayBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.handDelayBox_KeyDown);
             // 
             // removeLayerButton
@@ -174,10 +149,10 @@
             // 
             // hardResetButton
             // 
-            this.hardResetButton.Location = new System.Drawing.Point(782, 1150);
+            this.hardResetButton.Location = new System.Drawing.Point(1219, 991);
             this.hardResetButton.Margin = new System.Windows.Forms.Padding(4);
             this.hardResetButton.Name = "hardResetButton";
-            this.hardResetButton.Size = new System.Drawing.Size(373, 75);
+            this.hardResetButton.Size = new System.Drawing.Size(350, 133);
             this.hardResetButton.TabIndex = 10;
             this.hardResetButton.Text = "Factory Reset Command Structure";
             this.hardResetButton.UseVisualStyleBackColor = true;
@@ -185,10 +160,10 @@
             // 
             // saveCommandStructure
             // 
-            this.saveCommandStructure.Location = new System.Drawing.Point(778, 724);
+            this.saveCommandStructure.Location = new System.Drawing.Point(1209, 803);
             this.saveCommandStructure.Margin = new System.Windows.Forms.Padding(4);
             this.saveCommandStructure.Name = "saveCommandStructure";
-            this.saveCommandStructure.Size = new System.Drawing.Size(378, 123);
+            this.saveCommandStructure.Size = new System.Drawing.Size(373, 137);
             this.saveCommandStructure.TabIndex = 11;
             this.saveCommandStructure.Text = "Save Command Structure";
             this.saveCommandStructure.UseVisualStyleBackColor = true;
@@ -347,10 +322,10 @@
             // 
             // beginControllingHandButton
             // 
-            this.beginControllingHandButton.Location = new System.Drawing.Point(1220, 792);
+            this.beginControllingHandButton.Location = new System.Drawing.Point(778, 636);
             this.beginControllingHandButton.Margin = new System.Windows.Forms.Padding(4);
             this.beginControllingHandButton.Name = "beginControllingHandButton";
-            this.beginControllingHandButton.Size = new System.Drawing.Size(352, 65);
+            this.beginControllingHandButton.Size = new System.Drawing.Size(384, 98);
             this.beginControllingHandButton.TabIndex = 26;
             this.beginControllingHandButton.Text = "Configure hand for controlling";
             this.beginControllingHandButton.UseVisualStyleBackColor = true;
@@ -358,10 +333,10 @@
             // 
             // iterateButton
             // 
-            this.iterateButton.Location = new System.Drawing.Point(1220, 865);
+            this.iterateButton.Location = new System.Drawing.Point(778, 742);
             this.iterateButton.Margin = new System.Windows.Forms.Padding(4);
             this.iterateButton.Name = "iterateButton";
-            this.iterateButton.Size = new System.Drawing.Size(352, 105);
+            this.iterateButton.Size = new System.Drawing.Size(384, 105);
             this.iterateButton.TabIndex = 27;
             this.iterateButton.Text = "Move hand";
             this.iterateButton.UseVisualStyleBackColor = true;
@@ -377,29 +352,29 @@
             this.setCurrentPosition.Text = "Set";
             this.setCurrentPosition.UseVisualStyleBackColor = true;
             // 
-            // currentGoalBox
+            // currentAverageBox
             // 
-            this.currentGoalBox.Location = new System.Drawing.Point(1218, 1003);
-            this.currentGoalBox.Margin = new System.Windows.Forms.Padding(4);
-            this.currentGoalBox.Name = "currentGoalBox";
-            this.currentGoalBox.ReadOnly = true;
-            this.currentGoalBox.Size = new System.Drawing.Size(126, 31);
-            this.currentGoalBox.TabIndex = 29;
+            this.currentAverageBox.Location = new System.Drawing.Point(895, 956);
+            this.currentAverageBox.Margin = new System.Windows.Forms.Padding(4);
+            this.currentAverageBox.Name = "currentAverageBox";
+            this.currentAverageBox.ReadOnly = true;
+            this.currentAverageBox.Size = new System.Drawing.Size(126, 31);
+            this.currentAverageBox.TabIndex = 29;
             // 
-            // currentGoalLabel
+            // currentAverageLabel
             // 
-            this.currentGoalLabel.AutoSize = true;
-            this.currentGoalLabel.Location = new System.Drawing.Point(1213, 974);
-            this.currentGoalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.currentGoalLabel.Name = "currentGoalLabel";
-            this.currentGoalLabel.Size = new System.Drawing.Size(134, 25);
-            this.currentGoalLabel.TabIndex = 30;
-            this.currentGoalLabel.Text = "Current Goal";
+            this.currentAverageLabel.AutoSize = true;
+            this.currentAverageLabel.Location = new System.Drawing.Point(877, 927);
+            this.currentAverageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.currentAverageLabel.Name = "currentAverageLabel";
+            this.currentAverageLabel.Size = new System.Drawing.Size(169, 25);
+            this.currentAverageLabel.TabIndex = 30;
+            this.currentAverageLabel.Text = "Current Average";
             // 
             // currentInputLabel
             // 
             this.currentInputLabel.AutoSize = true;
-            this.currentInputLabel.Location = new System.Drawing.Point(1439, 974);
+            this.currentInputLabel.Location = new System.Drawing.Point(890, 991);
             this.currentInputLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.currentInputLabel.Name = "currentInputLabel";
             this.currentInputLabel.Size = new System.Drawing.Size(136, 25);
@@ -408,64 +383,43 @@
             // 
             // currentInputBox
             // 
-            this.currentInputBox.Location = new System.Drawing.Point(1444, 1003);
+            this.currentInputBox.Location = new System.Drawing.Point(895, 1028);
             this.currentInputBox.Margin = new System.Windows.Forms.Padding(4);
             this.currentInputBox.Name = "currentInputBox";
             this.currentInputBox.ReadOnly = true;
             this.currentInputBox.Size = new System.Drawing.Size(126, 31);
             this.currentInputBox.TabIndex = 31;
             // 
-            // maxValueLabel
+            // midpointValueLabel
             // 
-            this.maxValueLabel.AutoSize = true;
-            this.maxValueLabel.Location = new System.Drawing.Point(1008, 974);
-            this.maxValueLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.maxValueLabel.Name = "maxValueLabel";
-            this.maxValueLabel.Size = new System.Drawing.Size(130, 25);
-            this.maxValueLabel.TabIndex = 36;
-            this.maxValueLabel.Text = "Current Max";
+            this.midpointValueLabel.AutoSize = true;
+            this.midpointValueLabel.Location = new System.Drawing.Point(854, 863);
+            this.midpointValueLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.midpointValueLabel.Name = "midpointValueLabel";
+            this.midpointValueLabel.Size = new System.Drawing.Size(205, 25);
+            this.midpointValueLabel.TabIndex = 34;
+            this.midpointValueLabel.Text = "Configured Midpoint";
             // 
-            // maxValueTextBox
+            // midpointTextBox
             // 
-            this.maxValueTextBox.Location = new System.Drawing.Point(1013, 1003);
-            this.maxValueTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.maxValueTextBox.Name = "maxValueTextBox";
-            this.maxValueTextBox.ReadOnly = true;
-            this.maxValueTextBox.Size = new System.Drawing.Size(126, 31);
-            this.maxValueTextBox.TabIndex = 35;
-            // 
-            // minValueLabel
-            // 
-            this.minValueLabel.AutoSize = true;
-            this.minValueLabel.Location = new System.Drawing.Point(782, 974);
-            this.minValueLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.minValueLabel.Name = "minValueLabel";
-            this.minValueLabel.Size = new System.Drawing.Size(124, 25);
-            this.minValueLabel.TabIndex = 34;
-            this.minValueLabel.Text = "Current Min";
-            // 
-            // minValueTextBox
-            // 
-            this.minValueTextBox.Location = new System.Drawing.Point(787, 1003);
-            this.minValueTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.minValueTextBox.Name = "minValueTextBox";
-            this.minValueTextBox.ReadOnly = true;
-            this.minValueTextBox.Size = new System.Drawing.Size(126, 31);
-            this.minValueTextBox.TabIndex = 33;
+            this.midpointTextBox.Location = new System.Drawing.Point(895, 892);
+            this.midpointTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.midpointTextBox.Name = "midpointTextBox";
+            this.midpointTextBox.ReadOnly = true;
+            this.midpointTextBox.Size = new System.Drawing.Size(126, 31);
+            this.midpointTextBox.TabIndex = 33;
             // 
             // NeuralTreeWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1684, 1230);
-            this.Controls.Add(this.maxValueLabel);
-            this.Controls.Add(this.maxValueTextBox);
-            this.Controls.Add(this.minValueLabel);
-            this.Controls.Add(this.minValueTextBox);
+            this.Controls.Add(this.midpointValueLabel);
+            this.Controls.Add(this.midpointTextBox);
             this.Controls.Add(this.currentInputLabel);
             this.Controls.Add(this.currentInputBox);
-            this.Controls.Add(this.currentGoalLabel);
-            this.Controls.Add(this.currentGoalBox);
+            this.Controls.Add(this.currentAverageLabel);
+            this.Controls.Add(this.currentAverageBox);
             this.Controls.Add(this.setCurrentPosition);
             this.Controls.Add(this.iterateButton);
             this.Controls.Add(this.beginControllingHandButton);
@@ -487,9 +441,7 @@
             this.Controls.Add(this.hardResetButton);
             this.Controls.Add(this.removeLayerButton);
             this.Controls.Add(this.handDelayBox);
-            this.Controls.Add(this.positionsPerLayerBox);
             this.Controls.Add(this.handDelayButton);
-            this.Controls.Add(this.setNumberOfPositionsPerLayerButton);
             this.Controls.Add(this.desiredNameBox);
             this.Controls.Add(this.changeNameButton);
             this.Controls.Add(this.AddAnotherLayerButton);
@@ -510,9 +462,7 @@
         private System.Windows.Forms.Button AddAnotherLayerButton;
         private System.Windows.Forms.Button changeNameButton;
         private System.Windows.Forms.TextBox desiredNameBox;
-        private System.Windows.Forms.Button setNumberOfPositionsPerLayerButton;
         private System.Windows.Forms.Button handDelayButton;
-        private System.Windows.Forms.TextBox positionsPerLayerBox;
         private System.Windows.Forms.TextBox handDelayBox;
         private System.Windows.Forms.Button removeLayerButton;
         private System.Windows.Forms.Button hardResetButton;
@@ -534,13 +484,11 @@
         private System.Windows.Forms.Button beginControllingHandButton;
         private System.Windows.Forms.Button iterateButton;
         private System.Windows.Forms.Button setCurrentPosition;
-        private System.Windows.Forms.TextBox currentGoalBox;
-        private System.Windows.Forms.Label currentGoalLabel;
+        private System.Windows.Forms.TextBox currentAverageBox;
+        private System.Windows.Forms.Label currentAverageLabel;
         private System.Windows.Forms.Label currentInputLabel;
         private System.Windows.Forms.TextBox currentInputBox;
-        private System.Windows.Forms.Label maxValueLabel;
-        private System.Windows.Forms.TextBox maxValueTextBox;
-        private System.Windows.Forms.Label minValueLabel;
-        private System.Windows.Forms.TextBox minValueTextBox;
+        private System.Windows.Forms.Label midpointValueLabel;
+        private System.Windows.Forms.TextBox midpointTextBox;
     }
 }
