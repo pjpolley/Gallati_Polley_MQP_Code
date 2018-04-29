@@ -287,7 +287,7 @@ namespace Sender
 
         private void handDelayButton_Click(object sender, EventArgs e)
         {
-            controls.timeNeededForChange = System.Convert.ToInt32(handDelayBox);
+            controls.timeNeededForChange = System.Convert.ToInt32(handDelayBox.Text);
         }
 
         private void saveCommandStructure_Click(object sender, EventArgs e)
@@ -563,7 +563,7 @@ namespace Sender
                 timer.Start();
                 while (timer.ElapsedMilliseconds < Globals.threshholdAquisitionTime)
                 {
-                    decimal currentIn = 0;(decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
+                    decimal currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
                     allReads += currentIn;
                     reads++;
                     currentAverageBox.Text = (allReads / reads).ToString();
@@ -635,18 +635,21 @@ namespace Sender
                     break;
                 }
                 Random rand = new Random();
+                numInputs = 0;
                 decimal accruedValues = 0;
                 timer.Reset();
                 timer.Start();
                 decimal currentIn;
                 while (timer.ElapsedMilliseconds < desiredMillisecondDelay)
                 {
-                    currentIn = 0(decimal)reader.GetData()[Globals.inputNode];
+                    currentIn = (decimal)Math.Abs(reader.GetData()[Globals.inputNode]);
                     accruedValues += currentIn;
                     numInputs++;
                     currentAverageBox.Text = (accruedValues / numInputs).ToString();
                     currentInputBox.Text = currentIn.ToString();
                 }
+
+
 
                 averageInput = (double)(accruedValues / numInputs);
 

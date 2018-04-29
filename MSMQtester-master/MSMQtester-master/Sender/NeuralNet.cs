@@ -39,8 +39,8 @@ namespace Sender
             }
             catch (FileNotFoundException e)
             {
-                Console.WriteLine("Could not find file, generate new one");
-                network = new ActivationNetwork(new SigmoidFunction(), inputs, new int[3] {10, 10, outputs});
+                Console.WriteLine("Could not find file, generating new one");
+                network = new ActivationNetwork(new SigmoidFunction(), inputs, new int[4] {10, 10, 10, outputs});
             }
 
             //new ActivationNetwork(new SigmoidFunction(), inputs, returnArray);//
@@ -243,7 +243,7 @@ namespace Sender
                 {
                     bestKVal = kSumAvg;
                     bestVal = new KFoldData(breadth, depth, trainingweights, iterations, bestKVal);
-                    Console.WriteLine("Thread Complete");
+                    Console.WriteLine("Thread Complete " + breadth+ " " + depth + " " + trainingweights + " " + iterations + " " + bestKVal);
                     return bestVal;
 
                 }
@@ -255,7 +255,8 @@ namespace Sender
 
                 }
             }
-            Console.WriteLine("Thread Complete");
+            Console.WriteLine("Thread Complete " + breadth + " " + depth + " " + trainingweights + " " + bestVal.Iterations + " " + bestKVal);
+
             return bestVal;
             //return new Task<KFoldData>(() => helperFunction(inputSize, outputSize, breadth,depth,trainingweights));
 
