@@ -34,7 +34,7 @@ namespace Sender
         {
             InitializeComponent();
 
-            net = new NeuralNet(16, 7, ANNfilename, KFoldFilename);
+            net = new NeuralNet(8, 7, ANNfilename, KFoldFilename);
             inputTrainingData = new List<double[]>();
             outputTrainingData = new List<double[]>();
 
@@ -127,11 +127,12 @@ namespace Sender
                 var percievedPosition = new SetPoint(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
                 var rand = new Random();
                 //UnityCommunicationHub.WriteData(true);
-                
+
+                var percievedPositionArray = new double[7];
 
                 if (inputTrainingData.Count != 0)
                 {
-                    var percievedPositionArray = net.Think(inputTrainingData[inputTrainingData.Count - 1]);
+                    percievedPositionArray = net.Think(inputTrainingData[inputTrainingData.Count - 1]);
 
                     double bestVal = 0;
                     SetPoint bestSetPoint = new SetPoint();
@@ -164,6 +165,10 @@ namespace Sender
                 if (positionsToVisit.Count > 0)
                 {
                     percievedPosition = setPointList[positionsToVisit.First()];
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if ((7-i) == positionsToVisit.Count) percievedPositionArray[i] = 1;
+                    }
                     positionsToVisit.RemoveAt(0);
                 }
 
@@ -188,11 +193,16 @@ namespace Sender
                 for (int i = 0; i < 250; i++)
                 {
                     var input = serial.GetData();
+                    double[] inputData = new double[8];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        inputData[j] = input[j];
+                    }
                     UnityCommunicationHub.ReadData();
 
 
-                    inputTrainingData.Add(input);
-                    outputTrainingData.Add(Globals.GetDoubles());
+                    inputTrainingData.Add(inputData);
+                    outputTrainingData.Add(percievedPositionArray);
                     Thread.Sleep(1);
                 }
             }
@@ -211,7 +221,7 @@ namespace Sender
                 }
 
 
-                net.Train(networkTrainingInput, networkTrainingOutput, 100, .97f);
+                net.Train(networkTrainingInput, networkTrainingOutput, 10, .1f);
             }
         }
 
@@ -358,7 +368,7 @@ namespace Sender
                 //UnityCommunicationHub.WriteData(true);
 
                 var input = serial.GetData();
-                double[] inputData = new double[7];
+                double[] inputData = new double[8];
                 for (int j = 0; j < 8; j++)
                 {
                     inputData[j] = input[j];

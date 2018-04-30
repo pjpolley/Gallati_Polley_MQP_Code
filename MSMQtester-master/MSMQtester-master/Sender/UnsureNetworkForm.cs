@@ -51,7 +51,7 @@ namespace Sender
 
             controls = new PatsControlScheme();
             controls.Initialize();
-            controls.timeNeededForChange = 5000;
+            controls.timeNeededForChange = 7000;
 
             serial = new SerialReader();
             serial.Read();
@@ -118,6 +118,7 @@ namespace Sender
                             if (!goodToMove)
                             {
                                 percievedPositionArray[index] = 0;
+                                bestVal = 0;
                             }
                         }
                     }
