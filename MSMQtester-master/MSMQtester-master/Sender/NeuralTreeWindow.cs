@@ -19,7 +19,6 @@ namespace Sender
         volatile bool continueControlling = true;
         long numInputs = 0;
         TreeNode lastNode = null;
-        private Node desiredNode;
         Stopwatch timer = new Stopwatch();
         Node currentNode;
         SerialReader reader = new SerialReader();
@@ -73,20 +72,6 @@ namespace Sender
                         newNode.Tag = n.id;
                         parentNode.Nodes.Add(newNode);
                     }
-                }
-                if (n.id != Globals.CONTROLNODE && n.children.Contains(Globals.CONTROLNODE))
-                {
-                    TreeNode parentNode = findNodeInTree(n.id);
-                    foreach (TreeNode tn in parentNode.Nodes)
-                    {
-                        if ((int)tn.Tag == Globals.CONTROLNODE)
-                        {
-                            tn.Remove();
-                        }
-                    }
-                    TreeNode newControlNode = new TreeNode("Controls");
-                    newControlNode.Tag = Globals.CONTROLNODE;
-                    parentNode.Nodes.Add(newControlNode);
                 }
             }
 
@@ -278,7 +263,7 @@ namespace Sender
                     foundNode = recursiveFindNode(child, id);
                     if (foundNode != null)
                     {
-                        return child;
+                        return foundNode;
                     }
                 }
                 return null;
@@ -620,15 +605,19 @@ namespace Sender
         {
             continueControlling = true;
             currentNode = controls.root;
-            desiredNode = controls.root;
             int desiredMillisecondDelay = controls.timeNeededForChange;
+
+            TreeNode n = findNodeInTree(currentNode.id);
+            n.BackColor = Color.Yellow;
+            lastNode = n;
+
             timer = new Stopwatch();
             while (continueControlling)
             {
                 //get the inputs and average them for the desired output
                 double averageInput = 0;
 
-                if (currentNode.children.Count < 2)
+                if (currentNode.children.Count < 1)
                 {
                     continueControlling = false;
                     loadPositions(currentNode);
@@ -646,17 +635,18 @@ namespace Sender
                     accruedValues += currentIn;
                     numInputs++;
                     currentAverageBox.Text = (accruedValues / numInputs).ToString();
+                    timeLeftBox.Text = (desiredMillisecondDelay - timer.ElapsedMilliseconds).ToString();
                     currentInputBox.Text = currentIn.ToString();
                 }
 
-
-
                 averageInput = (double)(accruedValues / numInputs);
+                currentAverageBox.Text = averageInput.ToString();
 
-                if(averageInput >= configuredMidPoint)
+                if (averageInput >= configuredMidPoint)
                 {
                     //set current hand position as the one to move to
                     continueControlling = false;
+                    timeLeftBox.Text = "Done";
                 }
                 else
                 {
@@ -664,13 +654,10 @@ namespace Sender
                     currentNode = controls.allNodes[currentNode.children.First()];
                 }
 
-                TreeNode n = findNodeInTree(currentNode.id);
+                n = findNodeInTree(currentNode.id);
                 n.BackColor = Color.Yellow;
 
-                if (lastNode != null && n != lastNode)
-                {
-                    lastNode.BackColor = Color.White;
-                }
+                lastNode.BackColor = Color.White;
                 lastNode = n;
 
                 Console.WriteLine(averageInput);
@@ -678,19 +665,18 @@ namespace Sender
                 numInputs = 0;
                 accruedValues = 0;
 
-                Console.WriteLine("Desired was " + desiredNode.name);
+                Console.WriteLine("Desired was " + currentNode.name);
 
-                if (desiredNode.id == Globals.CONTROLNODE)
+                if (currentNode.id == Globals.CONTROLNODE)
                 {
                     continueControlling = false;
-                    loadPositions(desiredNode);
+                    loadPositions(currentNode);
                 }
                 else
                 {
-                    currentNode = desiredNode;
                     if (!continueControlling)
                     {
-                        loadPositions(desiredNode);
+                        loadPositions(currentNode);
                     }
                 }
             }
